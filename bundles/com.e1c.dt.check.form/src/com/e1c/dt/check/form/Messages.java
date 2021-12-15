@@ -26,6 +26,10 @@ final class Messages
     public static String DataPathReferredObjectCheck_description;
     public static String DataPathReferredObjectCheck_message;
     public static String DataPathReferredObjectCheck_title;
+    public static String NamedElementNameCheck_description;
+    public static String NamedElementNameCheck_Form_named_element_name__N__is_not_valid_name;
+    public static String NamedElementNameCheck_Form_named_element_name_is_empty;
+    public static String NamedElementNameCheck_title;
     static
     {
         // initialize resource bundle

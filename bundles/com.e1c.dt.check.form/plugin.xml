@@ -26,6 +26,10 @@
             category="com.e1c.dt.check.form"
             class="com.e1c.dt.check.internal.form.ExecutableExtensionFactory:com.e1c.dt.check.form.DataPathReferredObjectCheck">
       </check>
+      <check
+            category="com.e1c.dt.check.form"
+            class="com.e1c.dt.check.internal.form.ExecutableExtensionFactory:com.e1c.dt.check.form.NamedElementNameCheck">
+      </check>
    </extension>
 
 </plugin>
