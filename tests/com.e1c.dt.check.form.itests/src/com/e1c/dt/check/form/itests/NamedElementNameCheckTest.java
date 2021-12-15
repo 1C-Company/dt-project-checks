@@ -24,16 +24,17 @@ import com._1c.g5.v8.dt.core.platform.IDtProject;
 import com._1c.g5.v8.dt.form.model.Form;
 import com._1c.g5.v8.dt.form.model.FormField;
 import com._1c.g5.v8.dt.validation.marker.Marker;
+import com.e1c.dt.check.form.NamedElementNameCheck;
 import com.e1c.g5.v8.dt.testing.check.SingleProjectReadOnlyCheckTestBase;
 
 /**
- * @author Dmitriy Marmyshev
+ * Tests for {@link NamedElementNameCheck} check.
  *
+ * @author Dmitriy Marmyshev
  */
 public class NamedElementNameCheckTest
     extends SingleProjectReadOnlyCheckTestBase
 {
-
     private static final String CHECK_ID = "form-named-element-name";
 
     private static final String PROJECT_NAME = "NamedElementName";
@@ -47,7 +48,6 @@ public class NamedElementNameCheckTest
     @Test
     public void testNameIsEmpty() throws Exception
     {
-
         IDtProject dtProject = dtProjectManager.getDtProject(PROJECT_NAME);
         assertNotNull(dtProject);
 
@@ -58,13 +58,11 @@ public class NamedElementNameCheckTest
         EObject item = form.getAutoCommandBar();
         Marker marker = getFirstMarker(CHECK_ID, item, dtProject);
         assertNotNull(marker);
-
     }
 
     @Test
     public void testNameIsIncorrect() throws Exception
     {
-
         IDtProject dtProject = dtProjectManager.getDtProject(PROJECT_NAME);
         assertNotNull(dtProject);
 
@@ -86,13 +84,11 @@ public class NamedElementNameCheckTest
         item = form.getAttributes().get(0);
         marker = getFirstMarker(CHECK_ID, item, dtProject);
         assertNotNull(marker);
-
     }
 
     @Test
     public void testFormNamesCorrect() throws Exception
     {
-
         IDtProject dtProject = dtProjectManager.getDtProject(PROJECT_NAME);
         assertNotNull(dtProject);
 
@@ -102,7 +98,6 @@ public class NamedElementNameCheckTest
 
         Marker marker = getFirstNestedMarker(CHECK_ID, form, dtProject);
         assertNull(marker);
-
     }
 
     @Override
