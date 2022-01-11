@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><mdclass:Catalog xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" uuid="f3eff019-5e52-4631-92c8-d2eba76f4038">
+  <producedTypes>
+    <objectType typeId="db0888e6-7eaa-425e-b5e5-2e78ab0a3df2" valueTypeId="93d9971e-2bae-4cac-b646-b9be43e0f9f4">
+    </objectType>
+    <refType typeId="c154f2d1-43bf-4640-bf8f-ebba9e251b12" valueTypeId="ab3d0a5f-a83a-4767-997b-97fc73df0ec9">
+      <emptyRef/>
+    </refType>
+    <selectionType typeId="97bfb98a-41bd-4a49-9fa8-9efb48afa88f" valueTypeId="c28a414e-01c9-46d9-93ad-75dd029e2bbf">
+    </selectionType>
+    <listType typeId="bf31ee32-a98c-495b-894c-f197be56ec71" valueTypeId="288ca40a-9083-4437-9c4d-9aa704854448">
+    </listType>
+    <managerType typeId="e133842c-e362-4747-af7c-1946531d7b92" valueTypeId="320a6ffe-8525-4478-8bff-de0118bd672d">
+    </managerType>
+  </producedTypes>
+  <name>CatalogWithTwoNonUniqueNameTabularSectionAttribute</name>
+  <synonym>
+    <key>en</key>
+    <value>Catalog with two non unique name tabular section attribute</value>
+  </synonym>
+  <useStandardCommands>true</useStandardCommands>
+  <inputByString>Catalog.CatalogWithTwoNonUniqueNameTabularSectionAttribute.StandardAttribute.Code</inputByString>
+  <inputByString>Catalog.CatalogWithTwoNonUniqueNameTabularSectionAttribute.StandardAttribute.Description</inputByString>
+  <fullTextSearchOnInputByString>DontUse</fullTextSearchOnInputByString>
+  <createOnInput>Use</createOnInput>
+  <dataLockControlMode>Managed</dataLockControlMode>
+  <fullTextSearch>Use</fullTextSearch>
+  <codeLength>9</codeLength>
+  <descriptionLength>25</descriptionLength>
+  <codeType>String</codeType>
+  <codeAllowedLength>Variable</codeAllowedLength>
+  <checkUnique>true</checkUnique>
+  <autonumbering>true</autonumbering>
+  <defaultPresentation>AsDescription</defaultPresentation>
+  <editType>InDialog</editType>
+  <choiceMode>BothWays</choiceMode>
+  <tabularSections uuid="cf7a8e87-b9ee-429a-aba4-3a925948f8a2">
+    <producedTypes>
+      <objectType typeId="6a51e287-51b7-49db-9435-a2470cf19c2a" valueTypeId="67a73f57-5e0d-4270-be31-8fa3fa3d8794">
+      </objectType>
+      <rowType typeId="6af72e52-721a-40c9-8f6a-39ce3359c1d9" valueTypeId="b54fe8b8-29fd-4230-9eb3-3223f76ead2b">
+      </rowType>
+    </producedTypes>
+    <name>TabularSection</name>
+    <synonym>
+      <key>en</key>
+      <value>Tabular section</value>
+    </synonym>
+    <attributes uuid="c6ae4d44-ef07-4d1d-8720-c7004cb0525e">
+      <name>AttributeNotUniqueName</name>
+      <synonym>
+        <key>en</key>
+        <value>Attribute not unique name</value>
+      </synonym>
+      <type>
+        <types>String</types>
+        <stringQualifiers>
+          <length>10</length>
+        </stringQualifiers>
+      </type>
+    </attributes>
+    <attributes uuid="c87c1954-bc24-4ee6-ab7b-cdebb7456723">
+      <name>AttributeNotUniqueName</name>
+      <synonym>
+        <key>en</key>
+        <value>Attribute not unique name1</value>
+      </synonym>
+      <type>
+        <types>String</types>
+        <stringQualifiers>
+          <length>10</length>
+        </stringQualifiers>
+      </type>
+    </attributes>
+  </tabularSections>
+</mdclass:Catalog>

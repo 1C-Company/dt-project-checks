@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdclass:Configuration xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" uuid="e08befb8-332a-4631-a2a1-1f57ad92b33d">
+  <name>ConfigurationMobilePermissionsCheck</name>
+  <synonym>
+    <key>en</key>
+    <value>Configuration mobile permissions check</value>
+  </synonym>
+  <containedObjects classId="9cd510cd-abfc-11d4-9434-004095e12fc7" objectId="9201adfb-e5e5-490b-938b-6ec7780efcef"/>
+  <containedObjects classId="9fcd25a0-4822-11d4-9414-008048da11f9" objectId="a123e0b7-517d-464a-bf9c-44364a6b1268"/>
+  <containedObjects classId="e3687481-0a87-462c-a166-9f34594f9bba" objectId="52ec852b-b27c-4977-994f-d57f5ed6b074"/>
+  <containedObjects classId="9de14907-ec23-4a07-96f0-85521cb6b53b" objectId="6aaf4b4c-c096-449d-965a-bda73999ea3b"/>
+  <containedObjects classId="51f2d5d8-ea4d-4064-8892-82951750031e" objectId="d71a8468-3dd9-4941-a130-0fd4630ac893"/>
+  <containedObjects classId="e68182ea-4237-4383-967f-90c1e3370bc7" objectId="1a0b80b5-584d-472c-a459-2861f81c4537"/>
+  <configurationExtensionCompatibilityMode>8.3.14</configurationExtensionCompatibilityMode>
+  <defaultRunMode>ManagedApplication</defaultRunMode>
+  <usePurposes>MobileDevice</usePurposes>
+  <requiredMobileApplicationPermissions>MusicLibrary</requiredMobileApplicationPermissions>
+  <defaultLanguage>Language.English</defaultLanguage>
+  <dataLockControlMode>Managed</dataLockControlMode>
+  <objectAutonumerationMode>NotAutoFree</objectAutonumerationMode>
+  <modalityUseMode>DontUse</modalityUseMode>
+  <synchronousPlatformExtensionAndAddInCallUseMode>DontUse</synchronousPlatformExtensionAndAddInCallUseMode>
+  <compatibilityMode>8.3.14</compatibilityMode>
+  <languages uuid="6888aeea-119f-4cc3-b3cd-234fe52aacc2">
+    <name>English</name>
+    <synonym>
+      <key>en</key>
+      <value>English</value>
+    </synonym>
+    <languageCode>en</languageCode>
+  </languages>
+</mdclass:Configuration>

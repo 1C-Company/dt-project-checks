@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdclass:Document xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" uuid="fdff16d3-4741-4484-862b-4cd09d50678c">
+  <producedTypes>
+    <objectType typeId="cc539d36-eae2-4be3-a134-4a8692303003" valueTypeId="8cfcc412-398a-4cd9-962a-e1ee6c695af0">
+    </objectType>
+    <refType typeId="e5d847b4-34c3-4c30-8858-075b39dc64eb" valueTypeId="8c9d0e20-e3da-450d-b81b-a67443b9d731">
+      <emptyRef/>
+    </refType>
+    <selectionType typeId="05bc839b-1a9a-42aa-9103-66747fb8edd7" valueTypeId="ee2fa99a-aa88-46fc-a4ec-ea7cadfee3c3">
+    </selectionType>
+    <listType typeId="7fa1746c-9247-49ab-b5c2-e12a27f3cc81" valueTypeId="e3f7ce9a-dabe-4e32-8fda-8ca4110f2828">
+    </listType>
+    <managerType typeId="de99cae7-16a6-47e1-8405-74ecdc8c44d8" valueTypeId="c82ca5d3-1c02-4870-b114-faf6d7d81737">
+    </managerType>
+  </producedTypes>
+  <name>DocumentNotUniqueName</name>
+  <synonym>
+    <key>en</key>
+    <value>Document not unique name</value>
+  </synonym>
+  <useStandardCommands>true</useStandardCommands>
+  <inputByString>Document.DocumentNotUniqueName.StandardAttribute.Number</inputByString>
+  <fullTextSearchOnInputByString>DontUse</fullTextSearchOnInputByString>
+  <createOnInput>Use</createOnInput>
+  <dataLockControlMode>Managed</dataLockControlMode>
+  <fullTextSearch>Use</fullTextSearch>
+  <numberType>String</numberType>
+  <numberLength>9</numberLength>
+  <numberAllowedLength>Variable</numberAllowedLength>
+  <checkUnique>true</checkUnique>
+  <autonumbering>true</autonumbering>
+  <postInPrivilegedMode>true</postInPrivilegedMode>
+  <unpostInPrivilegedMode>true</unpostInPrivilegedMode>
+</mdclass:Document>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><mdclass:Catalog xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" uuid="678115f9-68a0-4c97-b336-ceb1244312f6">
+  <producedTypes>
+    <objectType typeId="33fee02d-f0e5-4e00-b87d-9aae64c2be0c" valueTypeId="76927bea-f120-4279-a721-5e2094a75f96">
+    </objectType>
+    <refType typeId="66613cc6-1970-4a64-8940-6f885949a6e3" valueTypeId="8e1092d7-80d4-4833-9345-df379927ad9b">
+      <emptyRef/>
+    </refType>
+    <selectionType typeId="2d13da4c-ec35-4230-85c3-33eb460d4399" valueTypeId="63716633-ec6b-4e32-931b-6c39e880247d">
+    </selectionType>
+    <listType typeId="7df51488-4d28-43a9-bb41-0f078e548835" valueTypeId="19a6e6b7-babd-424c-8591-a6d1cd567300">
+    </listType>
+    <managerType typeId="d985d985-7bd6-47e4-acf0-2980b48f32ac" valueTypeId="3adaef75-5f2f-41d8-a0b1-e14e78d78f7c">
+    </managerType>
+  </producedTypes>
+  <name>CatalogWithTwoNonUniqueNameAttribute</name>
+  <synonym>
+    <key>en</key>
+    <value>Catalog with two non unique name attribute</value>
+  </synonym>
+  <useStandardCommands>true</useStandardCommands>
+  <inputByString>Catalog.CatalogWithTwoNonUniqueNameAttribute.StandardAttribute.Code</inputByString>
+  <inputByString>Catalog.CatalogWithTwoNonUniqueNameAttribute.StandardAttribute.Description</inputByString>
+  <fullTextSearchOnInputByString>DontUse</fullTextSearchOnInputByString>
+  <createOnInput>Use</createOnInput>
+  <dataLockControlMode>Managed</dataLockControlMode>
+  <fullTextSearch>Use</fullTextSearch>
+  <codeLength>9</codeLength>
+  <descriptionLength>25</descriptionLength>
+  <codeType>String</codeType>
+  <codeAllowedLength>Variable</codeAllowedLength>
+  <checkUnique>true</checkUnique>
+  <autonumbering>true</autonumbering>
+  <defaultPresentation>AsDescription</defaultPresentation>
+  <editType>InDialog</editType>
+  <choiceMode>BothWays</choiceMode>
+  <attributes uuid="90c3c558-dc4d-427c-ba6d-97e8d777e0bb">
+    <name>AttributeNotUniqueName</name>
+    <synonym>
+      <key>en</key>
+      <value>Attribute not unique name</value>
+    </synonym>
+    <type>
+      <types>String</types>
+      <stringQualifiers>
+        <length>10</length>
+      </stringQualifiers>
+    </type>
+    <fullTextSearch>Use</fullTextSearch>
+  </attributes>
+  <attributes uuid="601a708d-2c4c-4aee-a536-96b1ab24a1c1">
+    <name>AttributeNotUniqueName</name>
+    <synonym>
+      <key>en</key>
+      <value>Attribute1</value>
+    </synonym>
+    <type>
+      <types>String</types>
+      <stringQualifiers>
+        <length>10</length>
+      </stringQualifiers>
+    </type>
+    <fullTextSearch>Use</fullTextSearch>
+  </attributes>
+</mdclass:Catalog>

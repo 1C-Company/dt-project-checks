@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><mdclass:Configuration xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" uuid="599a6845-7fe8-44f3-8751-af069138994c">
+  <name>MdObjectUniqueNameCheck</name>
+  <synonym>
+    <key>en</key>
+    <value>Md object unique name check</value>
+  </synonym>
+  <containedObjects classId="9cd510cd-abfc-11d4-9434-004095e12fc7" objectId="b0c1c66a-4786-485b-b1a1-c5036dfaa613"/>
+  <containedObjects classId="9fcd25a0-4822-11d4-9414-008048da11f9" objectId="59405c1b-791f-4b81-9720-a4b3ec642aa6"/>
+  <containedObjects classId="e3687481-0a87-462c-a166-9f34594f9bba" objectId="cd5b2c29-d5da-4bdb-ab64-ec3d618a1d11"/>
+  <containedObjects classId="9de14907-ec23-4a07-96f0-85521cb6b53b" objectId="9f3907d7-d4e3-4bdd-8210-a44aaa361fad"/>
+  <containedObjects classId="51f2d5d8-ea4d-4064-8892-82951750031e" objectId="59c12f69-5a34-45e1-8780-26f406feec57"/>
+  <containedObjects classId="e68182ea-4237-4383-967f-90c1e3370bc7" objectId="0274a5e7-72d3-4d98-8bb7-e6936efdd498"/>
+  <defaultRunMode>ManagedApplication</defaultRunMode>
+  <usePurposes>PersonalComputer</usePurposes>
+  <vendor></vendor>
+  <version></version>
+  <defaultLanguage>Language.English</defaultLanguage>
+  <dataLockControlMode>Managed</dataLockControlMode>
+  <objectAutonumerationMode>NotAutoFree</objectAutonumerationMode>
+  <modalityUseMode>DontUse</modalityUseMode>
+  <compatibilityMode>8.3.7</compatibilityMode>
+  <languages uuid="c59769b4-9f60-46e2-b070-8deae76bc1c7">
+    <name>English</name>
+    <synonym>
+      <key>en</key>
+      <value>English</value>
+    </synonym>
+    <languageCode>en</languageCode>
+  </languages>
+  <languages uuid="c59769b4-9f60-46e2-b070-8deae76bc1c8">
+    <name>English</name>
+    <synonym>
+      <key>en</key>
+      <value>English</value>
+    </synonym>
+    <languageCode>en</languageCode>
+  </languages>
+  <catalogs>Catalog.CatalogWithTwoNonUniqueNameAttribute</catalogs>
+  <catalogs>Catalog.CatalogWithTwoNonUniqueNameTabularSection</catalogs>
+  <catalogs>Catalog.CatalogWithTwoNonUniqueNameTabularSectionAttribute</catalogs>
+  <documents>Document.DocumentNotUniqueName</documents>
+  <documents>Document.DocumentNotUniqueName1</documents>
+</mdclass:Configuration>
