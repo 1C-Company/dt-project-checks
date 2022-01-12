@@ -1,21 +1,11 @@
 name: CI
 
-# on:
-#   push:
-#     branches:
-#       - master
-#       - release/*
-#       - '*'
-#   pull_request:
-#     branches: 
-#       - '*'
+on: [push, pull_request]
 
 jobs:
   build:
     name: Build
-    # This build will run on master,release/* push, local PR and PR from forks without label Analyze
-    #if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.event.repository.full_name  || !contains(github.event.pull_request.labels.*.name, 'Analyze')
-    uses: 1C-company/dt-project-checks/.github/workflows/build.yml@master
+    uses: 1C-company/dt-project-checks/.github/workflows/build.yml@release/0.1.0
     with:
       analyze: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.event.repository.full_name }}
     secrets:
