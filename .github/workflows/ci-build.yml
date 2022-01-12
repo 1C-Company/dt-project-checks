@@ -5,8 +5,8 @@ on:
     branches:
       - master
       - release/*
-  pull_request: 
-    branches:
+  pull_request:
+    branches: 
       - '**'
 
 jobs:
