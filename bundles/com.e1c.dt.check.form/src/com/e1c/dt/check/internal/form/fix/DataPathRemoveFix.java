@@ -17,10 +17,10 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
+import com._1c.g5.v8.dt.form.model.AbstractDataPath;
 import com._1c.g5.v8.dt.form.model.ExtInfo;
 import com._1c.g5.v8.dt.form.model.FormItem;
 import com.e1c.dt.check.form.DataPathReferredObjectCheck;
-import com.e1c.dt.check.internal.form.CorePlugin;
 import com.e1c.g5.v8.dt.check.qfix.IFixSession;
 import com.e1c.g5.v8.dt.check.qfix.components.BasicModelFixContext;
 import com.e1c.g5.v8.dt.check.qfix.components.MultiVariantModelBasicFix;
@@ -30,7 +30,7 @@ import com.e1c.g5.v8.dt.check.qfix.components.QuickFix;
  * The multi-variant fix for {@link DataPathReferredObjectCheck} allows to remove bad data path
  * and remove form item with this data path.
  */
-@QuickFix(checkId = "form-data-path", supplierId = CorePlugin.PLUGIN_ID)
+@QuickFix(checkId = "form-data-path")
 public class DataPathRemoveFix
     extends MultiVariantModelBasicFix
 {
@@ -56,7 +56,10 @@ public class DataPathRemoveFix
     private void removeDataPath(EObject object, EStructuralFeature feature, BasicModelFixContext context,
         IFixSession session)
     {
-        removeObject(object);
+        if (object instanceof AbstractDataPath)
+        {
+            removeObject(object);
+        }
     }
 
     private void removeFormItem(EObject object, EStructuralFeature feature, BasicModelFixContext context,
@@ -67,12 +70,11 @@ public class DataPathRemoveFix
         {
             item = item.eContainer();
         }
-        if (!(item instanceof FormItem))
-        {
-            return;
-        }
 
-        removeObject(item);
+        if (item instanceof FormItem)
+        {
+            removeObject(item);
+        }
     }
 
     private void removeObject(EObject object)
