@@ -1,7 +1,11 @@
 name: CI
 
-on: 
-  pull_request:
+on:
+  push:
+    branches:
+      - master
+      - release/*
+  pull_request: 
     branches:
       - '**'
 
