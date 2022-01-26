@@ -41,4 +41,5 @@
   <commonForms>CommonForm.IncorrectCommandBar</commonForms>
   <commonForms>CommonForm.IncorrectItem</commonForms>
   <commonForms>CommonForm.Correct</commonForms>
+  <commonForms>CommonForm.Correct2</commonForms>
 </mdclass:Configuration>

@@ -12,8 +12,11 @@
  *******************************************************************************/
 package com.e1c.dt.check.form;
 
+import static com._1c.g5.v8.dt.form.model.FormPackage.Literals.ABSTRACT_FORM_ATTRIBUTE;
 import static com._1c.g5.v8.dt.form.model.FormPackage.Literals.FORM;
-import static com._1c.g5.v8.dt.mcore.McorePackage.Literals.NAMED_ELEMENT;
+import static com._1c.g5.v8.dt.form.model.FormPackage.Literals.FORM_COMMAND;
+import static com._1c.g5.v8.dt.form.model.FormPackage.Literals.FORM_ITEM;
+import static com._1c.g5.v8.dt.form.model.FormPackage.Literals.FORM_PARAMETER;
 import static com._1c.g5.v8.dt.mcore.McorePackage.Literals.NAMED_ELEMENT__NAME;
 
 import java.text.MessageFormat;
@@ -52,10 +55,11 @@ public class NamedElementNameCheck
             .description(Messages.NamedElementNameCheck_description)
             .complexity(CheckComplexity.NORMAL)
             .severity(IssueSeverity.MAJOR)
-            .issueType(IssueType.ERROR)
-            .topObject(FORM)
-            .containment(NAMED_ELEMENT)
-            .features(NAMED_ELEMENT__NAME);
+            .issueType(IssueType.ERROR);
+        builder.topObject(FORM).containment(ABSTRACT_FORM_ATTRIBUTE).features(NAMED_ELEMENT__NAME);
+        builder.topObject(FORM).containment(FORM_COMMAND).features(NAMED_ELEMENT__NAME);
+        builder.topObject(FORM).containment(FORM_PARAMETER).features(NAMED_ELEMENT__NAME);
+        builder.topObject(FORM).containment(FORM_ITEM).features(NAMED_ELEMENT__NAME);
     }
 
     @Override
