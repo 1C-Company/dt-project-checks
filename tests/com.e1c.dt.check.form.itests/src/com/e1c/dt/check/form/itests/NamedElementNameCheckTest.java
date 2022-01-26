@@ -45,6 +45,8 @@ public class NamedElementNameCheckTest
 
     private static final String FQN_FORM3 = "CommonForm.Correct.Form";
 
+    private static final String FQN_FORM4 = "CommonForm.Correct2.Form";
+
     @Test
     public void testNameIsEmpty() throws Exception
     {
@@ -93,6 +95,25 @@ public class NamedElementNameCheckTest
         assertNotNull(dtProject);
 
         IBmObject object = getTopObjectByFqn(FQN_FORM3, dtProject);
+        assertTrue(object instanceof Form);
+        Form form = (Form)object;
+
+        Marker marker = getFirstNestedMarker(CHECK_ID, form, dtProject);
+        assertNull(marker);
+    }
+
+    /**
+     * Test form names that check does not include ContextDef or other non-related named objects.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void testFormNamesCorrect2() throws Exception
+    {
+        IDtProject dtProject = dtProjectManager.getDtProject(PROJECT_NAME);
+        assertNotNull(dtProject);
+
+        IBmObject object = getTopObjectByFqn(FQN_FORM4, dtProject);
         assertTrue(object instanceof Form);
         Form form = (Form)object;
 
