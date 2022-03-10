@@ -25,6 +25,7 @@
 
   <modules>
     <module>com.e1c.dt.check.form.itests</module>
+    <module>com.e1c.dt.check.md.itests</module>
   </modules>
 
   <profiles>
