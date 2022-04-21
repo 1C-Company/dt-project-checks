@@ -34,5 +34,5 @@ Import-Package: com._1c.g5.v8.bm.core;version="[7.4.100,8.0.0)",
  com.e1c.g5.v8.dt.check;version="[2.0.0,3.0.0)",
  com.e1c.g5.v8.dt.check.components;version="[2.0.0,3.0.0)",
  com.e1c.g5.v8.dt.check.context;version="1.0.100",
- com.e1c.g5.v8.dt.check.settings;version="[2.0.0,3.0.0)"
+ com.e1c.g5.v8.dt.check.settings;version="[3.0.0,4.0.0)"
 
