@@ -20,10 +20,13 @@ import static com._1c.g5.v8.dt.form.model.FormPackage.Literals.FORM_PARAMETER;
 import static com._1c.g5.v8.dt.mcore.McorePackage.Literals.NAMED_ELEMENT__NAME;
 
 import java.text.MessageFormat;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.ecore.EClass;
 
 import com._1c.g5.v8.dt.common.StringUtils;
+import com._1c.g5.v8.dt.form.model.FormPackage;
 import com._1c.g5.v8.dt.mcore.NamedElement;
 import com.e1c.g5.v8.dt.check.CheckComplexity;
 import com.e1c.g5.v8.dt.check.ICheckParameters;
@@ -39,8 +42,8 @@ import com.e1c.g5.v8.dt.check.settings.IssueType;
 public class NamedElementNameCheck
     extends BasicCheck
 {
-
     private static final String CHECK_ID = "form-named-element-name"; //$NON-NLS-1$
+    private static final Set<EClass> EXCLUDED_CLASSES = Set.of(FormPackage.Literals.AUTO_COMMAND_BAR);
 
     @Override
     public String getCheckId()
@@ -70,8 +73,11 @@ public class NamedElementNameCheck
         String name = named.getName();
         if (StringUtils.isEmpty(name))
         {
-            resultAceptor.addIssue(Messages.NamedElementNameCheck_Form_named_element_name_is_empty,
-                NAMED_ELEMENT__NAME);
+            if (!EXCLUDED_CLASSES.contains(named.eClass()))
+            {
+                resultAceptor.addIssue(Messages.NamedElementNameCheck_Form_named_element_name_is_empty,
+                    NAMED_ELEMENT__NAME);
+            }
         }
         else if (!StringUtils.isValidName(name))
         {
