@@ -39,7 +39,6 @@ import com.e1c.g5.v8.dt.check.settings.IssueType;
 public class NamedElementNameCheck
     extends BasicCheck
 {
-
     private static final String CHECK_ID = "form-named-element-name"; //$NON-NLS-1$
 
     @Override
@@ -51,7 +50,8 @@ public class NamedElementNameCheck
     @Override
     protected void configureCheck(CheckConfigurer builder)
     {
-        builder.title(Messages.NamedElementNameCheck_title)
+        builder.extension(new SkipBaseFormExtension())
+            .title(Messages.NamedElementNameCheck_title)
             .description(Messages.NamedElementNameCheck_description)
             .complexity(CheckComplexity.NORMAL)
             .severity(IssueSeverity.MAJOR)

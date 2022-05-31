@@ -48,10 +48,9 @@ import com.google.inject.Inject;
 public class DataPathReferredObjectCheck
     extends BasicCheck
 {
-
     private static final String CHECK_ID = "form-data-path"; //$NON-NLS-1$
 
-    private IDataSourceInfoAssociationService dataSourceInfoAssociationService;
+    private final IDataSourceInfoAssociationService dataSourceInfoAssociationService;
 
     /**
      * Instantiates a new instance of check of data path referred object check.
@@ -74,7 +73,8 @@ public class DataPathReferredObjectCheck
     @Override
     protected void configureCheck(CheckConfigurer builder)
     {
-        builder.title(Messages.DataPathReferredObjectCheck_title)
+        builder.extension(new SkipBaseFormExtension())
+            .title(Messages.DataPathReferredObjectCheck_title)
             .description(Messages.DataPathReferredObjectCheck_description)
             .complexity(CheckComplexity.NORMAL)
             .severity(IssueSeverity.MAJOR)
@@ -94,7 +94,6 @@ public class DataPathReferredObjectCheck
         }
 
         AbstractDataPath dataPath = (AbstractDataPath)object;
-
         if (dataPath.getSegments().isEmpty())
         {
             return;
