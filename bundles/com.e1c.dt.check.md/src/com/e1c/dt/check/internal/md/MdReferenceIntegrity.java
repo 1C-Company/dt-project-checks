@@ -55,9 +55,17 @@ import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGUR
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__SESSION_PARAMETERS;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__SETTINGS_STORAGES;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__STYLE_ITEMS;
+import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.EXCHANGE_PLAN;
+import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.EXCHANGE_PLAN_CONTENT_ITEM;
+import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.EXCHANGE_PLAN_CONTENT_ITEM__MD_OBJECT;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.SUBSYSTEM;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.SUBSYSTEM__CONTENT;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.SUBSYSTEM__SUBSYSTEMS;
+import static com._1c.g5.v8.dt.scc.model.StandaloneContentPackage.Literals.STANDALONE_CONTENT;
+import static com._1c.g5.v8.dt.scc.model.StandaloneContentPackage.Literals.STANDALONE_CONTENT_MD_OBJECT_AWARE__METADATA;
+import static com._1c.g5.v8.dt.scc.model.StandaloneContentPackage.Literals.STANDALONE_CONTENT_PRIORITY_ITEM;
+import static com._1c.g5.v8.dt.scc.model.StandaloneContentPackage.Literals.STANDALONE_CONTENT_UNUSED_ITEM;
+import static com._1c.g5.v8.dt.scc.model.StandaloneContentPackage.Literals.STANDALONE_CONTENT_USED_ITEM;
 
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -89,6 +97,7 @@ import com.e1c.g5.v8.dt.check.context.CheckContextCollectingSession;
 import com.e1c.g5.v8.dt.check.context.OnModelFeatureChangeContextCollector;
 import com.e1c.g5.v8.dt.check.context.OnModelObjectAssociationContextCollector;
 import com.e1c.g5.v8.dt.check.context.OnModelObjectRemovalContextCollector;
+import com.e1c.g5.v8.dt.check.settings.IssueSeverity;
 
 /**
  * MD object referential integrity checks. Checks all important relations which are required by the 1C:Enterprise to
@@ -144,7 +153,17 @@ public final class MdReferenceIntegrity
             CONFIGURATION__STYLE_ITEMS)),
         COMMON_ATTRIBUTE, new CheckDef(Map.of(
             COMMON_ATTRIBUTE_CONTENT_ITEM,
-                Set.of(COMMON_ATTRIBUTE_CONTENT_ITEM__METADATA))));
+                Set.of(COMMON_ATTRIBUTE_CONTENT_ITEM__METADATA))),
+        EXCHANGE_PLAN, new CheckDef(Map.of(
+            EXCHANGE_PLAN_CONTENT_ITEM,
+                Set.of(EXCHANGE_PLAN_CONTENT_ITEM__MD_OBJECT))),
+        STANDALONE_CONTENT, new CheckDef(Map.of(
+            STANDALONE_CONTENT_USED_ITEM,
+                Set.of(STANDALONE_CONTENT_MD_OBJECT_AWARE__METADATA),
+            STANDALONE_CONTENT_UNUSED_ITEM,
+                Set.of(STANDALONE_CONTENT_MD_OBJECT_AWARE__METADATA),
+            STANDALONE_CONTENT_PRIORITY_ITEM,
+                Set.of(STANDALONE_CONTENT_MD_OBJECT_AWARE__METADATA))));
     // @formatter:on
 
     @Override
@@ -216,6 +235,7 @@ public final class MdReferenceIntegrity
 
         definition.setTitle(Messages.MdReferenceIntegrity_Title);
         definition.setDescription(Messages.MdReferenceIntegrity_Description);
+        definition.setDefaultSeverity(IssueSeverity.CRITICAL);
     }
 
     @Override
