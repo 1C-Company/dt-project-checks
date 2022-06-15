@@ -25,6 +25,7 @@
 
 | Версия | P2-репозиторий | ZIP-архив репозитория |
 |--------|----------------|-----------------------|
+| 0.2.0 для 1C:EDT 2022.1 | https://edt.1c.ru/downloads/releases/plugins/dt-project-checks/edt-2022.1/0.2.0/repo/ | https://edt.1c.ru/downloads/releases/plugins/dt-project-checks/edt-2022.1/0.2.0/repo.zip |
 | 0.1.0 для 1C:EDT 2021.3 | https://edt.1c.ru/downloads/releases/plugins/dt-project-checks/edt-2021.3/0.1.0/repo/ | https://edt.1c.ru/downloads/releases/plugins/dt-project-checks/edt-2021.3/0.1.0/repo.zip |
 
 

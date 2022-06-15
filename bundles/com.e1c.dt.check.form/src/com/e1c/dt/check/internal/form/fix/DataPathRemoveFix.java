@@ -21,6 +21,7 @@ import com._1c.g5.v8.dt.form.model.AbstractDataPath;
 import com._1c.g5.v8.dt.form.model.ExtInfo;
 import com._1c.g5.v8.dt.form.model.FormItem;
 import com.e1c.dt.check.form.DataPathReferredObjectCheck;
+import com.e1c.dt.check.internal.form.CorePlugin;
 import com.e1c.g5.v8.dt.check.qfix.IFixSession;
 import com.e1c.g5.v8.dt.check.qfix.components.BasicModelFixContext;
 import com.e1c.g5.v8.dt.check.qfix.components.MultiVariantModelBasicFix;
@@ -30,7 +31,7 @@ import com.e1c.g5.v8.dt.check.qfix.components.QuickFix;
  * The multi-variant fix for {@link DataPathReferredObjectCheck} allows to remove bad data path
  * and remove form item with this data path.
  */
-@QuickFix(checkId = "form-data-path")
+@QuickFix(checkId = "form-data-path", supplierId = CorePlugin.PLUGIN_ID)
 public class DataPathRemoveFix
     extends MultiVariantModelBasicFix
 {
