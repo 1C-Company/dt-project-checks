@@ -386,8 +386,8 @@ public final class MdReferenceIntegrity
     }
 
     /*
-     * Schedules the check for all holders of leftover references of the removed object. Only checked references are being taken
-     * into the account
+     * Schedules the check for all holders of leftover references of the removed object.
+     * Only checked references are being taken into the account
      */
     private static final class ObjectRemovalContextCollector
         implements OnModelObjectRemovalContextCollector
@@ -413,13 +413,13 @@ public final class MdReferenceIntegrity
         private final Collection<EStructuralFeature> features;
         private final Map<EClass, Collection<EStructuralFeature>> containments;
 
-        public CheckDef(Collection<EStructuralFeature> features)
+        CheckDef(Collection<EStructuralFeature> features)
         {
             this.features = features;
             containments = Collections.emptyMap();
         }
 
-        public CheckDef(Map<EClass, Collection<EStructuralFeature>> containments)
+        CheckDef(Map<EClass, Collection<EStructuralFeature>> containments)
         {
             this.features = null;
             this.containments = containments;

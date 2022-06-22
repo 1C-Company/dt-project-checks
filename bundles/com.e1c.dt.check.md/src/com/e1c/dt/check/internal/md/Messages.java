@@ -19,7 +19,7 @@ import org.eclipse.osgi.util.NLS;
  *
  * @author Alexander Tretyakevich
  */
-class Messages
+final class Messages
     extends NLS
 {
     private static final String BUNDLE_NAME = "com.e1c.dt.check.internal.md.messages"; //$NON-NLS-1$

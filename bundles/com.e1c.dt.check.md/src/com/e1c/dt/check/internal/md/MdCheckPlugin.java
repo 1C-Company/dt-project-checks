@@ -148,7 +148,7 @@ public class MdCheckPlugin
     {
         if (injector == null)
         {
-            return injector = createInjector();
+            injector = createInjector();
         }
         return injector;
     }
