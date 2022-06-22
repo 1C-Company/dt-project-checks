@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdclass:Configuration xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" uuid="3eb04fd9-3f37-46e2-a7c9-a2b3d863dd3c">
+  <name>ConfigurationCompatibilityModeCheckMax</name>
+  <synonym>
+    <key>en</key>
+    <value>Configuration compatibility mode check max</value>
+  </synonym>
+  <containedObjects classId="9cd510cd-abfc-11d4-9434-004095e12fc7" objectId="16484c2c-567c-44dc-85f3-ca117098373a"/>
+  <containedObjects classId="9fcd25a0-4822-11d4-9414-008048da11f9" objectId="08a33d50-1f0c-4ac9-a58e-3a029fd2843c"/>
+  <containedObjects classId="e3687481-0a87-462c-a166-9f34594f9bba" objectId="5ebf5574-8b44-4116-8fa2-532dcbccd040"/>
+  <containedObjects classId="9de14907-ec23-4a07-96f0-85521cb6b53b" objectId="e777f152-331c-47f4-8672-00d34443dfc8"/>
+  <containedObjects classId="51f2d5d8-ea4d-4064-8892-82951750031e" objectId="bf65b1ae-4b58-4108-8dcd-2c827e93ee80"/>
+  <containedObjects classId="e68182ea-4237-4383-967f-90c1e3370bc7" objectId="551e0c79-124f-445d-9c35-a00f8ab5e62f"/>
+  <containedObjects classId="fb282519-d103-4dd3-bc12-cb271d631dfc" objectId="d052726f-1582-47df-a75f-267537d13d74"/>
+  <configurationExtensionCompatibilityMode>8.3.18</configurationExtensionCompatibilityMode>
+  <defaultRunMode>ManagedApplication</defaultRunMode>
+  <usePurposes>PersonalComputer</usePurposes>
+  <usedMobileApplicationFunctionalities>
+    <functionality>
+      <use>true</use>
+    </functionality>
+    <functionality>
+      <functionality>OSBackup</functionality>
+      <use>true</use>
+    </functionality>
+  </usedMobileApplicationFunctionalities>
+  <defaultLanguage>Language.English</defaultLanguage>
+  <dataLockControlMode>Managed</dataLockControlMode>
+  <objectAutonumerationMode>NotAutoFree</objectAutonumerationMode>
+  <modalityUseMode>DontUse</modalityUseMode>
+  <synchronousPlatformExtensionAndAddInCallUseMode>DontUse</synchronousPlatformExtensionAndAddInCallUseMode>
+  <compatibilityMode>8.3.999</compatibilityMode>
+  <languages uuid="268a47e9-1b2a-4d11-8c0f-73ae829d3042">
+    <name>English</name>
+    <synonym>
+      <key>en</key>
+      <value>English</value>
+    </synonym>
+    <languageCode>en</languageCode>
+  </languages>
+</mdclass:Configuration>

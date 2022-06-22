@@ -8,18 +8,23 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
+<<<<<<< HEAD
  *     1C-Soft LLC - initial implementation
+=======
+ *     1C-Soft LLC - initial API and implementation
+>>>>>>> f317a3edd770771871e5399f4fa35234f4899311
  *******************************************************************************/
 package com.e1c.dt.check.internal.md;
 
 import org.eclipse.core.runtime.Plugin;
 
+import com._1c.g5.v8.dt.platform.version.IRuntimeVersionSupport;
 import com._1c.g5.wiring.AbstractServiceAwareModule;
 
 /**
  * External services bindings for plugin.
  *
- * @author Alexander Tretyakevich
+ * @author Andrey Volkov
  */
 public class ExternalDependenciesModule
     extends AbstractServiceAwareModule
@@ -29,14 +34,14 @@ public class ExternalDependenciesModule
      *
      * @param bundle the parent bundle, cannot be {@code null}
      */
-    public ExternalDependenciesModule(Plugin bundle)
+    public ExternalDependenciesModule(Plugin plugin)
     {
-        super(bundle);
+        super(plugin);
     }
 
     @Override
     protected void doConfigure()
     {
-        // Nothing at the moment
+        bind(IRuntimeVersionSupport.class).toService();
     }
 }

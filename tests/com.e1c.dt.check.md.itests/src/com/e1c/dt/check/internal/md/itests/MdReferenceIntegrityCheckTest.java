@@ -36,11 +36,10 @@ import com._1c.g5.v8.dt.metadata.mdclass.Subsystem;
 import com._1c.g5.v8.dt.platform.version.Version;
 import com._1c.g5.v8.dt.testing.TestingPlatformSupport;
 import com._1c.g5.v8.dt.validation.marker.Marker;
-import com.e1c.dt.check.internal.md.MdReferenceIntegrity;
 import com.e1c.g5.v8.dt.testing.check.CheckTestBase;
 
 /**
- * Tests for {@link MdReferenceIntegrity} check.
+ * Tests for MdReferenceIntegrity check.
  *
  * @author Alexander Tretyakevich
  */

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdclass:Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" xmlns:mdcommon="http://g5.1c.ru/v8/dt/metadata/common" uuid="72262417-e4fb-4f53-9aaf-5d6fe7cc806d">
+  <name>ConfigurationMobileApplicationUrlsCheck</name>
+  <synonym>
+    <key>en</key>
+    <value>Configuration mobile application URLs check</value>
+  </synonym>
+  <containedObjects classId="9cd510cd-abfc-11d4-9434-004095e12fc7" objectId="ec7f8674-f897-4740-a0b0-0c927ec1a822"/>
+  <containedObjects classId="9fcd25a0-4822-11d4-9414-008048da11f9" objectId="421cf7f2-3f0e-437f-8723-49c6f2ceeccf"/>
+  <containedObjects classId="e3687481-0a87-462c-a166-9f34594f9bba" objectId="08859e66-8632-488b-8004-c2fd8becf2f7"/>
+  <containedObjects classId="9de14907-ec23-4a07-96f0-85521cb6b53b" objectId="e1e3dcc4-b3ff-436d-a8c1-9c0a8199556e"/>
+  <containedObjects classId="51f2d5d8-ea4d-4064-8892-82951750031e" objectId="aae4190c-c7b0-4a3b-acef-e86d0f78cd12"/>
+  <containedObjects classId="e68182ea-4237-4383-967f-90c1e3370bc7" objectId="71791bd5-6389-426e-b57e-055db3ddf7b2"/>
+  <containedObjects classId="fb282519-d103-4dd3-bc12-cb271d631dfc" objectId="cfb4ab20-a038-416f-af89-9e79fbf2df96"/>
+  <configurationExtensionCompatibilityMode>8.3.18</configurationExtensionCompatibilityMode>
+  <defaultRunMode>ManagedApplication</defaultRunMode>
+  <usePurposes>MobileDevice</usePurposes>
+  <usedMobileApplicationFunctionalities>
+    <functionality>
+      <use>true</use>
+    </functionality>
+    <functionality>
+      <functionality>OSBackup</functionality>
+      <use>true</use>
+    </functionality>
+  </usedMobileApplicationFunctionalities>
+  <mobileApplicationUrls xsi:type="mdcommon:MobileApplicationUrl">
+    <baseUrl>http://localhost</baseUrl>
+  </mobileApplicationUrls>
+  <mobileApplicationUrls xsi:type="mdcommon:MobileApplicationUrl">
+    <baseUrl></baseUrl>
+  </mobileApplicationUrls>
+  <defaultLanguage>Language.English</defaultLanguage>
+  <dataLockControlMode>Managed</dataLockControlMode>
+  <objectAutonumerationMode>NotAutoFree</objectAutonumerationMode>
+  <modalityUseMode>DontUse</modalityUseMode>
+  <synchronousPlatformExtensionAndAddInCallUseMode>DontUse</synchronousPlatformExtensionAndAddInCallUseMode>
+  <compatibilityMode>8.3.18</compatibilityMode>
+  <languages uuid="e57953f5-ba26-4576-baf4-7e7c549314e9">
+    <name>English</name>
+    <synonym>
+      <key>en</key>
+      <value>English</value>
+    </synonym>
+    <languageCode>en</languageCode>
+  </languages>
+</mdclass:Configuration>
