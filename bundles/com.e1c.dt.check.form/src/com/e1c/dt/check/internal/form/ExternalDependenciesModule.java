@@ -22,7 +22,6 @@ import com._1c.g5.wiring.AbstractServiceAwareModule;
  * External services bindings for plugin.
  *
  * @author Dmitriy Marmyshev
- *
  */
 public class ExternalDependenciesModule
     extends AbstractServiceAwareModule

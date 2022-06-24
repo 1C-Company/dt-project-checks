@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdclass:Catalog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" xmlns:mdclassExtension="http://g5.1c.ru/v8/dt/metadata/mdclass/extension" uuid="607eb94a-d7b7-4c2e-9a44-2d1699a5fbca" extendedConfigurationObject="d364427e-f53e-4d29-a5bc-a6c16d22323b">
+  <producedTypes>
+    <objectType typeId="663831bf-cee4-4367-b43a-57a183e26b5d" valueTypeId="71f171c9-393c-4844-9cd7-9fdb350d73e0"/>
+    <refType typeId="d1650737-1c8c-4e31-b0b5-9d1886225842" valueTypeId="878cdad0-aeeb-4e78-92dd-998934005b9f"/>
+    <selectionType typeId="3fdcf40f-016a-436d-a0a2-53925ea084db" valueTypeId="b968102d-913b-482a-977a-a272ce40dd3d"/>
+    <listType typeId="bca97a80-c44e-42e6-b61c-8bed3f3910cd" valueTypeId="e2c92b1f-06e2-483f-a379-19c2bb2a4229"/>
+    <managerType typeId="9769d03f-3b9f-4dcb-91c6-1109245e08c2" valueTypeId="fab8bb11-ebc9-4d9b-b057-273fb6bfc289"/>
+  </producedTypes>
+  <name>Products</name>
+  <objectBelonging>Adopted</objectBelonging>
+  <extension xsi:type="mdclassExtension:CatalogExtension">
+    <extendedConfigurationObject>Checked</extendedConfigurationObject>
+  </extension>
+  <forms uuid="c748dc45-10a1-4a35-b381-5066637b5d45" extendedConfigurationObject="88699109-2b46-4cb6-9c97-86d10aca9f8f">
+    <name>ItemForm</name>
+    <objectBelonging>Adopted</objectBelonging>
+    <extension xsi:type="mdclassExtension:BasicFormExtension">
+      <extendedConfigurationObject>Checked</extendedConfigurationObject>
+      <form>Extended</form>
+    </extension>
+  </forms>
+  <forms uuid="8bececef-8d3b-4b51-bc2a-8dc4106794bf" extendedConfigurationObject="eca8b70c-5d51-43e7-acff-27dd977593df">
+    <name>ListForm</name>
+    <objectBelonging>Adopted</objectBelonging>
+    <extension xsi:type="mdclassExtension:BasicFormExtension">
+      <extendedConfigurationObject>Checked</extendedConfigurationObject>
+      <form>Extended</form>
+    </extension>
+  </forms>
+</mdclass:Catalog>

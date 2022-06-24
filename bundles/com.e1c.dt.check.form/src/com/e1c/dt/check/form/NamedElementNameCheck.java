@@ -54,7 +54,8 @@ public class NamedElementNameCheck
     @Override
     protected void configureCheck(CheckConfigurer builder)
     {
-        builder.title(Messages.NamedElementNameCheck_title)
+        builder.extension(new SkipBaseFormExtension())
+            .title(Messages.NamedElementNameCheck_title)
             .description(Messages.NamedElementNameCheck_description)
             .complexity(CheckComplexity.NORMAL)
             .severity(IssueSeverity.MAJOR)

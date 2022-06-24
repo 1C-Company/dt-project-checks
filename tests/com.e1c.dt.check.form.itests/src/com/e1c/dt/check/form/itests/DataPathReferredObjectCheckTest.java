@@ -16,6 +16,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.junit.Test;
@@ -28,8 +30,8 @@ import com._1c.g5.v8.dt.form.model.FormField;
 import com._1c.g5.v8.dt.form.model.FormItem;
 import com._1c.g5.v8.dt.form.model.Table;
 import com._1c.g5.v8.dt.validation.marker.Marker;
-import com.e1c.g5.v8.dt.testing.check.SingleProjectReadOnlyCheckTestBase;
 import com.e1c.dt.check.form.DataPathReferredObjectCheck;
+import com.e1c.dt.internal.check.form.itests.SingleProjectWithExtReadOnlyCheckTestBase;
 
 /**
  * Tests for {@link DataPathReferredObjectCheck} check.
@@ -37,12 +39,12 @@ import com.e1c.dt.check.form.DataPathReferredObjectCheck;
  * @author Dmitriy Marmyshev
  */
 public class DataPathReferredObjectCheckTest
-    extends SingleProjectReadOnlyCheckTestBase
+    extends SingleProjectWithExtReadOnlyCheckTestBase
 {
-
     private static final String CHECK_ID = "form-data-path";
 
     private static final String PROJECT_NAME = "FormDataPath";
+    private static final String PROJECT_EXT_NAME = "FormDataPathExt";
 
     private static final String FQN_FORM = "CommonForm.ListForm.Form";
 
@@ -58,13 +60,83 @@ public class DataPathReferredObjectCheckTest
     @Test
     public void testDynamicListFormWithCustomQuery() throws Exception
     {
-        IDtProject dtProject = dtProjectManager.getDtProject(PROJECT_NAME);
-        assertNotNull(dtProject);
+        List.of(PROJECT_NAME, PROJECT_EXT_NAME).forEach(projName -> {
+            IDtProject dtProject = dtProjectManager.getDtProject(projName);
+            assertNotNull(dtProject);
 
-        IBmObject object = getTopObjectByFqn(FQN_FORM, dtProject);
-        assertTrue(object instanceof Form);
-        Form form = (Form)object;
+            IBmObject object = getTopObjectByFqn(FQN_FORM, dtProject);
+            assertTrue(object instanceof Form);
+            Form form = (Form)object;
+            checkDynamicListFormWithCustomQuery(dtProject, form, false);
+            if (form.getBaseForm() != null && !form.getBaseForm().eIsProxy())
+            {
+                checkDynamicListFormWithCustomQuery(dtProject, form.getBaseForm(), true);
+            }
+        });
+    }
 
+    /**
+     * Test the dynamic list form with main table finds data path to unknown field that not exist in the object
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void testListFormWithMainTable() throws Exception
+    {
+        List.of(PROJECT_NAME, PROJECT_EXT_NAME).forEach(projName -> {
+            IDtProject dtProject = dtProjectManager.getDtProject(projName);
+            assertNotNull(dtProject);
+
+            IBmObject object = getTopObjectByFqn(FQN_FORM2, dtProject);
+            assertTrue(object instanceof Form);
+
+            Form form = (Form)object;
+            checkListFormWithMainTableMarkers(dtProject, form, false);
+            if (form.getBaseForm() != null && !form.getBaseForm().eIsProxy())
+            {
+                checkListFormWithMainTableMarkers(dtProject, form.getBaseForm(), true);
+            }
+        });
+    }
+
+    /**
+     * Test the object form finds data path to unknown field that not exist in the object
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void testItemForm() throws Exception
+    {
+        List.of(PROJECT_NAME, PROJECT_EXT_NAME).forEach(projName -> {
+            IDtProject dtProject = dtProjectManager.getDtProject(projName);
+            assertNotNull(dtProject);
+
+            IBmObject object = getTopObjectByFqn(FQN_FORM3, dtProject);
+            assertTrue(object instanceof Form);
+            Form form = (Form)object;
+
+            checkItemFormMarkers(dtProject, form, false);
+            if (form.getBaseForm() != null && !form.getBaseForm().eIsProxy())
+            {
+                checkItemFormMarkers(dtProject, form.getBaseForm(), true);
+            }
+        });
+    }
+
+    @Override
+    protected String getTestConfigurationName()
+    {
+        return PROJECT_NAME;
+    }
+
+    @Override
+    protected String getTestConfigurationExtName()
+    {
+        return PROJECT_EXT_NAME;
+    }
+
+    private void checkDynamicListFormWithCustomQuery(IDtProject dtProject, Form form, boolean isBaseForm)
+    {
         FormItem item = getItemByName(form, "List");
         assertTrue(item instanceof Table);
 
@@ -87,24 +159,18 @@ public class DataPathReferredObjectCheckTest
         dataPath = ((FormField)item).getDataPath();
 
         marker = getFirstMarker(CHECK_ID, dataPath, dtProject);
-        assertNotNull(marker);
+        if (isBaseForm)
+        {
+            assertNull(marker);
+        }
+        else
+        {
+            assertNotNull(marker);
+        }
     }
 
-    /**
-     * Test the dynamic list form with main table finds data path to unknown field that not exist in the object
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void testListFormWithMainTable() throws Exception
+    private void checkListFormWithMainTableMarkers(IDtProject dtProject, Form form, boolean isBaseForm)
     {
-        IDtProject dtProject = dtProjectManager.getDtProject(PROJECT_NAME);
-        assertNotNull(dtProject);
-
-        IBmObject object = getTopObjectByFqn(FQN_FORM2, dtProject);
-        assertTrue(object instanceof Form);
-        Form form = (Form)object;
-
         FormItem item = getItemByName(form, "List");
         assertTrue(item instanceof Table);
 
@@ -148,7 +214,14 @@ public class DataPathReferredObjectCheckTest
         dataPath = ((FormField)item).getDataPath();
 
         marker = getFirstMarker(CHECK_ID, dataPath, dtProject);
-        assertNotNull(marker);
+        if (isBaseForm)
+        {
+            assertNull(marker);
+        }
+        else
+        {
+            assertNotNull(marker);
+        }
 
         item = getItemByName(form, "Current");
         assertTrue(item instanceof FormField);
@@ -164,24 +237,18 @@ public class DataPathReferredObjectCheckTest
         dataPath = ((FormField)item).getDataPath();
 
         marker = getFirstMarker(CHECK_ID, dataPath, dtProject);
-        assertNotNull(marker);
+        if (isBaseForm)
+        {
+            assertNull(marker);
+        }
+        else
+        {
+            assertNotNull(marker);
+        }
     }
 
-    /**
-     * Test the object form finds data path to unknown field that not exist in the object
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void testItemForm() throws Exception
+    private void checkItemFormMarkers(IDtProject dtProject, Form form, boolean isBaseForm)
     {
-        IDtProject dtProject = dtProjectManager.getDtProject(PROJECT_NAME);
-        assertNotNull(dtProject);
-
-        IBmObject object = getTopObjectByFqn(FQN_FORM3, dtProject);
-        assertTrue(object instanceof Form);
-        Form form = (Form)object;
-
         FormItem item = getItemByName(form, "Code");
         assertTrue(item instanceof FormField);
 
@@ -204,13 +271,14 @@ public class DataPathReferredObjectCheckTest
         dataPath = ((FormField)item).getDataPath();
 
         marker = getFirstMarker(CHECK_ID, dataPath, dtProject);
-        assertNotNull(marker);
-    }
-
-    @Override
-    protected String getTestConfigurationName()
-    {
-        return PROJECT_NAME;
+        if (isBaseForm)
+        {
+            assertNull(marker);
+        }
+        else
+        {
+            assertNotNull(marker);
+        }
     }
 
     private FormItem getItemByName(Form form, String name)
@@ -224,7 +292,5 @@ public class DataPathReferredObjectCheckTest
             }
         }
         return null;
-
     }
-
 }
