@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdclass:CommonAttribute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:core="http://g5.1c.ru/v8/dt/mcore" xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" uuid="9b49c8c1-9b1a-454f-afe5-0e474fb13a14">
+  <name>CommonAttribute</name>
+  <synonym>
+    <key>en</key>
+    <value>Common attribute</value>
+  </synonym>
+  <type>
+    <types>String</types>
+    <stringQualifiers>
+      <length>10</length>
+    </stringQualifiers>
+  </type>
+  <minValue xsi:type="core:UndefinedValue"/>
+  <maxValue xsi:type="core:UndefinedValue"/>
+  <dataHistory>Use</dataHistory>
+  <fillValue xsi:type="core:UndefinedValue"/>
+  <content>
+    <metadata>Catalog.Catalog</metadata>
+    <use>Use</use>
+  </content>
+  <content>
+    <metadata>Catalog.Catalog1</metadata>
+    <use>Use</use>
+  </content>
+  <content>
+    <metadata>Catalog.Catalog2</metadata>
+    <use>Use</use>
+  </content>
+  <content>
+    <metadata>Document.Document</metadata>
+    <use>Use</use>
+  </content>
+  <content>
+    <metadata>Document.Document1</metadata>
+    <use>Use</use>
+  </content>
+  <content>
+    <metadata>Document.Document2</metadata>
+    <use>Use</use>
+  </content>
+  <autoUse>DontUse</autoUse>
+  <dataSeparation>DontUse</dataSeparation>
+  <usersSeparation>DontUse</usersSeparation>
+  <authenticationSeparation>DontUse</authenticationSeparation>
+  <configurationExtensionsSeparation>DontUse</configurationExtensionsSeparation>
+  <fullTextSearch>Use</fullTextSearch>
+</mdclass:CommonAttribute>
