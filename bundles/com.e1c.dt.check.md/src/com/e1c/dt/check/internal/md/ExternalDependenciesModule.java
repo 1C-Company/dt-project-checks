@@ -8,11 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
-<<<<<<< HEAD
- *     1C-Soft LLC - initial implementation
-=======
  *     1C-Soft LLC - initial API and implementation
->>>>>>> f317a3edd770771871e5399f4fa35234f4899311
  *******************************************************************************/
 package com.e1c.dt.check.internal.md;
 
