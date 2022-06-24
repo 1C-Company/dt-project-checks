@@ -59,7 +59,9 @@ public class NamedElementNameCheckTest
 
         EObject item = form.getAutoCommandBar();
         Marker marker = getFirstMarker(CHECK_ID, item, dtProject);
-        assertNotNull(marker);
+        // We don't check name of the auto command bar. This name is not provided by configurator on
+        // command bar creation. And there is no way to change this name in UI.
+        assertNull(marker);
     }
 
     @Test
