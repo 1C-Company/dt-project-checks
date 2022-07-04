@@ -67,11 +67,8 @@ public abstract class SingleProjectWithExtReadOnlyCheckTestBase
     /**
      * Gets the name of the test extension configuration
      *
-     * @return The name of the test configuration. Can be {@code null} if there is no extension project
+     * @return The name of the test configuration. Never {@code null}
      */
-    protected String getTestConfigurationExtName()
-    {
-        return null;
-    }
+    protected abstract String getTestConfigurationExtName();
 }
 
