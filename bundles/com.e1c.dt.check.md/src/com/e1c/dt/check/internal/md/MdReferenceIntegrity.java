@@ -207,8 +207,6 @@ public final class MdReferenceIntegrity
     @Override
     public void configureContextCollector(ICheckDefinition definition)
     {
-        definition.markAsCriticalDataIntegrityCheck();
-
         // Added to track all removals/additions of top MD objects
         definition.addCheckedModelObjects(MdClassPackage.Literals.MD_OBJECT, true, Collections.emptySet());
 
