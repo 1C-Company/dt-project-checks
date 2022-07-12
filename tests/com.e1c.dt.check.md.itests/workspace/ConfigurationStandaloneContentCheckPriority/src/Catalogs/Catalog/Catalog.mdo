@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdclass:Catalog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:core="http://g5.1c.ru/v8/dt/mcore" xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" uuid="a7cc32b0-eb8a-49c9-b361-53fa3244c43e">
+  <producedTypes>
+    <objectType typeId="40044632-ccdc-4f95-8393-989e5481e0e9" valueTypeId="e4d97d28-7741-400e-bb10-7c4e034678ac"/>
+    <refType typeId="6c12f87b-80f0-4638-9946-2696eed947dc" valueTypeId="7b2127a1-b897-4652-8eac-848f51946752"/>
+    <selectionType typeId="fa578a01-cabe-40f7-86d9-dda156eb1b5d" valueTypeId="4bde162c-ad17-4310-b04f-8b480597d625"/>
+    <listType typeId="d13ccf58-5a37-4b0b-a38f-d6365f041215" valueTypeId="4b45895f-5144-4a24-96a4-b186607af81c"/>
+    <managerType typeId="58ea801b-f0d0-4c92-94c7-c2004a69abcd" valueTypeId="dc50b98f-b25f-4b08-a3ec-89212fa7362d"/>
+  </producedTypes>
+  <name>Catalog</name>
+  <synonym>
+    <key>en</key>
+    <value>Catalog</value>
+  </synonym>
+  <useStandardCommands>true</useStandardCommands>
+  <inputByString>Catalog.Catalog.StandardAttribute.Code</inputByString>
+  <inputByString>Catalog.Catalog.StandardAttribute.Description</inputByString>
+  <fullTextSearchOnInputByString>DontUse</fullTextSearchOnInputByString>
+  <createOnInput>Use</createOnInput>
+  <dataLockControlMode>Managed</dataLockControlMode>
+  <fullTextSearch>Use</fullTextSearch>
+  <levelCount>2</levelCount>
+  <foldersOnTop>true</foldersOnTop>
+  <codeLength>9</codeLength>
+  <descriptionLength>25</descriptionLength>
+  <codeType>String</codeType>
+  <codeAllowedLength>Variable</codeAllowedLength>
+  <checkUnique>true</checkUnique>
+  <autonumbering>true</autonumbering>
+  <defaultPresentation>AsDescription</defaultPresentation>
+  <editType>InDialog</editType>
+  <choiceMode>BothWays</choiceMode>
+  <defaultObjectForm>Catalog.Catalog.Form.ItemForm</defaultObjectForm>
+  <defaultListForm>Catalog.Catalog.Form.ItemForm1</defaultListForm>
+  <attributes uuid="3638290d-c5ed-4dbf-9646-c1af78e7251c">
+    <name>Attribute</name>
+    <synonym>
+      <key>en</key>
+      <value>Attribute</value>
+    </synonym>
+    <type>
+      <types>String</types>
+      <stringQualifiers>
+        <length>10</length>
+      </stringQualifiers>
+    </type>
+    <minValue xsi:type="core:UndefinedValue"/>
+    <maxValue xsi:type="core:UndefinedValue"/>
+    <fillValue xsi:type="core:UndefinedValue"/>
+    <fullTextSearch>Use</fullTextSearch>
+    <dataHistory>Use</dataHistory>
+  </attributes>
+  <tabularSections uuid="4843c604-7899-43c1-a24f-3b213b8bbcd8">
+    <producedTypes>
+      <objectType typeId="75f1096a-1043-47e7-86f0-2ce31f10c89d" valueTypeId="0ccd46a7-4a16-4aeb-8a40-6179b8eceb88"/>
+      <rowType typeId="b2e0f1e6-3f24-4526-8b80-d3df73cc12ca" valueTypeId="2c6e4c35-4ba3-44e9-845e-f8d809a0c62f"/>
+    </producedTypes>
+    <name>TabularSection</name>
+    <synonym>
+      <key>en</key>
+      <value>Tabular section</value>
+    </synonym>
+    <attributes uuid="c12b2127-6723-4ee6-9ba6-18d3041f3fab">
+      <name>Attribute</name>
+      <synonym>
+        <key>en</key>
+        <value>Attribute</value>
+      </synonym>
+      <type>
+        <types>String</types>
+        <stringQualifiers>
+          <length>10</length>
+        </stringQualifiers>
+      </type>
+      <minValue xsi:type="core:UndefinedValue"/>
+      <maxValue xsi:type="core:UndefinedValue"/>
+      <dataHistory>Use</dataHistory>
+      <fullTextSearch>Use</fullTextSearch>
+    </attributes>
+  </tabularSections>
+  <forms uuid="b5861171-d18c-4d0f-9af8-cd5fe96af56f">
+    <name>ItemForm</name>
+    <synonym>
+      <key>en</key>
+      <value>Item form</value>
+    </synonym>
+    <usePurposes>PersonalComputer</usePurposes>
+    <usePurposes>MobileDevice</usePurposes>
+  </forms>
+  <forms uuid="8f5dcc8c-6290-47d9-876f-10157be71df0">
+    <name>ItemForm1</name>
+    <synonym>
+      <key>en</key>
+      <value>Item form1</value>
+    </synonym>
+    <usePurposes>PersonalComputer</usePurposes>
+    <usePurposes>MobileDevice</usePurposes>
+  </forms>
+  <commands uuid="a8a25f8a-e1b7-4a22-856d-50db8cfd7d2a">
+    <name>Command</name>
+    <synonym>
+      <key>en</key>
+      <value>Command</value>
+    </synonym>
+    <group>ActionsPanelTools</group>
+    <representation>Auto</representation>
+  </commands>
+  <commands uuid="ff33b693-27de-474b-8698-89764c606299">
+    <name>Command1</name>
+    <synonym>
+      <key>en</key>
+      <value>Command1</value>
+    </synonym>
+    <group>ActionsPanelTools</group>
+    <representation>Auto</representation>
+  </commands>
+</mdclass:Catalog>

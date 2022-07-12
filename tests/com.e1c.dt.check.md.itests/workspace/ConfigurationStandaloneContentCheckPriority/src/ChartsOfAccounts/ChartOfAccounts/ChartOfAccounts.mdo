@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdclass:ChartOfAccounts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:core="http://g5.1c.ru/v8/dt/mcore" xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" uuid="560adb02-615b-478e-af2b-dea3b2ac046c">
+  <producedTypes>
+    <objectType typeId="4189f5d2-b831-409b-9f35-b341ac35f1ef" valueTypeId="1df4b9de-c466-4230-97b4-b47f5058d5b6"/>
+    <refType typeId="bc59d312-c562-4133-b311-040cc509a660" valueTypeId="8a5fd519-1e43-45d6-b02f-98ec6c51b4bd"/>
+    <selectionType typeId="a3a4ec38-3a36-43fe-9b6d-15b90220c7d2" valueTypeId="87bcd008-8c31-4bfe-aca3-b8bdd0505df6"/>
+    <listType typeId="935ca8df-d093-4738-bff0-fc7cc122f57f" valueTypeId="a59bfae7-7a87-4470-819b-406c0b693433"/>
+    <managerType typeId="86b482df-3acb-4779-939e-6ae40e4b39a2" valueTypeId="664e348d-e369-4e8b-b9c1-ff4c0907b711"/>
+    <extDimensionTypes typeId="8892210c-7afd-49b3-9633-be1958509ec9" valueTypeId="ec376277-e95d-4ea5-ab53-c02b2f5fe2d2"/>
+    <extDimensionTypesRow typeId="f7cf1301-e2c6-4754-8f07-ee1fa1ded155" valueTypeId="cc18fa95-7930-4422-8c48-23b4054800f5"/>
+  </producedTypes>
+  <name>ChartOfAccounts</name>
+  <synonym>
+    <key>en</key>
+    <value>Chart of accounts</value>
+  </synonym>
+  <useStandardCommands>true</useStandardCommands>
+  <inputByString>ChartOfAccounts.ChartOfAccounts.StandardAttribute.Code</inputByString>
+  <inputByString>ChartOfAccounts.ChartOfAccounts.StandardAttribute.Description</inputByString>
+  <fullTextSearchOnInputByString>DontUse</fullTextSearchOnInputByString>
+  <createOnInput>DontUse</createOnInput>
+  <dataLockControlMode>Managed</dataLockControlMode>
+  <fullTextSearch>Use</fullTextSearch>
+  <codeLength>9</codeLength>
+  <descriptionLength>25</descriptionLength>
+  <checkUnique>true</checkUnique>
+  <editType>InDialog</editType>
+  <choiceMode>BothWays</choiceMode>
+  <defaultObjectForm>ChartOfAccounts.ChartOfAccounts.Form.ItemForm</defaultObjectForm>
+  <attributes uuid="cb5511c8-643b-4d59-bbce-dda3454be827">
+    <name>Attribute</name>
+    <synonym>
+      <key>en</key>
+      <value>Attribute</value>
+    </synonym>
+    <type>
+      <types>String</types>
+      <stringQualifiers>
+        <length>10</length>
+      </stringQualifiers>
+    </type>
+    <minValue xsi:type="core:UndefinedValue"/>
+    <maxValue xsi:type="core:UndefinedValue"/>
+    <fillValue xsi:type="core:UndefinedValue"/>
+    <fullTextSearch>Use</fullTextSearch>
+    <dataHistory>Use</dataHistory>
+  </attributes>
+  <tabularSections uuid="b8d48a60-5843-4832-b62f-62b67303971d">
+    <producedTypes>
+      <objectType typeId="972a5b28-dff8-4870-bb7a-8e75132a8580" valueTypeId="aa513d84-d7a4-4df3-ab1a-31dee1f6bf0b"/>
+      <rowType typeId="bba4aad1-eb14-4d76-9441-23b2594bab66" valueTypeId="d27fd65e-7ef1-4951-9793-f6247f3b400d"/>
+    </producedTypes>
+    <name>TabularSection</name>
+    <synonym>
+      <key>en</key>
+      <value>Tabular section</value>
+    </synonym>
+    <attributes uuid="fb2ac2f5-d1ba-4052-ba59-2d66d2ecb48d">
+      <name>Attribute</name>
+      <synonym>
+        <key>en</key>
+        <value>Attribute</value>
+      </synonym>
+      <type>
+        <types>String</types>
+        <stringQualifiers>
+          <length>10</length>
+        </stringQualifiers>
+      </type>
+      <minValue xsi:type="core:UndefinedValue"/>
+      <maxValue xsi:type="core:UndefinedValue"/>
+      <dataHistory>Use</dataHistory>
+      <fullTextSearch>Use</fullTextSearch>
+    </attributes>
+  </tabularSections>
+  <forms uuid="1577d5d0-6e58-447c-adce-eb747d200303">
+    <name>ItemForm</name>
+    <synonym>
+      <key>en</key>
+      <value>Item form</value>
+    </synonym>
+    <usePurposes>PersonalComputer</usePurposes>
+    <usePurposes>MobileDevice</usePurposes>
+  </forms>
+  <commands uuid="d36dc437-7e4a-4044-a608-afc134db1756">
+    <name>Command</name>
+    <synonym>
+      <key>en</key>
+      <value>Command</value>
+    </synonym>
+    <group>ActionsPanelTools</group>
+    <representation>Auto</representation>
+  </commands>
+</mdclass:ChartOfAccounts>

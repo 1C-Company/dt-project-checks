@@ -24,22 +24,34 @@
  
       <check
           category="com.e1c.dt.check.md"
-          class="com.e1c.dt.check.internal.md.ExecutableExtensionFactory:com.e1c.dt.check.md.ConfigurationCompatibilityModeCheck">
+          class="com.e1c.dt.check.internal.md.ExecutableExtensionFactory:com.e1c.dt.check.internal.md.check.ConfigurationCompatibilityModeCheck">
       </check>
       
       <check
           category="com.e1c.dt.check.md"
-          class="com.e1c.dt.check.internal.md.ExecutableExtensionFactory:com.e1c.dt.check.md.ConfigurationUsedMobileApplicationFunctionalitiesCheck">
+          class="com.e1c.dt.check.internal.md.ExecutableExtensionFactory:com.e1c.dt.check.internal.md.check.ConfigurationUsedMobileApplicationFunctionalitiesCheck">
       </check>
       
       <check
           category="com.e1c.dt.check.md"
-          class="com.e1c.dt.check.internal.md.ExecutableExtensionFactory:com.e1c.dt.check.md.ConfigurationMobileApplicationUrlsCheck">
+          class="com.e1c.dt.check.internal.md.ExecutableExtensionFactory:com.e1c.dt.check.internal.md.check.ConfigurationMobileApplicationUrlsCheck">
       </check>
       
       <check
           category="com.e1c.dt.check.md"
-          class="com.e1c.dt.check.internal.md.MdReferenceIntegrity">
-      </check>            
+          class="com.e1c.dt.check.internal.md.check.MdReferenceIntegrity">
+      </check>
+      
+      <check
+          category="com.e1c.dt.check.md"
+          class="com.e1c.dt.check.internal.md.ExecutableExtensionFactory:com.e1c.dt.check.internal.md.check.ConfigurationStandaloneContentCheck">
+      </check>
+                  
     </extension>
+    
+    <extension point="com.e1c.g5.v8.dt.check.fixes">
+        <fix
+            class="com.e1c.dt.check.internal.md.fix.ConfigurationStandaloneContentFix">
+        </fix>
+   </extension>
 </plugin>

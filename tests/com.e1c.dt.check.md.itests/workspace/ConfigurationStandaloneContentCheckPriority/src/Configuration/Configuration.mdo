@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdclass:Configuration xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" uuid="ded273e2-1b8f-487c-b493-133cfe6299b8">
+  <name>ConfigurationStandaloneContentCheckPriority</name>
+  <synonym>
+    <key>en</key>
+    <value>Configuration standalone content check priority</value>
+  </synonym>
+  <containedObjects classId="9cd510cd-abfc-11d4-9434-004095e12fc7" objectId="a46249e8-b601-4cd5-af68-77b05472b86d"/>
+  <containedObjects classId="9fcd25a0-4822-11d4-9414-008048da11f9" objectId="764d1ff6-4449-44ae-8660-b62096fe16ba"/>
+  <containedObjects classId="e3687481-0a87-462c-a166-9f34594f9bba" objectId="fe885114-365b-4591-b528-d0a986d892ec"/>
+  <containedObjects classId="9de14907-ec23-4a07-96f0-85521cb6b53b" objectId="8fbfb0f7-22d8-4967-9cab-4c6f098240a3"/>
+  <containedObjects classId="51f2d5d8-ea4d-4064-8892-82951750031e" objectId="d1834c40-7716-48bf-9658-c196e4cc2625"/>
+  <containedObjects classId="e68182ea-4237-4383-967f-90c1e3370bc7" objectId="8837f1e7-a7b5-4d6d-82be-b3f0cc8495b2"/>
+  <containedObjects classId="fb282519-d103-4dd3-bc12-cb271d631dfc" objectId="03a3c891-4ac0-4c3e-b8ca-a81d2a5dadcb"/>
+  <configurationExtensionCompatibilityMode>8.3.21</configurationExtensionCompatibilityMode>
+  <defaultRunMode>ManagedApplication</defaultRunMode>
+  <usePurposes>PersonalComputer</usePurposes>
+  <usedMobileApplicationFunctionalities>
+    <functionality>
+      <use>true</use>
+    </functionality>
+    <functionality>
+      <functionality>OSBackup</functionality>
+      <use>true</use>
+    </functionality>
+  </usedMobileApplicationFunctionalities>
+  <defaultLanguage>Language.English</defaultLanguage>
+  <dataLockControlMode>Managed</dataLockControlMode>
+  <objectAutonumerationMode>NotAutoFree</objectAutonumerationMode>
+  <modalityUseMode>DontUse</modalityUseMode>
+  <synchronousPlatformExtensionAndAddInCallUseMode>DontUse</synchronousPlatformExtensionAndAddInCallUseMode>
+  <compatibilityMode>8.3.21</compatibilityMode>
+  <languages uuid="9bdb9444-9299-426e-9c0a-b85b773cb371">
+    <name>English</name>
+    <synonym>
+      <key>en</key>
+      <value>English</value>
+    </synonym>
+    <languageCode>en</languageCode>
+  </languages>
+  <commonCommands>CommonCommand.CommonCommand</commonCommands>
+  <commandGroups>CommandGroup.CommandGroup</commandGroups>
+  <commonForms>CommonForm.Form</commonForms>
+  <catalogs>Catalog.Catalog</catalogs>
+  <catalogs>Catalog.Catalog1</catalogs>
+  <chartsOfAccounts>ChartOfAccounts.ChartOfAccounts</chartsOfAccounts>
+</mdclass:Configuration>

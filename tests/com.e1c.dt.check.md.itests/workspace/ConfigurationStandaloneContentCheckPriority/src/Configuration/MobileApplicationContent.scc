@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scc:StandaloneContent xmlns:scc="http://g5.1c.ru/v8/dt/scc">
+  <usedItem metadata="CommonForm.Form"/>
+  <usedItem metadata="CommonCommand.CommonCommand"/>
+  <usedItem metadata="CommandGroup.CommandGroup"/>
+  <usedItem metadata="Catalog.Catalog"/>
+  <unusedItem metadata="Catalog.Catalog.Command.Command1"/>
+  <unusedItem metadata="Catalog.Catalog.Form.ItemForm1"/>
+  <priorityItem metadata="CommonForm.Form" priority="MainServer"/>
+  <priorityItem metadata="CommonCommand.CommonCommand" priority="MainServer"/>
+  <priorityItem metadata="CommandGroup.CommandGroup" priority="MainServer"/>
+  <priorityItem metadata="Catalog.Catalog.Form.ItemForm" priority="LocalServer"/>
+  <priorityItem metadata="Catalog.Catalog.Command.Command" priority="LocalServer"/>
+  <priorityItem metadata="Catalog.Catalog.Form.ItemForm1" priority="LocalServer"/>
+  <priorityItem metadata="Catalog.Catalog.Command.Command1" priority="LocalServer"/>
+  <priorityItem metadata="Catalog.Catalog.Attribute.Attribute"/>
+  <priorityItem metadata="Catalog.Catalog.TabularSection.TabularSection.Attribute.Attribute"/>
+  <priorityItem metadata="Catalog.Catalog" priority="MainServer"/>
+  <priorityItem metadata="Catalog.Catalog1" priority="MainServer"/>
+  <priorityItem metadata="Catalog.Catalog1.Form.ItemForm" priority="LocalServer"/>
+</scc:StandaloneContent>
