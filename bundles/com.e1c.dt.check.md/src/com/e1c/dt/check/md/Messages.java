@@ -37,6 +37,9 @@ import org.eclipse.osgi.util.NLS;
     public static String ConfigurationMobileApplicationUrlsCheck_Description;
     public static String ConfigurationMobileApplicationUrlsCheck_Empty_base_url;
 
+    public static String ConfigurationStandaloneContentCheck_Title;
+    public static String ConfigurationStandaloneContentCheck_Description;
+
     static
     {
         // initialize resource bundle

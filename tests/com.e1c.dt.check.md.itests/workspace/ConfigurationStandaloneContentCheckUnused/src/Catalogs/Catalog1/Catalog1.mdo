@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdclass:Catalog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:core="http://g5.1c.ru/v8/dt/mcore" xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" uuid="00349002-f4d8-4235-bf58-ef0251bdddf7">
+  <producedTypes>
+    <objectType typeId="009cb253-d043-474c-8aed-fc39ec658b10" valueTypeId="397c52d3-051f-404e-ba10-d3e1b673cff9"/>
+    <refType typeId="0749c7d5-020d-47fa-b294-79e43467eb88" valueTypeId="733cafd5-4835-436e-99c8-91c930843e34"/>
+    <selectionType typeId="7613911a-e5de-4ae1-a8a0-1fa3b3fe2d9e" valueTypeId="b374cd98-22ba-4207-85cc-5c3cc4236178"/>
+    <listType typeId="a8627c24-7287-4640-a65c-f7dd4f51b9df" valueTypeId="c2836f5d-75bd-40dd-ac82-44229a569c60"/>
+    <managerType typeId="7a24678b-ae30-4706-8d12-e1023ae9db07" valueTypeId="2d01cbeb-0b5e-4a39-ae30-86727ac5aaa4"/>
+  </producedTypes>
+  <name>Catalog1</name>
+  <synonym>
+    <key>en</key>
+    <value>Catalog1</value>
+  </synonym>
+  <useStandardCommands>true</useStandardCommands>
+  <inputByString>Catalog.Catalog1.StandardAttribute.Code</inputByString>
+  <inputByString>Catalog.Catalog1.StandardAttribute.Description</inputByString>
+  <fullTextSearchOnInputByString>DontUse</fullTextSearchOnInputByString>
+  <createOnInput>Use</createOnInput>
+  <dataLockControlMode>Managed</dataLockControlMode>
+  <fullTextSearch>Use</fullTextSearch>
+  <levelCount>2</levelCount>
+  <foldersOnTop>true</foldersOnTop>
+  <codeLength>9</codeLength>
+  <descriptionLength>25</descriptionLength>
+  <codeType>String</codeType>
+  <codeAllowedLength>Variable</codeAllowedLength>
+  <checkUnique>true</checkUnique>
+  <autonumbering>true</autonumbering>
+  <defaultPresentation>AsDescription</defaultPresentation>
+  <editType>InDialog</editType>
+  <choiceMode>BothWays</choiceMode>
+  <attributes uuid="aaae6217-fd9f-44c9-ac7c-523d94ea0d9a">
+    <name>Attribute</name>
+    <synonym>
+      <key>en</key>
+      <value>Attribute</value>
+    </synonym>
+    <type>
+      <types>String</types>
+      <stringQualifiers>
+        <length>10</length>
+      </stringQualifiers>
+    </type>
+    <minValue xsi:type="core:UndefinedValue"/>
+    <maxValue xsi:type="core:UndefinedValue"/>
+    <fillValue xsi:type="core:UndefinedValue"/>
+    <fullTextSearch>Use</fullTextSearch>
+    <dataHistory>Use</dataHistory>
+  </attributes>
+  <tabularSections uuid="1034f3e8-f60f-4c0c-b7be-2101a60e2614">
+    <producedTypes>
+      <objectType typeId="8241fede-e7f3-443d-b5e6-95dae94bf9f3" valueTypeId="fd10b7c3-8804-45d6-b085-35aacabacce8"/>
+      <rowType typeId="6314872e-116e-4cb6-b8df-859644429156" valueTypeId="ee33b468-cad0-42aa-9987-548f674f5f0a"/>
+    </producedTypes>
+    <name>TabularSection</name>
+    <synonym>
+      <key>en</key>
+      <value>Tabular section</value>
+    </synonym>
+    <attributes uuid="79f2cd70-e96c-422c-8ddd-6b2769a64951">
+      <name>Attribute</name>
+      <synonym>
+        <key>en</key>
+        <value>Attribute</value>
+      </synonym>
+      <type>
+        <types>String</types>
+        <stringQualifiers>
+          <length>10</length>
+        </stringQualifiers>
+      </type>
+      <minValue xsi:type="core:UndefinedValue"/>
+      <maxValue xsi:type="core:UndefinedValue"/>
+      <dataHistory>Use</dataHistory>
+      <fullTextSearch>Use</fullTextSearch>
+    </attributes>
+  </tabularSections>
+</mdclass:Catalog>
