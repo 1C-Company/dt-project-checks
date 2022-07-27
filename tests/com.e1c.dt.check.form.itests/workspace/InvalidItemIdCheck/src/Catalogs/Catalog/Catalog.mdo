@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdclass:Catalog xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" uuid="791a0a7c-4925-4a79-820d-477c3d1b0cc3">
+  <producedTypes>
+    <objectType typeId="4c70d19b-f735-40ee-9610-5a2e80d2d089" valueTypeId="69088e08-9dd8-4a57-a6d5-f6de97f74fc9"/>
+    <refType typeId="60d29cd1-e8e8-4872-a654-5fd8ab6b6631" valueTypeId="0f192a6f-2ea4-4244-af7b-c984b08972a7"/>
+    <selectionType typeId="a5209f3f-c8d9-4f5d-a886-896a28a96d6b" valueTypeId="7ce040fc-5d63-418d-9ac1-720c764e03c6"/>
+    <listType typeId="bf9ea5ab-df4a-4f40-8fbe-83bf6f22528e" valueTypeId="7fe41a19-3a35-43f3-915c-5ef91a0acab6"/>
+    <managerType typeId="3bfaa1a0-de0d-4b85-bb0b-856d9b0f628e" valueTypeId="d7b7ea86-4553-4474-81f2-a3c2722befa2"/>
+  </producedTypes>
+  <name>Catalog</name>
+  <synonym>
+    <key>en</key>
+    <value>Catalog</value>
+  </synonym>
+  <useStandardCommands>true</useStandardCommands>
+  <inputByString>Catalog.Catalog.StandardAttribute.Code</inputByString>
+  <inputByString>Catalog.Catalog.StandardAttribute.Description</inputByString>
+  <fullTextSearchOnInputByString>DontUse</fullTextSearchOnInputByString>
+  <createOnInput>Use</createOnInput>
+  <dataLockControlMode>Managed</dataLockControlMode>
+  <fullTextSearch>Use</fullTextSearch>
+  <levelCount>2</levelCount>
+  <foldersOnTop>true</foldersOnTop>
+  <codeLength>9</codeLength>
+  <descriptionLength>25</descriptionLength>
+  <codeType>String</codeType>
+  <codeAllowedLength>Variable</codeAllowedLength>
+  <checkUnique>true</checkUnique>
+  <autonumbering>true</autonumbering>
+  <defaultPresentation>AsDescription</defaultPresentation>
+  <editType>InDialog</editType>
+  <choiceMode>BothWays</choiceMode>
+  <defaultListForm>Catalog.Catalog.Form.DefaultListForm</defaultListForm>
+  <forms uuid="422802cd-dc20-44ff-8a11-4cff76f22de2">
+    <name>Id0ImmediateChild</name>
+    <synonym>
+      <key>en</key>
+      <value>Id0 immediate child</value>
+    </synonym>
+    <usePurposes>PersonalComputer</usePurposes>
+    <usePurposes>MobileDevice</usePurposes>
+  </forms>
+  <forms uuid="c05ad545-6b74-402a-9f29-2a6bcddf95d9">
+    <name>Id0NestedChild</name>
+    <synonym>
+      <key>en</key>
+      <value>Id0 nested child</value>
+    </synonym>
+    <usePurposes>PersonalComputer</usePurposes>
+    <usePurposes>MobileDevice</usePurposes>
+  </forms>
+  <forms uuid="c9bb2384-e511-4914-9007-e99eb50cf55f">
+    <name>NegativeId</name>
+    <synonym>
+      <key>en</key>
+      <value>Negative id</value>
+    </synonym>
+    <usePurposes>PersonalComputer</usePurposes>
+    <usePurposes>MobileDevice</usePurposes>
+  </forms>
+  <forms uuid="19e0c008-0c74-4fdd-b808-4b53331a81c8">
+    <name>MissingId</name>
+    <synonym>
+      <key>en</key>
+      <value>Missing id</value>
+    </synonym>
+    <usePurposes>PersonalComputer</usePurposes>
+    <usePurposes>MobileDevice</usePurposes>
+  </forms>
+  <forms uuid="9df9c9df-767e-4fbd-9fbc-e5eeccd350ea">
+    <name>MissingIdMultiple</name>
+    <synonym>
+      <key>en</key>
+      <value>Missing id multiple</value>
+    </synonym>
+    <usePurposes>PersonalComputer</usePurposes>
+    <usePurposes>MobileDevice</usePurposes>
+  </forms>
+  <forms uuid="a0fbf755-779a-4c23-8af7-ff26ebf447a6">
+    <name>DefaultListForm</name>
+    <synonym>
+      <key>en</key>
+      <value>Default list form</value>
+    </synonym>
+    <usePurposes>PersonalComputer</usePurposes>
+    <usePurposes>MobileDevice</usePurposes>
+  </forms>
+</mdclass:Catalog>

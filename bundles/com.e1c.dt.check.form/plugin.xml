@@ -30,6 +30,10 @@
             category="com.e1c.dt.check.form"
             class="com.e1c.dt.check.internal.form.ExecutableExtensionFactory:com.e1c.dt.check.form.NamedElementNameCheck">
       </check>
+      <check
+            category="com.e1c.dt.check.form"
+            class="com.e1c.dt.check.internal.form.ExecutableExtensionFactory:com.e1c.dt.check.form.InvalidItemIdCheck">
+      </check>
    </extension>
    <extension
          point="com.e1c.g5.v8.dt.check.fixes">
@@ -37,5 +41,9 @@
             class="com.e1c.dt.check.internal.form.fix.DataPathRemoveFix">
       </fix>
    </extension>
-
+    <extension point="org.eclipse.ui.trace.traceComponents">
+        <component id="com.e1c.dt.check.form.component" label="%traceComponentLabel">
+            <bundle consumed="true" name="com.e1c.dt.check.form"></bundle>
+        </component>
+    </extension>
 </plugin>
