@@ -16,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -149,6 +150,27 @@ public class InvalidItemIdCheckTest
             filterByType(markers.stream(), BmObjectMarker.class).map(marker -> marker.getObjectId())
                 .distinct()
                 .count());
+    }
+
+    /**
+     * Test that when Form`s child items have duplicate identifiers then each duplicated item except the first one
+     * has a marker.
+     *
+     * @throws Exception When first duplicated element has a marker
+     * or some of the consequent elements do not have a marker.
+     */
+    @Test
+    public void testDuplicateIdCausesIssue() throws Exception
+    {
+        int duplicateElementsCount = 3;
+        IBmObject form = getTopObjectByFqn("Catalog.Catalog.Form.BadMerge.Form", getProject());
+        FormField user1Field = (FormField)findChildByName(form, "DescriptionByUser1");
+        Marker[] originalMarkers = markerManager.getNestedMarkers(getWorkspaceProject().get(), user1Field.bmGetId());
+        assertEquals("Should be no markers on first/original field", 0, originalMarkers.length);
+        FormField user2Field = (FormField)findChildByName(form, "DescriptionByUser2");
+        Marker[] duplicateMarkers = markerManager.getNestedMarkers(getWorkspaceProject().get(), user2Field.bmGetId());
+        assertEquals("Each duplicated field should have a marker", duplicateElementsCount, duplicateMarkers.length);
+        Arrays.stream(duplicateMarkers).forEach(marker -> assertMarkerIsCorrect(Optional.of(marker)));
     }
 
     @Override

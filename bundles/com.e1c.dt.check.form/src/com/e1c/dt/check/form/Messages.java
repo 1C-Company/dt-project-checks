@@ -31,6 +31,7 @@ final class Messages
     public static String NamedElementNameCheck_Form_named_element_name_is_empty;
     public static String NamedElementNameCheck_title;
     public static String InvalidItemIdCheck_description;
+    public static String InvalidItemIdCheck_DuplicateValueOfIdAttribute;
     public static String InvalidItemIdCheck_InvalidValueOfIdAttribute;
     public static String InvalidItemIdCheck_title;
     static

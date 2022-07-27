@@ -85,4 +85,13 @@
     <usePurposes>PersonalComputer</usePurposes>
     <usePurposes>MobileDevice</usePurposes>
   </forms>
+  <forms uuid="d2deae20-7bc5-423c-a379-35d85ddc85c8">
+    <name>BadMerge</name>
+    <synonym>
+      <key>en</key>
+      <value>Bad merge</value>
+    </synonym>
+    <usePurposes>PersonalComputer</usePurposes>
+    <usePurposes>MobileDevice</usePurposes>
+  </forms>
 </mdclass:Catalog>

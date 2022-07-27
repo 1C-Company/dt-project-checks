@@ -6,6 +6,10 @@ package com.e1c.dt.check.form;
 import static com._1c.g5.v8.dt.form.model.FormPackage.Literals.FORM;
 import static com._1c.g5.v8.dt.form.model.FormPackage.Literals.FORM_ITEM__ID;
 
+import java.text.MessageFormat;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
@@ -85,6 +89,7 @@ public class InvalidItemIdCheck
                 .forEach(attribute -> CorePlugin.trace(DEBUG_OPTION, "Got form attribute: id={0}, class={1}", //$NON-NLS-1$
                     attribute.getId(), attribute.getClass()));
         }
+        Set<Integer> seenIdentifiers = new HashSet<>();
         for (FormItemIterator iterator = new FormItemIterator(form); iterator.hasNext();)
         {
             if (progressMonitor.isCanceled())
@@ -94,7 +99,19 @@ public class InvalidItemIdCheck
             }
             FormItem item = iterator.next();
             CorePlugin.trace(DEBUG_OPTION, "Got form item: id={0}, class={1}", item.getId(), item.getClass()); //$NON-NLS-1$
-            if (!hasValidId(item))
+            if (hasValidId(item))
+            {
+                boolean isUniqueId = seenIdentifiers.add(item.getId());
+                if (!isUniqueId)
+                {
+                    CorePlugin.trace(DEBUG_OPTION, "Form item has a duplicate identifier: id={0}, item={1}, seen={2}", //$NON-NLS-1$
+                        item.getId(), item, seenIdentifiers);
+                    resultAcceptor.addIssue(
+                        MessageFormat.format(Messages.InvalidItemIdCheck_DuplicateValueOfIdAttribute, item.getId()),
+                        item, FORM_ITEM__ID);
+                }
+            }
+            else
             {
                 CorePlugin.trace(DEBUG_OPTION, "Form item has an invalid identifier: id={0}, item={1}", item.getId(), //$NON-NLS-1$
                     item);
