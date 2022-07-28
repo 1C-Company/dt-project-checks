@@ -20,6 +20,7 @@ import com.e1c.dt.check.internal.form.CorePlugin;
 import com.e1c.g5.v8.dt.check.CheckComplexity;
 import com.e1c.g5.v8.dt.check.ICheckParameters;
 import com.e1c.g5.v8.dt.check.components.BasicCheck;
+import com.e1c.g5.v8.dt.check.components.TopObjectFilterExtension;
 import com.e1c.g5.v8.dt.check.settings.IssueSeverity;
 import com.e1c.g5.v8.dt.check.settings.IssueType;
 
@@ -60,8 +61,8 @@ public class InvalidItemIdCheck
     @Override
     protected void configureCheck(CheckConfigurer configurationBuilder)
     {
-        // TODO: Verify which common extensions should be used.
         configurationBuilder.extension(new SkipBaseFormExtension())
+            .extension(new TopObjectFilterExtension())
             .title(Messages.InvalidItemIdCheck_title)
             .description(Messages.InvalidItemIdCheck_description)
             .complexity(CheckComplexity.NORMAL)
