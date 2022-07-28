@@ -147,7 +147,10 @@ public class InvalidItemIdCheckTest
             .collect(Collectors.toList());
         assertEquals("Markers count", brokenElementsCount, markers.size());
         assertEquals("Not all markers target their own object", brokenElementsCount,
-            filterByType(markers.stream(), BmObjectMarker.class).map(marker -> marker.getObjectId())
+            markers.stream()
+                .filter(BmObjectMarker.class::isInstance)
+                .map(BmObjectMarker.class::cast)
+                .map(marker -> marker.getObjectId())
                 .distinct()
                 .count());
     }
