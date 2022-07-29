@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2021, 1C-Soft LLC and others.
+ * Copyright (C) 2022, 1C-Soft LLC and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -18,19 +18,30 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.Spliterators;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
+import org.eclipse.core.resources.IProject;
 import org.junit.Test;
 
 import com._1c.g5.v8.bm.core.IBmObject;
 import com._1c.g5.v8.dt.common.StringUtils;
+import com._1c.g5.v8.dt.core.platform.IDtProject;
 import com._1c.g5.v8.dt.form.model.FormField;
+import com._1c.g5.v8.dt.mcore.NamedElement;
 import com._1c.g5.v8.dt.validation.marker.BmObjectMarker;
 import com._1c.g5.v8.dt.validation.marker.Marker;
 import com._1c.g5.v8.dt.validation.marker.MarkerSeverity;
 import com.e1c.dt.check.form.InvalidItemIdCheck;
 import com.e1c.g5.v8.dt.testing.check.SingleProjectReadOnlyCheckTestBase;
+import com.google.common.base.Preconditions;
 
 /**
  * Tests for {@link InvalidItemIdCheck} check.
@@ -210,6 +221,130 @@ public class InvalidItemIdCheckTest
         assertFalse("Message is blank", StringUtils.isBlank(marker.getMessage()));
         assertEquals("Target feature is not identifier",
             com._1c.g5.v8.dt.form.model.FormPackage.Literals.FORM_ITEM__ID.getFeatureID(), marker.getFeatureId());
+    }
+
+    /**
+     * Finds first child with the specified name.
+     *
+     * <p/>
+     * Usage:
+     * <pre><code>
+     * IBmObject form = getTopObjectByFqn("Catalog.Catalog1.Form.Form1.Form", project);
+     * FormField field1 = (FormField)findChildByName(form, "Field1");
+     * </code></pre>
+     *
+     * @param parent Parent where to search child with the specified name. Must not be {@code null}.
+     * @param name Name of the child to search for. May be {@code null}.
+     * @return Child item with the specified name. Never {@code null}.
+     * @throws NoSuchElementException if child with the specified name does not exist.
+     */
+    private NamedElement findChildByName(IBmObject parent, String name)
+    {
+        Preconditions.checkNotNull(parent, "parent"); //$NON-NLS-1$
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(parent.eAllContents(), 0), false)
+            .filter(NamedElement.class::isInstance)
+            .map(NamedElement.class::cast)
+            .filter(v -> Objects.equals(name, v.getName()))
+            .findFirst()
+            .orElseThrow(() -> new NoSuchElementException(String.valueOf(name)));
+    }
+
+    /**
+     * Creates stream of all validation markers for the specified project.
+     *
+     * @param project Project to get markers from. Must not be {@code null}.
+     * @return Stream of all markers from the specified project. Never {@code null}.
+     */
+    private Stream<Marker> streamAllMarkers(IProject project)
+    {
+        Preconditions.checkNotNull(project, "project"); //$NON-NLS-1$
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(markerManager.iterator(project), 0), false);
+    }
+
+    /**
+     * Tests if a marker corresponds to the specified form.
+     *
+     * When issue is added to an element of a form then
+     * <ul>
+     * <li>{@link Marker#getSourceObjectId()} points to whole form
+     * via {@link com._1c.g5.v8.bm.core.Form#bmGetId()}
+     * <li>and {@link BmObjectMarker#getObjectId()} points to target element of a form
+     * via {@link com._1c.g5.v8.dt.form.model.FormItem#getId()}.
+     *</ul>
+     *
+     * This predicate checks if a marker originates from the specified form regardless of its target element.
+     *
+     * @param form Form to test for. Must not be null.
+     * @return Predicate that matches markers by the specified form. Never {@code null}.
+     */
+    private Predicate<Marker> byForm(IBmObject form)
+    {
+        Preconditions.checkNotNull(form, "form"); //$NON-NLS-1$
+        return marker -> Objects.equals(marker.getSourceObjectId(), form.bmGetId());
+    }
+
+    /**
+     * Tests if a marker corresponds to the specified target element of a form.
+     *
+     * When issue is added to an element of a form then
+     * <ul>
+     * <li>{@link Marker#getSourceObjectId()} points to whole form
+     * via {@link com._1c.g5.v8.bm.core.Form#bmGetId()}
+     * <li>and {@link BmObjectMarker#getObjectId()} points to target element of a form
+     * via {@link com._1c.g5.v8.dt.form.model.FormItem#getId()}.
+     *</ul>
+     *
+     * This predicate checks if a marker originates from the specified target element of a form.
+     *
+     * Note that you might also need to filter by a form as well to avoid getting markers from multiple forms
+     * in case forms have elements with the same identifiers.
+     *
+     * @param target Target form element to test for. Must not be {@code null}.
+     * @return Predicate that matches markers of type {@link BmObjectMarker} that have been added with
+     * the specified form element as a target. Never {@code null}.
+     */
+    private Predicate<Marker> byTarget(IBmObject target)
+    {
+        Preconditions.checkNotNull(target, "target"); //$NON-NLS-1$
+        return marker -> marker instanceof BmObjectMarker
+            && Objects.equals(((BmObjectMarker)marker).getObjectId(), target.bmGetId());
+    }
+
+    /**
+     * Tests if marker corresponds to the specified check.
+     *
+     * {@link Marker#getCheckId()} returns short version of identifier that is not the same as specified
+     * in an implementation of the corresponding check. This method will convert specified
+     * natural check identifier to short identifier before matching markers.
+     *
+     * @param naturalCheckId Natural (long, as specified in implementation of check`s class) identifier of the check.
+     * Must not be {@code null}.
+     * @param project Project being tested. Must not be {@code null}.
+     * @return Predicate that matches markers originating from the specified check. Never {@code null}.
+     */
+    private Predicate<Marker> byNaturalCheckId(String naturalCheckId, IProject project)
+    {
+        Preconditions.checkNotNull(naturalCheckId, "naturalCheckId"); //$NON-NLS-1$
+        Preconditions.checkNotNull(project, "project"); //$NON-NLS-1$
+        Set<String> checkUids = checkRepository.toUid(naturalCheckId, project)
+            .stream()
+            .map(uid -> checkRepository.getShortUid(uid, project))
+            .collect(Collectors.toSet());
+        return marker -> checkUids.contains(marker.getCheckId());
+    }
+
+    /**
+     * Gets Eclipse project associated with the current test case.
+     *
+     * @return Optional project that could be empty when called outside of
+     * {@linkplain} junit.framework.Test}-annotated methods or
+     * DT project has no associated Eclipse project.
+     *
+     * @see IDtProject#getWorkspaceProject()
+     */
+    private Optional<IProject> getWorkspaceProject()
+    {
+        return Optional.ofNullable(getProject()).map(dtProject -> dtProject.getWorkspaceProject());
     }
 
 }
