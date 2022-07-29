@@ -1,6 +1,15 @@
-/**
- * Copyright (C) 2022, 1C
- */
+/*******************************************************************************
+ * Copyright (C) 2022, 1C-Soft LLC and others.
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     1C-Soft LLC - initial API and implementation
+ *******************************************************************************/
 package com.e1c.dt.check.form;
 
 import static com._1c.g5.v8.dt.form.model.FormPackage.Literals.FORM;
@@ -36,7 +45,7 @@ import com.e1c.g5.v8.dt.check.settings.IssueType;
  *
  * Negative values are not considered to be invalid. That is because such values are perfectly valid
  * at least for some of the cases. For example, {@link com._1c.g5.v8.dt.form.model.AutoCommandBar}
- * might have {@link -1} as in identifier. This can be seen in the implementation of
+ * might have {@code -1} as in identifier. This can be seen in the implementation of
  * {@code com._1c.g5.v8.dt.internal.form.generator.FormGeneratorCore}.
  *
  * Only {@link FormItem}`s are checked. {@link com._1c.g5.v8.dt.form.model.FormAttribute}
