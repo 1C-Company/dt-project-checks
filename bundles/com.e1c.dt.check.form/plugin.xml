@@ -40,6 +40,7 @@
       <fix
             class="com.e1c.dt.check.internal.form.fix.DataPathRemoveFix">
       </fix>
+      <fix class="com.e1c.dt.check.internal.form.ExecutableExtensionFactory:com.e1c.dt.check.internal.form.fix.InvalidItemIdFix"/>
    </extension>
     <extension point="org.eclipse.ui.trace.traceComponents">
         <component id="com.e1c.dt.check.form.component" label="%traceComponentLabel">

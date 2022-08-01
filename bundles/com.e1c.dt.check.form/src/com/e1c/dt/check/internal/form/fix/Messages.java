@@ -26,6 +26,8 @@ final class Messages
     public static String DataPathRemoveFix_Remove_data_path_title;
     public static String DataPathRemoveFix_Remove_form_item_description;
     public static String DataPathRemoveFix_Remove_form_item_title;
+    public static String InvalidItemIdFix_AssignNewIdentifierValue;
+    public static String InvalidItemIdFix_ServiceNotAvailable;
     static
     {
         // initialize resource bundle

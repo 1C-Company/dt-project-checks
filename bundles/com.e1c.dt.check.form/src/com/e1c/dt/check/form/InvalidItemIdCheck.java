@@ -59,7 +59,7 @@ public class InvalidItemIdCheck
 {
 
     private static final String CHECK_ID = "form-invalid-item-id"; //$NON-NLS-1$
-    private static final String DEBUG_OPTION = "/debug/InvalidItemIdCheck"; //$NON-NLS-1$
+    private static final String DEBUG_OPTION = "/debug/InvalidItemId"; //$NON-NLS-1$
 
     @Override
     public String getCheckId()
@@ -87,16 +87,17 @@ public class InvalidItemIdCheck
     {
         if (!(object instanceof Form))
         {
-            CorePlugin.trace(DEBUG_OPTION, "Received something that is not a Form: class={0}", object.getClass()); //$NON-NLS-1$
+            CorePlugin.trace(DEBUG_OPTION, "Check: Received something that is not a Form: class={0}", //$NON-NLS-1$
+                object.getClass());
             return;
         }
         Form form = (Form)object;
-        CorePlugin.trace(DEBUG_OPTION, "Checking form: {0}", form); //$NON-NLS-1$
+        CorePlugin.trace(DEBUG_OPTION, "Check: Checking form: {0}", form); //$NON-NLS-1$
         if (CorePlugin.getDefault().isDebugging())
         {
             // We're not interested in attributes because their identifier does not have effect on anything.
             form.getAttributes()
-                .forEach(attribute -> CorePlugin.trace(DEBUG_OPTION, "Got form attribute: id={0}, class={1}", //$NON-NLS-1$
+                .forEach(attribute -> CorePlugin.trace(DEBUG_OPTION, "Check: Got form attribute: id={0}, class={1}", //$NON-NLS-1$
                     attribute.getId(), attribute.getClass()));
         }
         Set<Integer> seenIdentifiers = new HashSet<>();
@@ -104,17 +105,18 @@ public class InvalidItemIdCheck
         {
             if (progressMonitor.isCanceled())
             {
-                CorePlugin.trace(DEBUG_OPTION, "Check has been cancelled"); //$NON-NLS-1$
+                CorePlugin.trace(DEBUG_OPTION, "Check: Check has been cancelled"); //$NON-NLS-1$
                 return;
             }
             FormItem item = iterator.next();
-            CorePlugin.trace(DEBUG_OPTION, "Got form item: id={0}, class={1}", item.getId(), item.getClass()); //$NON-NLS-1$
+            CorePlugin.trace(DEBUG_OPTION, "Check: Got form item: id={0}, class={1}", item.getId(), item.getClass()); //$NON-NLS-1$
             if (hasValidId(item))
             {
                 boolean isUniqueId = seenIdentifiers.add(item.getId());
                 if (!isUniqueId)
                 {
-                    CorePlugin.trace(DEBUG_OPTION, "Form item has a duplicate identifier: id={0}, item={1}, seen={2}", //$NON-NLS-1$
+                    CorePlugin.trace(DEBUG_OPTION,
+                        "Check: Form item has a duplicate identifier: id={0}, item={1}, seen={2}", //$NON-NLS-1$
                         item.getId(), item, seenIdentifiers);
                     resultAcceptor.addIssue(
                         MessageFormat.format(Messages.InvalidItemIdCheck_DuplicateValueOfIdAttribute, item.getId()),
@@ -123,8 +125,8 @@ public class InvalidItemIdCheck
             }
             else
             {
-                CorePlugin.trace(DEBUG_OPTION, "Form item has an invalid identifier: id={0}, item={1}", item.getId(), //$NON-NLS-1$
-                    item);
+                CorePlugin.trace(DEBUG_OPTION, "Check: Form item has an invalid identifier: id={0}, item={1}", //$NON-NLS-1$
+                    item.getId(), item);
                 resultAcceptor.addIssue(Messages.InvalidItemIdCheck_InvalidValueOfIdAttribute, item, FORM_ITEM__ID);
             }
         }
