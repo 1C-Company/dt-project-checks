@@ -28,6 +28,8 @@ final class Messages
     public static String MdReferenceIntegrity_LostReference_Many;
     public static String MdReferenceIntegrity_Title;
     public static String MdReferenceIntegrity_Description;
+    public static String MdReferenceIntegrity_FixDescription;
+    public static String MdReferenceIntegrity_FixTitle;
 
     static
     {
