@@ -41,16 +41,10 @@ import com.google.inject.Inject;
  *
  * @author Nikolay Martynov
  */
-@QuickFix(checkId = "form-invalid-item-id", supplierId = CorePlugin.PLUGIN_ID)
+@QuickFix(checkId = InvalidItemIdCheck.CHECK_ID, supplierId = CorePlugin.PLUGIN_ID)
 public class InvalidItemIdFix
     extends SingleVariantModelBasicFix<FormItem>
 {
-    /**
-     * Configuration option that determines if tracing is enabled.
-     *
-     * Make sure this is synchronized with .options file.
-     */
-    private static final String DEBUG_OPTION = "/debug/InvalidItemId"; //$NON-NLS-1$
 
     /**
      * Service that is used to generate new identifiers for broken form items.
@@ -69,20 +63,22 @@ public class InvalidItemIdFix
     protected void applyChanges(FormItem modelObject, EStructuralFeature targetFeature, BasicModelFixContext context,
         IFixSession session)
     {
-        CorePlugin.trace(DEBUG_OPTION, "Fix: Applying fix: object={0}, feature={1}, context={2}, session={3}", //$NON-NLS-1$
+        CorePlugin.trace(InvalidItemIdCheck.DEBUG_OPTION,
+            "Fix: Applying fix: object={0}, feature={1}, context={2}, session={3}", //$NON-NLS-1$
             modelObject, targetFeature, context, session);
         boolean wasSet = modelObject.eIsSet(targetFeature);
         Object oldValue = modelObject.eGet(targetFeature);
         Optional<Integer> newValue = calculateNewIdFor(modelObject);
         if (newValue.isEmpty())
         {
-            CorePlugin.trace(DEBUG_OPTION,
+            CorePlugin.trace(InvalidItemIdCheck.DEBUG_OPTION,
                 "Fix: To avoid data corruption, will not change identifier of {0} because unable to determine proper new value", //$NON-NLS-1$
                 modelObject);
             return;
         }
         modelObject.setId(newValue.get());
-        CorePlugin.trace(DEBUG_OPTION, "Fix: Replaced identifier: newValue={0}, wasSet={1}, oldvalue={2}, object={3}", //$NON-NLS-1$
+        CorePlugin.trace(InvalidItemIdCheck.DEBUG_OPTION,
+            "Fix: Replaced identifier: newValue={0}, wasSet={1}, oldvalue={2}, object={3}", //$NON-NLS-1$
             newValue.get(), wasSet, oldValue, modelObject);
     }
 
@@ -109,7 +105,7 @@ public class InvalidItemIdFix
         boolean commandBarOfForm = item instanceof AutoCommandBar && item.eContainer() instanceof Form;
         if (commandBarOfForm)
         {
-            CorePlugin.trace(DEBUG_OPTION,
+            CorePlugin.trace(InvalidItemIdCheck.DEBUG_OPTION,
                 "Fix: This seem as command bar of a form so will use -1 for identifier: item={0}, container={1}", item, //$NON-NLS-1$
                 item.eContainer());
             return Optional.of(-1);
@@ -117,13 +113,14 @@ public class InvalidItemIdFix
         IBmObject topObject = item.bmGetTopObject();
         if (!(topObject instanceof Form))
         {
-            CorePlugin.trace(DEBUG_OPTION, "Fix: Unable to determine enclosing form: item={0}, topObject={1}", item, //$NON-NLS-1$
+            CorePlugin.trace(InvalidItemIdCheck.DEBUG_OPTION,
+                "Fix: Unable to determine enclosing form: item={0}, topObject={1}", item, //$NON-NLS-1$
                 item.bmGetTopObject());
             return Optional.empty();
         }
         Form form = (Form)item.bmGetTopObject();
         int newValue = formIdentifierService.getNextItemId(form);
-        CorePlugin.trace(DEBUG_OPTION,
+        CorePlugin.trace(InvalidItemIdCheck.DEBUG_OPTION,
             "Fix: Form identifier service says we should use {0} as next identifier value for form {1}", newValue, //$NON-NLS-1$
             form);
         return Optional.of(newValue);
