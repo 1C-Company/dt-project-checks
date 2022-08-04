@@ -32,7 +32,7 @@ final class Messages
     {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-}
+    }
 
     private Messages()
     {
