@@ -10,23 +10,20 @@
  * Contributors:
  *     1C-Soft LLC - initial API and implementation
  *******************************************************************************/
-package com.e1c.dt.check.internal.form.fix;
+package com.e1c.dt.check.internal.form.cleanup;
 
 import org.eclipse.osgi.util.NLS;
 
 /**
- * @author Dmitriy Marmyshev
+ * @author Nikolay Martynov
  *
  */
 final class Messages
     extends NLS
 {
-    private static final String BUNDLE_NAME = "com.e1c.dt.check.internal.form.fix.messages"; //$NON-NLS-1$
-    public static String DataPathRemoveFix_Remove_data_path_description;
-    public static String DataPathRemoveFix_Remove_data_path_title;
-    public static String DataPathRemoveFix_Remove_form_item_description;
-    public static String DataPathRemoveFix_Remove_form_item_title;
-    public static String InvalidItemIdFix_AssignNewIdentifierValue;
+    private static final String BUNDLE_NAME = "com.e1c.dt.check.internal.form.cleanup.messages"; //$NON-NLS-1$
+    public static String InvalidItemIdCleanup_Fixing_invalid_form_item_identifier;
+    public static String InvalidItemIdCleanup_Searching_invalid_form_item_identifiers;
     static
     {
         // initialize resource bundle

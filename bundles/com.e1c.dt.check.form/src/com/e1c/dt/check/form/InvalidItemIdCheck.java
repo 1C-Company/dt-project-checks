@@ -12,12 +12,7 @@
  *******************************************************************************/
 package com.e1c.dt.check.form;
 
-import static com._1c.g5.v8.dt.form.model.FormPackage.Literals.FORM;
-import static com._1c.g5.v8.dt.form.model.FormPackage.Literals.FORM_ITEM__ID;
-
-import java.text.MessageFormat;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -36,8 +31,8 @@ import com._1c.g5.v8.bm.core.event.BmSubEvent;
 import com._1c.g5.v8.dt.form.model.Form;
 import com._1c.g5.v8.dt.form.model.FormItem;
 import com._1c.g5.v8.dt.form.model.FormPackage;
-import com._1c.g5.v8.dt.form.service.item.FormItemIterator;
 import com.e1c.dt.check.internal.form.CorePlugin;
+import com.e1c.dt.check.internal.form.IInvalidItemIdService;
 import com.e1c.g5.v8.dt.check.CheckComplexity;
 import com.e1c.g5.v8.dt.check.ICheckDefinition;
 import com.e1c.g5.v8.dt.check.ICheckParameters;
@@ -49,25 +44,15 @@ import com.e1c.g5.v8.dt.check.context.OnModelFeatureChangeContextCollector;
 import com.e1c.g5.v8.dt.check.context.OnModelObjectRemovalContextCollector;
 import com.e1c.g5.v8.dt.check.settings.IssueSeverity;
 import com.e1c.g5.v8.dt.check.settings.IssueType;
+import com.google.inject.Inject;
 
 /**
  * Checks that form items have valid identifiers.
- *
- * {@link com._1c.g5.v8.dt.form.model.FormItem#getId()} is valid if it has a unique value
- * accross all other items on this form.
- *
- * Additionally, an identifier is considered to be invalid if its value is {@code 0}
- * which is a default value for {@link org.eclipse.emf.ecore.EObject#eGet(EStructuralFeature, boolean)}
- * in case of {@link java.langInteger} feature.
- *
- * Negative values are not considered to be invalid. That is because such values are perfectly valid
- * at least for some of the cases. For example, {@link com._1c.g5.v8.dt.form.model.AutoCommandBar}
- * might have {@code -1} as in identifier. This can be seen in the implementation of
- * {@code com._1c.g5.v8.dt.internal.form.generator.FormGeneratorCore}.
- *
- * Only {@link FormItem}`s are checked. {@link com._1c.g5.v8.dt.form.model.FormAttribute}
- * and other child content is ignored.
- *
+ * <p/>
+ * This implementation delegates actual verification to {@link IInvalidItemIdService}.
+ * This class itself contains only the wiring into {@link com.e1c.g5.v8.dt.check.ICheck}
+ * and the rest of the infrastructure that triggers validation.
+ * <p/>
  * Since the check tries to find child items with duplicate identifiers, it has to walk through whole
  * child content. To make sure we do not try to walk the whole form when validating every form item,
  * the check specifies the form itself as an object to be validated.
@@ -75,6 +60,9 @@ import com.e1c.g5.v8.dt.check.settings.IssueType;
  * because duplicates might have gone away. For example, first opject with the same id (which did not have markers)
  * might have been deleted and we need to cleanup markers on a second object that has those markers.
  * For this purpose implementation uses {@link AdditionalRevalidationRules} extension to specify extra rules.
+ * <p/>
+ * This check will put a marker for each {@link FormItem} as target object with a
+ * description of the issue (as specified by {@link IInvalidItemIdService}).
  *
  * @author Nikolay Martynov
  */
@@ -83,19 +71,15 @@ public class InvalidItemIdCheck
 {
 
     /**
-     * Identifier of the check.
+     * Service to delegate checking to.
      */
-    public static final String CHECK_ID = "form-invalid-item-id"; //$NON-NLS-1$
-
-    /**
-     * Name of the option that determines if tracing is enabled.
-     */
-    public static final String DEBUG_OPTION = "/debug/InvalidItemId"; //$NON-NLS-1$
+    @Inject
+    private IInvalidItemIdService service;
 
     @Override
     public String getCheckId()
     {
-        return CHECK_ID;
+        return IInvalidItemIdService.CHECK_ID;
     }
 
     @Override
@@ -109,7 +93,7 @@ public class InvalidItemIdCheck
             .complexity(CheckComplexity.NORMAL)
             .severity(IssueSeverity.MAJOR)
             .issueType(IssueType.ERROR)
-            .topObject(FORM)
+            .topObject(FormPackage.Literals.FORM)
             .checkTop();
     }
 
@@ -125,52 +109,21 @@ public class InvalidItemIdCheck
             // We're not insterested in this child content here and need to ignore all those calls.
             // If http://boreas.dept07/jira/browse/G5V8DT-22389 is fixed
             // then the following excerpt could be used to trace unexpected calls.
-            // CorePlugin.trace(DEBUG_OPTION, "Check: Received something that is not a Form: class={0}", //$NON-NLS-1$
+            // CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION, "Check: Received something that is not a Form: class={0}", //$NON-NLS-1$
             //    object.getClass());
             return;
         }
-        Form form = (Form)object;
-        CorePlugin.trace(DEBUG_OPTION, "Check: Checking form: {0}", form); //$NON-NLS-1$
-        Set<Integer> seenIdentifiers = new HashSet<>();
-        for (FormItemIterator iterator = new FormItemIterator(form); iterator.hasNext();)
+        if (progressMonitor.isCanceled())
         {
-            if (progressMonitor.isCanceled())
-            {
-                CorePlugin.trace(DEBUG_OPTION, "Check: Check has been cancelled"); //$NON-NLS-1$
-                return;
-            }
-            FormItem item = iterator.next();
-            if (hasValidId(item))
-            {
-                boolean isUniqueId = seenIdentifiers.add(item.getId());
-                if (!isUniqueId)
-                {
-                    CorePlugin.trace(DEBUG_OPTION,
-                        "Check: Form item has a duplicate identifier: id={0}, item={1}, seen={2}", //$NON-NLS-1$
-                        item.getId(), item, seenIdentifiers);
-                    resultAcceptor.addIssue(
-                        MessageFormat.format(Messages.InvalidItemIdCheck_DuplicateValueOfIdAttribute, item.getId()),
-                        item, FORM_ITEM__ID);
-                }
-            }
-            else
-            {
-                CorePlugin.trace(DEBUG_OPTION, "Check: Form item has an invalid identifier: id={0}, item={1}", //$NON-NLS-1$
-                    item.getId(), item);
-                resultAcceptor.addIssue(Messages.InvalidItemIdCheck_InvalidValueOfIdAttribute, item, FORM_ITEM__ID);
-            }
+            CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION, "Check: Check has been cancelled"); //$NON-NLS-1$
+            return;
         }
-    }
-
-    /**
-     * Checks whether specified form item has a valid identifier.
-     *
-     * @param item Form item whose identifier is to be checked. Must not be null.
-     * @return {@code true} if specified item has a valid identifier.
-     */
-    private boolean hasValidId(FormItem item)
-    {
-        return item.getId() != 0;
+        Form form = (Form)object;
+        service.validate(form)
+            .entrySet()
+            .stream()
+            .forEach(itemAndMesage -> resultAcceptor.addIssue(itemAndMesage.getValue(), itemAndMesage.getKey(),
+                FormPackage.Literals.FORM_ITEM__ID));
     }
 
     /**
@@ -187,7 +140,8 @@ public class InvalidItemIdCheck
         IBmObject topObject = bmObject.bmGetTopObject();
         if (!(topObject instanceof Form))
         {
-            CorePlugin.trace(DEBUG_OPTION, "Check: Unable to determine parent form: object={0}, topObject={1}", //$NON-NLS-1$
+            CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION,
+                "Check: Unable to determine parent form: object={0}, topObject={1}", //$NON-NLS-1$
                 bmObject, bmObject.bmGetTopObject());
             return Optional.empty();
         }
@@ -270,12 +224,12 @@ public class InvalidItemIdCheck
      * <li>User has deleted the first duplicate which had no markers.
      * Generic marker cleanup mechanism will try to remove markers from deleted item but there were none.
      * The markers were on the 2nd duplicate. Keeping them on this 2nd duplicate is incorrect since
-     * the problem does not exist anymore. To fix the issue, we trigger re-validation of the form.
+     * the problem does not exist anymore. To fix the issue, we trigger re-validation of the form.</li>
      * <li>User has deleted 2nd, 3rd any further duplicate which had markers.
      * Here the generic mechanism responsible for cleaning markers from deleted items will trigger
      * and remove all markers from the deleted item. If there were just two duplicates then, correctly, the first
      * one had no markers and will have no markers. If there were more than two duplicates, the 3rd one will still
-     * have markers, correctly.
+     * have markers, correctly.</li>
      * </ol>
      *
      * @see OnItemIdChangeTriggerFormValidation
@@ -321,18 +275,6 @@ public class InvalidItemIdCheck
             // Single instance should be created outside of loop and registered for all classes.
             CONTAINER_CLASSES.forEach(containerClass -> definition.addModelFeatureChangeContextCollector(
                 new OnItemRemovalTriggerFormValidation(containerClass.getName()), containerClass));
-            // You can use the following excerpt to eavesdrop events.
-            /*
-            Stream
-                .concat(List.of(FormPackage.Literals.FORM_ITEM, FormPackage.Literals.FORM).stream(),
-                    CONTAINER_CLASSES.stream())
-                .forEach(clazz -> definition.addModelFeatureChangeContextCollector(
-                    (IBmObject bmObject, EStructuralFeature feature, BmSubEvent bmEvent,
-                        CheckContextCollectingSession contextSession) -> CorePlugin.trace(DEBUG_OPTION,
-                            "Check: Handler for {2} has received event: object={0}, event={1}", //$NON-NLS-1$
-                            bmObject, dumpEvent(bmEvent), clazz.getName()),
-                    clazz));
-            */
         }
     }
 
@@ -364,7 +306,7 @@ public class InvalidItemIdCheck
                 if (valueChanged)
                 {
                     findFormOf(bmObject).ifPresent(form -> {
-                        CorePlugin.trace(DEBUG_OPTION,
+                        CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION,
                             "Check: Triggering re-validation of parent form due to change of from item identifier: formItem={0}, form={1}", //$NON-NLS-1$
                             bmObject, form);
                         contextSession.addModelCheck(form);
@@ -374,7 +316,7 @@ public class InvalidItemIdCheck
                 {
                     if (CorePlugin.getDefault().isDebugging())
                     {
-                        CorePlugin.trace(DEBUG_OPTION,
+                        CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION,
                             "Check: Ignored strange update event for form item identifier: object={0}, event={1}", //$NON-NLS-1$
                             bmObject, dumpEvent(bmEvent));
                     }
@@ -388,11 +330,11 @@ public class InvalidItemIdCheck
      *
      * This implementation checks if an event contains a notification (for any of the features) that
      * <ul>
-     * <li>a value has been removed and this old removed value has been of type {@link FormItem}
+     * <li>a value has been removed and this old removed value has been of type {@link FormItem}</li>
      * <ul>
      * <li>one item has been deleted ({@link Notification#REMOVE})</li>
      * <li>multiple items have been deleted at once ({@link Notification#REMOVE_MANY})</li>
-     * </li>
+     * </ul>
      * </ul>
      * This is an alternative to watching for specific features of various containers like
      * <ul>{@link com._1c.g5.v8.dt.form.model.FormItemContainer#getItems()}
@@ -419,7 +361,7 @@ public class InvalidItemIdCheck
          * @param instanceLabel A label to be used for this instance. For example, trace message in the log will
          * have this label added. May be {@code null}.
          */
-        public OnItemRemovalTriggerFormValidation(String instanceLabel)
+        OnItemRemovalTriggerFormValidation(String instanceLabel)
         {
             this.instanceLabel = instanceLabel;
         }
@@ -452,7 +394,7 @@ public class InvalidItemIdCheck
             if (hasItemBeenDeleted)
             {
                 findFormOf(bmObject).ifPresent(form -> {
-                    CorePlugin.trace(DEBUG_OPTION,
+                    CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION,
                         "Check: Triggering re-validation of form due to removal of an item: handlerLabel={0}, changedObject={1}, form={2}", //$NON-NLS-1$
                         instanceLabel, bmObject, form);
                     contextSession.addModelCheck(form);
@@ -462,7 +404,7 @@ public class InvalidItemIdCheck
             {
                 if (!CorePlugin.getDefault().isDebugging())
                 {
-                    CorePlugin.trace(DEBUG_OPTION,
+                    CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION,
                         "Check: Event ignored because it did not match re-validation criteria: handlerLabel={0}, changedObject={1}, feature={2}, event={2}", //$NON-NLS-1$
                         instanceLabel, bmObject, feature, dumpEvent(changeEvent));
                 }
