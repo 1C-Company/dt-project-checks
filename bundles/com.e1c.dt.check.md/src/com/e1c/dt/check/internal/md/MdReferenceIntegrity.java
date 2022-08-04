@@ -277,10 +277,14 @@ public final class MdReferenceIntegrity
             for (IBmCrossReference reference : references)
             {
                 IBmObject referenceHolder = reference.getObject();
+                if (Objects.isNull(referenceHolder))
+                {
+                    continue;
+                }
                 IBmObject topBmObject = referenceHolder.bmGetTopObject();
                 boolean isTopTarget = topBmObject.bmGetId() == referenceHolder.bmGetId();
                 CheckDef checkDef = CHECKED_COLLECTIONS.get(topBmObject.eClass());
-                if (checkDef == null)
+                if (Objects.isNull(checkDef))
                 {
                     continue;
                 }
@@ -295,7 +299,7 @@ public final class MdReferenceIntegrity
                     checkedFeatures = checkDef.containments.get(referenceHolder.eClass());
                 }
 
-                if (checkedFeatures != null && checkedFeatures.contains(reference.getFeature()))
+                if (Objects.nonNull(checkedFeatures) && checkedFeatures.contains(reference.getFeature()))
                 {
                     // The back reference is checkable - we need to schedule the check for the corresponding
                     // top object

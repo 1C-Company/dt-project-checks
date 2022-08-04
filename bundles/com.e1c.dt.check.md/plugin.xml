@@ -12,7 +12,6 @@
     Contributors:
         1C-Soft LLC - initial API and implementation
  -->
-
 <plugin>
     <extension point="com.e1c.g5.v8.dt.check.checks">
     
@@ -37,10 +36,16 @@
           category="com.e1c.dt.check.md"
           class="com.e1c.dt.check.internal.md.ExecutableExtensionFactory:com.e1c.dt.check.md.ConfigurationMobileApplicationUrlsCheck">
       </check>
-
+      
       <check
           category="com.e1c.dt.check.md"
           class="com.e1c.dt.check.internal.md.MdReferenceIntegrity">
-      </check>
+      </check>            
+    </extension>
+    <extension
+          point="com.e1c.g5.v8.dt.check.fixes">
+       <fix
+             class="com.e1c.dt.check.internal.md.fix.MdReferenceIntegrityFix">
+       </fix>
     </extension>
 </plugin>
