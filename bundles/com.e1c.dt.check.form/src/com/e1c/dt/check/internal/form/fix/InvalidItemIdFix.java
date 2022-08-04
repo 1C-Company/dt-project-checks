@@ -86,16 +86,6 @@ public class InvalidItemIdFix
             newValue.get(), wasSet, oldValue, modelObject);
     }
 
-    @Override
-    protected boolean isFixApplicable(BasicModelFixContext context, IFixSession session)
-    {
-        boolean applicable = super.isFixApplicable(context, session);
-        CorePlugin.trace(DEBUG_OPTION,
-            "Fix: Parent thinks fix is {0,choice,0#not applicable|1#applicable}: object={1}, feature={2}", //$NON-NLS-1$
-            applicable ? 1 : 0, context.getTargetObjectId(), context.getTargetFeatureId());
-        return applicable;
-    }
-
     /**
      * Calculates new identifier for the specified form item.
      *
