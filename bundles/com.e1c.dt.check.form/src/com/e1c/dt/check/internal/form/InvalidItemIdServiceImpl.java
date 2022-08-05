@@ -17,6 +17,7 @@ import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Spliterators;
 import java.util.stream.Collectors;
@@ -37,17 +38,24 @@ import com.google.inject.Inject;
 /**
  * Checks and fixes identifiers of {@link FormItem}s.
  * <p/>
- * {@link FormItem#getId()} is valid if it has a unique value
- * accross all other items on this {@link Form}.
- * <p/>
- * Additionally, an identifier is considered to be invalid if its value is {@code 0}
+ * {@link FormItem#getId()} is considered to be invalid if its value is {@code 0}
  * which is a default value for {@link org.eclipse.emf.ecore.EObject#eGet(EStructuralFeature, boolean)}
  * in case of {@link java.lang.Integer} feature.
  * <p/>
  * Negative values are not considered to be invalid. That is because such values are perfectly valid
- * at least for some of the cases. For example, {@link com._1c.g5.v8.dt.form.model.AutoCommandBar}
+ * at least for some of the cases. For example, {@link AutoCommandBar}
  * might have {@code -1} as in identifier. This can be seen in the implementation of
  * {@code com._1c.g5.v8.dt.internal.form.generator.FormGeneratorCore}.
+ * <p/>
+ * Additionally, form items have to have a unique identifier value
+ * accross all other items on this {@link Form} regardless of how they are nested into each other.
+ * When there are multiple form items with the same identifier then one of
+ * them is considered to be valid while others are deemed to be problematic duplicates.
+ * This is to reduce number of errors shown to user.
+ * Identifiers that are arelady invalid (as described previously) do not paticipate into
+ * duplicates check and are just reported as incorrect. This means that if there are two from items
+ * with {@code 0} identifiers then both of them will be reported as having incorrect rather than duplicate
+ * identifiers.
  * <p/>
  * Only {@link FormItem}`s are checked. {@link com._1c.g5.v8.dt.form.model.FormAttribute}
  * and other child content is ignored.
@@ -55,7 +63,9 @@ import com.google.inject.Inject;
  * When fixing, it does not try to understand why identifier is not good enough.
  * It just replaces it with a new value.
  * {@link FormIdentifierService} is used to determine what this new value should be.
- * However, there are exclusions. For example, command bar of a form will get predefined value of {@code -1}.
+ * However, there are exclusions. For example, {@link AutoCommandBar}
+ * of a form will get predefined value of {@code -1} while {@link AutoCommandBar} of any
+ * other item will get identifer from {@link FormIdentifierService}.
  *
  * @author Nikolay Martynov
  */
@@ -66,8 +76,20 @@ public class InvalidItemIdServiceImpl
     /**
      * Service that is used to generate new identifiers for broken form items.
      */
+    private final FormIdentifierService formIdentifierService;
+
+    /**
+     * Creates an instance.
+     *
+     * @param formIdentifierService Service to be used to generate
+     * new identifiers when fixing broken form items. Must not be {@code null}.
+     */
     @Inject
-    private FormIdentifierService formIdentifierService;
+    public InvalidItemIdServiceImpl(FormIdentifierService formIdentifierService)
+    {
+        Objects.requireNonNull(formIdentifierService, "formIdentifierService"); //$NON-NLS-1$
+        this.formIdentifierService = formIdentifierService;
+    }
 
     @Override
     public Map<FormItem, String> validate(Form form)

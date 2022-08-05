@@ -19,13 +19,16 @@ import com.e1c.dt.check.internal.IBmIntegrityService;
 /**
  * A service that can check and fix identifiers of form items.
  * <p/>
- * This is just a specialization of {@link IBmIntegrityService}
- * for checking {@link com._1c.g5.v8.dt.form.model.Form} and returning issue description
- * for malformed {@link com._1c.g5.v8.dt.form.model.FormItem}s.
+ * This specialization of {@link IBmIntegrityService}
+ * gets a {@link Form} for checking and returns
+ * an issue description as a {@code String}
+ * for every child {@link FormItem} on this form (regardless of how deep it is nested)
+ * that has an problem with its identifier.
+ * It can also fix identifiers of those broken {@link FormItem}s one-by-one.
  *
  * @author Nikolay Martynov
  */
-// This interface is a specialization with specific type arguments.
+// This is not a marker interface. It is a specialization with the specific type arguments.
 @SuppressWarnings("checkstyle:InterfaceIsType")
 public interface IInvalidItemIdService
     extends IBmIntegrityService<Form, FormItem, String>
