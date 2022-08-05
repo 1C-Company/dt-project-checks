@@ -10,7 +10,7 @@
  * Contributors:
  *     1C-Soft LLC - initial API and implementation
  *******************************************************************************/
-package com.e1c.dt.check.internal.form;
+package com.e1c.dt.check.internal.form.test;
 
 import java.util.List;
 import java.util.Map;
@@ -19,8 +19,7 @@ import org.assertj.core.api.Assertions;
 import org.eclipse.emf.common.util.BasicEList;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -35,6 +34,7 @@ import com._1c.g5.v8.dt.form.model.FormItem;
 import com._1c.g5.v8.dt.form.model.FormItemContainer;
 import com._1c.g5.v8.dt.form.model.Table;
 import com._1c.g5.v8.dt.form.service.FormIdentifierService;
+import com.e1c.dt.check.internal.form.InvalidItemIdServiceImpl;
 
 /**
  * Tests for {@link InvalidItemIdServiceImpl}.
@@ -55,9 +55,6 @@ public class InvalidItemIdServiceImplTest
 
     @InjectMocks
     private InvalidItemIdServiceImpl invalidItemIdServiceImpl;
-
-    @Captor
-    private ArgumentCaptor<String> argumentCaptor;
 
     /**
      * {@link com.e1c.dt.check.internal.IBmIntegrityService#validate} allows {@code null}
@@ -103,9 +100,10 @@ public class InvalidItemIdServiceImplTest
         // when
         Map<FormItem, String> actual = invalidItemIdServiceImpl.validate(formMock);
         // then
-        Assertions.assertThat(actual).isNotNull().containsOnlyKeys(item).allSatisfy((issueItem, issueDescription) -> {
-            Assertions.assertThat(issueDescription).isNotBlank();
-        });
+        Assertions.assertThat(actual)
+            .isNotNull()
+            .containsOnlyKeys(item)
+            .allSatisfy((issueItem, issueDescription) -> Assertions.assertThat(issueDescription).isNotBlank());
     }
 
     /**
@@ -365,7 +363,7 @@ public class InvalidItemIdServiceImplTest
         invalidItemIdServiceImpl.fix(commandBar);
         // then
         Mockito.verify(commandBar).setId(newId);
-        Mockito.verify(formIdentifierServiceMock, Mockito.never()).getNextItemId(Mockito.any());
+        Mockito.verify(formIdentifierServiceMock, Mockito.never()).getNextItemId(ArgumentMatchers.any());
         Mockito.verify(commandBar, Mockito.never()).bmGetTopObject();
     }
 

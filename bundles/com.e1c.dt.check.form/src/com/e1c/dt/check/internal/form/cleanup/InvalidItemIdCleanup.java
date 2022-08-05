@@ -129,15 +129,15 @@ public class InvalidItemIdCleanup
         {
             CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION, "Cleanup: Analyzing configuration"); //$NON-NLS-1$
             Iterator<IBmObject> formIterator = transaction.getTopObjectIterator(FormPackage.Literals.FORM);
-            List<ICleanUpBmObjectTask> cleanupTasks =
-                StreamSupport.stream(Spliterators.spliteratorUnknownSize(formIterator, 0), false)
-                    .filter(Form.class::isInstance)
-                    .map(Form.class::cast)
-                    .peek(form -> transaction.evict(form.bmGetId()))
-                    .flatMap(this::validateForm)
-                    .map(InvalidItemIdCleanupTask::new)
-                    .collect(Collectors.toList());
-            return cleanupTasks;
+            List<Form> forms = StreamSupport.stream(Spliterators.spliteratorUnknownSize(formIterator, 0), false)
+                .filter(Form.class::isInstance)
+                .map(Form.class::cast)
+                .collect(Collectors.toList());
+            forms.forEach(form -> transaction.evict(form.bmGetId()));
+            return forms.stream()
+                .flatMap(this::validateForm)
+                .map(InvalidItemIdCleanupTask::new)
+                .collect(Collectors.toList());
         }
 
         /**

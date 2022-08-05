@@ -52,17 +52,17 @@ import com._1c.g5.v8.bm.core.IBmObject;
  * This is purely optional to keep things together in a cleaner OOP manner when you do check and fix and cleanup
  * for the same issue.
  *
- * @param ValidatedType Type of objects from which validation is going to start.
+ * @param S Type of objects from which validation is going to start.
  * For example, this could be a {@link com._1c.g5.v8.dt.form.model.Form} as a container or other elements.
- * @param InvalidObjectsType Type of objects that could be deemed as having issues.
+ * @param T Type of objects that could be deemed as having issues.
  * For example, this could be {@link com._1c.g5.v8.dt.form.model.FormItem}s that have issues.
- * @param ResultType Type of the issue.
+ * @param R Type of the issue.
  * For example, this could be {@code String} if all we need is just an error message describing
  * the issue related to the particular invalid object.
  *
  * @author Nikolay Martynov
  */
-public interface IBmIntegrityService<ValidatedType extends IBmObject, InvalidObjectsType extends IBmObject, IssueType>
+public interface IBmIntegrityService<S extends IBmObject, T extends IBmObject, R>
 {
 
     /**
@@ -78,7 +78,7 @@ public interface IBmIntegrityService<ValidatedType extends IBmObject, InvalidObj
      * The result should not contain {@code null} keys or values. Only objects with issues should be among the keys.
      * An empty map means no issues with any of the objects. The result must never be {@code null}.
      */
-    Map<InvalidObjectsType, IssueType> validate(ValidatedType startingObject);
+    Map<T, R> validate(S startingObject);
 
     /**
      * Fixes specified object.
@@ -89,6 +89,6 @@ public interface IBmIntegrityService<ValidatedType extends IBmObject, InvalidObj
      * (one of the keys in result returned by {@link #validate(IBmObject)})
      * that is to be fixed. Must not be {@code null}.
      */
-    void fix(InvalidObjectsType objectToBeFixed);
+    void fix(T objectToBeFixed);
 
 }

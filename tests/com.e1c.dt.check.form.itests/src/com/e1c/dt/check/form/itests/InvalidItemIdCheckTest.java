@@ -64,11 +64,11 @@ public class InvalidItemIdCheckTest
      * form element set as their target.
      */
     @Test
-    public void testDefaultFormNoIssues() throws Exception
+    public void testDefaultFormNoIssues()
     {
         IBmObject form = getTopObjectByFqn("Catalog.Catalog.Form.DefaultListForm.Form", getProject());
-        List<Marker> markers = streamAllMarkers(getWorkspaceProject().get()).filter(byForm(form))
-            .filter(byNaturalCheckId(IInvalidItemIdService.CHECK_ID, getWorkspaceProject().get()))
+        List<Marker> markers = streamAllMarkers(getWorkspaceProject()).filter(byForm(form))
+            .filter(byNaturalCheckId(IInvalidItemIdService.CHECK_ID, getWorkspaceProject()))
             .collect(Collectors.toList());
         assertEquals("Markers found", 0, markers.size());
     }
@@ -79,12 +79,12 @@ public class InvalidItemIdCheckTest
      * @throws Exception When no marker is detected.
      */
     @Test
-    public void testId0ImmediateChildCausesIssue() throws Exception
+    public void testId0ImmediateChildCausesIssue()
     {
         IBmObject form = getTopObjectByFqn("Catalog.Catalog.Form.Id0ImmediateChild.Form", getProject());
-        Optional<Marker> marker = streamAllMarkers(getWorkspaceProject().get()).filter(byForm(form))
+        Optional<Marker> marker = streamAllMarkers(getWorkspaceProject()).filter(byForm(form))
             .filter(byTarget((FormField)findChildByName(form, "Code")))
-            .filter(byNaturalCheckId(IInvalidItemIdService.CHECK_ID, getWorkspaceProject().get()))
+            .filter(byNaturalCheckId(IInvalidItemIdService.CHECK_ID, getWorkspaceProject()))
             .findFirst();
         assertMarkerIsCorrect(marker);
     }
@@ -95,12 +95,12 @@ public class InvalidItemIdCheckTest
      * @throws Exception When no marker is detected.
      */
     @Test
-    public void testId0NestedChildCausesIssue() throws Exception
+    public void testId0NestedChildCausesIssue()
     {
         IBmObject form = getTopObjectByFqn("Catalog.Catalog.Form.Id0NestedChild.Form", getProject());
-        Optional<Marker> marker = streamAllMarkers(getWorkspaceProject().get()).filter(byForm(form))
+        Optional<Marker> marker = streamAllMarkers(getWorkspaceProject()).filter(byForm(form))
             .filter(byTarget(((FormField)findChildByName(form, "Code")).getContextMenu()))
-            .filter(byNaturalCheckId(IInvalidItemIdService.CHECK_ID, getWorkspaceProject().get()))
+            .filter(byNaturalCheckId(IInvalidItemIdService.CHECK_ID, getWorkspaceProject()))
             .findFirst();
         assertMarkerIsCorrect(marker);
     }
@@ -111,12 +111,12 @@ public class InvalidItemIdCheckTest
      * @throws Exception When no marker is detected.
      */
     @Test
-    public void testMissingIdCausesIssue() throws Exception
+    public void testMissingIdCausesIssue()
     {
-        IBmObject form = getTopObjectByFqn("Catalog.Catalog.Form.Id0ImmediateChild.Form", getProject());
-        Optional<Marker> marker = streamAllMarkers(getWorkspaceProject().get()).filter(byForm(form))
+        IBmObject form = getTopObjectByFqn("Catalog.Catalog.Form.MissingId.Form", getProject());
+        Optional<Marker> marker = streamAllMarkers(getWorkspaceProject()).filter(byForm(form))
             .filter(byTarget((FormField)findChildByName(form, "Code")))
-            .filter(byNaturalCheckId(IInvalidItemIdService.CHECK_ID, getWorkspaceProject().get()))
+            .filter(byNaturalCheckId(IInvalidItemIdService.CHECK_ID, getWorkspaceProject()))
             .findFirst();
         assertMarkerIsCorrect(marker);
     }
@@ -127,12 +127,12 @@ public class InvalidItemIdCheckTest
      * @throws Exception When a marker is detected.
      */
     @Test
-    public void testNegativeIdCausesNoIssue() throws Exception
+    public void testNegativeIdCausesNoIssue()
     {
         IBmObject form = getTopObjectByFqn("Catalog.Catalog.Form.NegativeId.Form", getProject());
-        Optional<Marker> marker = streamAllMarkers(getWorkspaceProject().get()).filter(byForm(form))
+        Optional<Marker> marker = streamAllMarkers(getWorkspaceProject()).filter(byForm(form))
             .filter(byTarget((FormField)findChildByName(form, "Code")))
-            .filter(byNaturalCheckId(IInvalidItemIdService.CHECK_ID, getWorkspaceProject().get()))
+            .filter(byNaturalCheckId(IInvalidItemIdService.CHECK_ID, getWorkspaceProject()))
             .findFirst();
         assertTrue("Marker found", marker.isEmpty());
     }
@@ -145,19 +145,19 @@ public class InvalidItemIdCheckTest
      * form element set as their target.
      */
     @Test
-    public void testMultipleMissingIdsCauseSeparateIssues() throws Exception
+    public void testMultipleMissingIdsCauseSeparateIssues()
     {
         int brokenElementsCount = 22;
         IBmObject form = getTopObjectByFqn("Catalog.Catalog.Form.MissingIdMultiple.Form", getProject());
-        List<Marker> markers = streamAllMarkers(getWorkspaceProject().get()).filter(byForm(form))
-            .filter(byNaturalCheckId(IInvalidItemIdService.CHECK_ID, getWorkspaceProject().get()))
+        List<Marker> markers = streamAllMarkers(getWorkspaceProject()).filter(byForm(form))
+            .filter(byNaturalCheckId(IInvalidItemIdService.CHECK_ID, getWorkspaceProject()))
             .collect(Collectors.toList());
         assertEquals("Markers count", brokenElementsCount, markers.size());
         assertEquals("Not all markers target their own object", brokenElementsCount,
             markers.stream()
                 .filter(BmObjectMarker.class::isInstance)
                 .map(BmObjectMarker.class::cast)
-                .map(marker -> marker.getObjectId())
+                .map(BmObjectMarker::getObjectId)
                 .distinct()
                 .count());
     }
@@ -170,15 +170,15 @@ public class InvalidItemIdCheckTest
      * or some of the consequent elements do not have a marker.
      */
     @Test
-    public void testDuplicateIdCausesIssue() throws Exception
+    public void testDuplicateIdCausesIssue()
     {
         int duplicateElementsCount = 3;
         IBmObject form = getTopObjectByFqn("Catalog.Catalog.Form.BadMerge.Form", getProject());
         FormField user1Field = (FormField)findChildByName(form, "DescriptionByUser1");
-        Marker[] originalMarkers = markerManager.getNestedMarkers(getWorkspaceProject().get(), user1Field.bmGetId());
+        Marker[] originalMarkers = markerManager.getNestedMarkers(getWorkspaceProject(), user1Field.bmGetId());
         assertEquals("Should be no markers on first/original field", 0, originalMarkers.length);
         FormField user2Field = (FormField)findChildByName(form, "DescriptionByUser2");
-        Marker[] duplicateMarkers = markerManager.getNestedMarkers(getWorkspaceProject().get(), user2Field.bmGetId());
+        Marker[] duplicateMarkers = markerManager.getNestedMarkers(getWorkspaceProject(), user2Field.bmGetId());
         assertEquals("Each duplicated field should have a marker", duplicateElementsCount, duplicateMarkers.length);
         Arrays.stream(duplicateMarkers).forEach(marker -> assertMarkerIsCorrect(Optional.of(marker)));
     }
@@ -338,9 +338,9 @@ public class InvalidItemIdCheckTest
      *
      * @see IDtProject#getWorkspaceProject()
      */
-    private Optional<IProject> getWorkspaceProject()
+    private IProject getWorkspaceProject()
     {
-        return Optional.ofNullable(getProject()).map(dtProject -> dtProject.getWorkspaceProject());
+        return Optional.ofNullable(getProject()).map(IDtProject::getWorkspaceProject).orElseThrow();
     }
 
 }

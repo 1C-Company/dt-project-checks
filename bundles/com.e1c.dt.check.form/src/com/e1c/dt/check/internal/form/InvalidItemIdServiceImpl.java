@@ -17,6 +17,7 @@ import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Spliterators;
@@ -102,29 +103,32 @@ public class InvalidItemIdServiceImpl
         Map<Boolean, List<FormItem>> validAndInvalidIdentifiers =
             StreamSupport.stream(Spliterators.spliteratorUnknownSize(new FormItemIterator(form), 0), false)
                 .collect(Collectors.partitioningBy(this::hasValidId));
+        validAndInvalidIdentifiers.get(false)
+            .forEach(
+                item -> CorePlugin.trace(DEBUG_OPTION, "Check: Form item has an invalid identifier: id={0}, item={1}", //$NON-NLS-1$
+                    item.getId(), item));
         Stream<Map.Entry<FormItem, String>> invalidIdIssues = validAndInvalidIdentifiers.get(false)
             .stream()
-            .peek(item -> CorePlugin.trace(DEBUG_OPTION, "Check: Form item has an invalid identifier: id={0}, item={1}", //$NON-NLS-1$
-                item.getId(), item))
             .map(item -> new AbstractMap.SimpleEntry<>(item,
                 Messages.InvalidItemIdServiceImpl_InvalidValueOfIdAttribute));
-        Stream<Map.Entry<FormItem, String>> duplicateIdIssues = validAndInvalidIdentifiers.get(true)
+        List<Entry<Integer, List<FormItem>>> duplicateIdAndItems = validAndInvalidIdentifiers.get(true)
             .stream()
             .collect(Collectors.groupingBy(FormItem::getId))
             .entrySet()
             .stream()
             .filter(idAndItems -> idAndItems.getValue().size() > 1)
-            .peek(idAndItems -> CorePlugin.trace(DEBUG_OPTION,
-                "Check: Form has items with duplicate itentifiers: id={0}, items={1}", //$NON-NLS-1$
-                idAndItems.getKey(), idAndItems.getValue()))
+            .collect(Collectors.toList());
+        duplicateIdAndItems.forEach(idAndItems -> CorePlugin.trace(DEBUG_OPTION,
+            "Check: Form has items with duplicate itentifiers: id={0}, items={1}", //$NON-NLS-1$
+            idAndItems.getKey(), idAndItems.getValue()));
+        Stream<Map.Entry<FormItem, String>> duplicateIdIssues = duplicateIdAndItems.stream()
             .flatMap(idAndItems -> idAndItems.getValue()
                 .stream()
                 .skip(1)
                 .map(item -> new AbstractMap.SimpleEntry<>(item, MessageFormat
                     .format(Messages.InvalidItemIdServiceImpl_DuplicateValueOfIdAttribute, idAndItems.getKey()))));
-        Map<FormItem, String> allIssues = Stream.concat(invalidIdIssues, duplicateIdIssues)
-            .collect(Collectors.toMap(item -> item.getKey(), message -> message.getValue()));
-        return allIssues;
+        return Stream.concat(invalidIdIssues, duplicateIdIssues)
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     @Override

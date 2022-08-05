@@ -107,10 +107,6 @@ public class InvalidItemIdCheck
             // to ICheckDefinition.addCheckedModelObjects()
             // in InvalidItemIdCheck.AdditionalRevalidationRules.configureContextCollector().
             // We're not insterested in this child content here and need to ignore all those calls.
-            // If http://boreas.dept07/jira/browse/G5V8DT-22389 is fixed
-            // then the following excerpt could be used to trace unexpected calls.
-            // CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION, "Check: Received something that is not a Form: class={0}", //$NON-NLS-1$
-            //    object.getClass());
             return;
         }
         if (progressMonitor.isCanceled())
@@ -261,7 +257,7 @@ public class InvalidItemIdCheck
             // by user using form editor.
             // With this call, we get parasite calls to check() with non-Form objects
             // which we need to suppress.
-            // If http://boreas.dept07/jira/browse/G5V8DT-22389 is fixed
+            // If G5V8DT-22389 is fixed
             // then the call can be removed and parasite calls suppression
             // should be removed from check().
             definition.addCheckedModelObjects(FormPackage.Literals.FORM, true, CONTAINER_CLASSES);
@@ -269,7 +265,7 @@ public class InvalidItemIdCheck
             definition.addModelFeatureChangeContextCollector(new OnItemIdChangeTriggerFormValidation(),
                 FormPackage.Literals.FORM_ITEM);
             // We use here separate instances to assign each one a distinct label for tracing and debug purposes.
-            // If http://boreas.dept07/jira/browse/G5V8DT-22389 is fixed in a way that
+            // If G5V8DT-22389 is fixed in a way that
             // each instance of the collector is called only once per-event
             // then additional optimisation should be done here:
             // Single instance should be created outside of loop and registered for all classes.
@@ -382,14 +378,13 @@ public class InvalidItemIdCheck
                 notification -> notification.getEventType() == Notification.REMOVE_MANY;
             Predicate<Notification> oldValueContainsFormItem =
                 notification -> (notification.getOldValue() instanceof Collection)
-                    && (((Collection<?>)notification.getOldValue()).stream()
-                        .anyMatch(removedValue -> removedValue instanceof FormItem));
+                    && (((Collection<?>)notification.getOldValue()).stream().anyMatch(FormItem.class::isInstance));
             Predicate<Notification> removedManyItems = isRemoveMany.and(oldValueContainsFormItem);
             Predicate<Notification> someItemWasRemoved = removedSingleItem.or(removedManyItems);
             boolean hasItemBeenDeleted = changeEvent.getNotifications()
                 .values()
                 .stream()
-                .flatMap(notificationsForFeature -> notificationsForFeature.stream())
+                .flatMap(Collection::stream)
                 .anyMatch(someItemWasRemoved);
             if (hasItemBeenDeleted)
             {
