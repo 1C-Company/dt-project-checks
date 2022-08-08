@@ -186,7 +186,7 @@ public class CorePlugin
      *
      * @param traceOption Name of the option that is to be checked if message should be traced.
      * This corresponds to an individual component of function. The value should have
-     * the following format: /debug/componentName. It should be toggled eother via .options file
+     * the following format: /debug/componentName. It should be toggled either via .options file
      * or through Window  → Preferences  → General → Tracing. Note the importance of {@code /} in the beginning.
      * If value is {@code null} then option for an individual component will not be checked.
      * However, {@link #DEBUG_OPTION} will still be checked.

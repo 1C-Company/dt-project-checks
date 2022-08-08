@@ -53,7 +53,7 @@ import com.google.inject.Inject;
  * When there are multiple form items with the same identifier then one of
  * them is considered to be valid while others are deemed to be problematic duplicates.
  * This is to reduce number of errors shown to user.
- * Identifiers that are arelady invalid (as described previously) do not paticipate into
+ * Identifiers that are already invalid (as described previously) do not paticipate into
  * duplicates check and are just reported as incorrect. This means that if there are two from items
  * with {@code 0} identifiers then both of them will be reported as having incorrect rather than duplicate
  * identifiers.

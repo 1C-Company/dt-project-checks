@@ -15,6 +15,7 @@ package com.e1c.dt.check.internal.form.cleanup;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Spliterators;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -61,26 +62,49 @@ public class InvalidItemIdCleanup
     /**
      * Service used to obtain project model.
      */
-    @Inject
-    private IBmModelManager bmModelManager;
+    private final IBmModelManager bmModelManager;
 
     /**
      * Service used to check if editing is allowed.
      */
-    @Inject
-    private IModelEditingSupport editingSupport;
+    private final IModelEditingSupport editingSupport;
 
     /**
      * Service used to obtain project configuration.
      */
-    @Inject
-    private IConfigurationProvider configurationProvider;
+    private final IConfigurationProvider configurationProvider;
 
     /**
      * Service to delegate checking and fixing to.
      */
+    private final IInvalidItemIdService invalidItemIdService;
+
+    /**
+     * Creates new instance.
+     *
+     * @param invalidItemIdService Service to which delegate actual checking and fixing of form item identifiers.
+     * Must not be {@code null}.
+     * @param configurationProvider Service instance that is to be used to obtain configuration.
+     * Must not be {@code null}.
+     * @param bmModelManager Service instance that is to be used to obtain project model.
+     * Must not be {@code null}.
+     * @param editingSupport Service instance that is to be used to check if we're allowed to change configuration.
+     * Must not be {@code null}.
+     */
     @Inject
-    private IInvalidItemIdService service;
+    public InvalidItemIdCleanup(IInvalidItemIdService invalidItemIdService,
+        IConfigurationProvider configurationProvider, IBmModelManager bmModelManager,
+        IModelEditingSupport editingSupport)
+    {
+        Objects.requireNonNull(bmModelManager, "bmModelManager"); //$NON-NLS-1$
+        Objects.requireNonNull(editingSupport, "editingSupport"); //$NON-NLS-1$
+        Objects.requireNonNull(configurationProvider, "configurationProvider"); //$NON-NLS-1$
+        Objects.requireNonNull(invalidItemIdService, "invalidItemIdService"); //$NON-NLS-1$
+        this.bmModelManager = bmModelManager;
+        this.editingSupport = editingSupport;
+        this.configurationProvider = configurationProvider;
+        this.invalidItemIdService = invalidItemIdService;
+    }
 
     @Override
     public List<ICleanUpBmObjectTask> getCleanUpProjectTasks(IDtProject project)
@@ -148,7 +172,7 @@ public class InvalidItemIdCleanup
          */
         private Stream<FormItem> validateForm(Form form)
         {
-            return service.validate(form).keySet().stream();
+            return invalidItemIdService.validate(form).keySet().stream();
         }
 
     }
@@ -181,7 +205,7 @@ public class InvalidItemIdCleanup
         @Override
         public Void execute(IBmTransaction transaction, IProgressMonitor progressMonitor)
         {
-            service.fix(itemToFix);
+            invalidItemIdService.fix(itemToFix);
             return null;
         }
 

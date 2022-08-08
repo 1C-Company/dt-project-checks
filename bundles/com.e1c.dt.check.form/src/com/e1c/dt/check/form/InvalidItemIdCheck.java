@@ -57,7 +57,7 @@ import com.google.inject.Inject;
  * child content. To make sure we do not try to walk the whole form when validating every form item,
  * the check specifies the form itself as an object to be validated.
  * When user changes identifier of an item or removes an item, we need to trigger form re-validation
- * because duplicates might have gone away. For example, first opject with the same id (which did not have markers)
+ * because duplicates might have gone away. For example, first object with the same id (which did not have markers)
  * might have been deleted and we need to cleanup markers on a second object that has those markers.
  * For this purpose implementation uses {@link AdditionalRevalidationRules} extension to specify extra rules.
  * <p/>
@@ -73,8 +73,18 @@ public class InvalidItemIdCheck
     /**
      * Service to delegate checking to.
      */
+    private final IInvalidItemIdService invalidItemIdservice;
+
+    /**
+     * Creates new instance.
+     * @param invalidItemIdService Service that will be used to delegate checks to. Must not be {@code null}.
+     */
     @Inject
-    private IInvalidItemIdService service;
+    public InvalidItemIdCheck(IInvalidItemIdService invalidItemIdService)
+    {
+        Objects.requireNonNull(invalidItemIdService, "invalidItemIdService"); //$NON-NLS-1$
+        this.invalidItemIdservice = invalidItemIdService;
+    }
 
     @Override
     public String getCheckId()
@@ -115,7 +125,7 @@ public class InvalidItemIdCheck
             return;
         }
         Form form = (Form)object;
-        service.validate(form)
+        invalidItemIdservice.validate(form)
             .entrySet()
             .stream()
             .forEach(itemAndMesage -> resultAcceptor.addIssue(itemAndMesage.getValue(), itemAndMesage.getKey(),

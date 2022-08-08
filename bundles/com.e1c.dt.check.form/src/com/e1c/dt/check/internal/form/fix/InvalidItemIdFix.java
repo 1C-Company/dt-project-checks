@@ -12,6 +12,8 @@
  *******************************************************************************/
 package com.e1c.dt.check.internal.form.fix;
 
+import java.util.Objects;
+
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import com._1c.g5.v8.dt.form.model.FormItem;
@@ -43,8 +45,19 @@ public class InvalidItemIdFix
     /**
      * Service to delegate fixing to.
      */
+    private final IInvalidItemIdService invalidItemIdService;
+
+    /**
+     * Creates new instnce.
+     *
+     * @param invalidItemIdService Service to which actual fixing should be delegated to. Must not be {@code null}.
+     */
     @Inject
-    private IInvalidItemIdService service;
+    public InvalidItemIdFix(IInvalidItemIdService invalidItemIdService)
+    {
+        Objects.requireNonNull(invalidItemIdService, "invalidItemIdService"); //$NON-NLS-1$
+        this.invalidItemIdService = invalidItemIdService;
+    }
 
     @Override
     protected void configureFix(FixConfigurer configurer)
@@ -57,7 +70,7 @@ public class InvalidItemIdFix
     protected void applyChanges(FormItem modelObject, EStructuralFeature targetFeature, BasicModelFixContext context,
         IFixSession session)
     {
-        service.fix(modelObject);
+        invalidItemIdService.fix(modelObject);
     }
 
 }
