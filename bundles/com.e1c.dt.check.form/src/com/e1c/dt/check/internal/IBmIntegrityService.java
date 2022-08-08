@@ -95,7 +95,7 @@ public interface IBmIntegrityService<S extends IBmObject, T extends IBmObject, R
      */
     default boolean isValid(S startingObject)
     {
-        return !validate(startingObject).isEmpty();
+        return validate(startingObject).isEmpty();
     }
 
     /**
