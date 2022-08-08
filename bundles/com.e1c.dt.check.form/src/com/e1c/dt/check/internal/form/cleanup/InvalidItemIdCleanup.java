@@ -12,14 +12,11 @@
  *******************************************************************************/
 package com.e1c.dt.check.internal.form.cleanup;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Spliterators;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -126,15 +123,13 @@ public class InvalidItemIdCleanup
     /**
      * Task that checks what needs to be fixed and returns fixing tasks.
      * <p/>
-     * This is a read-only task that does not modify model.
-     * However, it will {@link IBmTransaction#evict()} every form
-     * so they're not modified until cleanup process is finished.
-     * The fixing itself happens in tasks that this task returns.
+     * To conserve memory this implementation will load each form one-by-one
+     * (by asking a transaction to iterate over all top objects that are {@link Form}),
+     * check it and then immediately unload ({@link IBmTransaction#evict(long)}) it.
      * <p/>
-     * The implementation asks a transaction for all top objects that are {@link Form}
-     * and passes each of those to {@link IInvalidItemIdService#validate(Form)} for validation.
-     * Each resulting {@link FormItem} is passed to separate {@link InvalidItemIdCleanupTask}
-     * and those tasks are then returned as a result.
+     * The implementation depends on {@link IInvalidItemIdService#isValid(Form)}
+     * to short-circuit after the first issue is detected to minimize double effort
+     * to validate form again in fixing tasks - {@link InvalidFormCleanupTask}.
      */
     private class CollectCleanupTasksTask
         extends AbstractBmTask<List<ICleanUpBmObjectTask>>
@@ -153,59 +148,54 @@ public class InvalidItemIdCleanup
         {
             CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION, "Cleanup: Analyzing configuration"); //$NON-NLS-1$
             Iterator<IBmObject> formIterator = transaction.getTopObjectIterator(FormPackage.Literals.FORM);
-            List<Form> forms = StreamSupport.stream(Spliterators.spliteratorUnknownSize(formIterator, 0), false)
-                .filter(Form.class::isInstance)
-                .map(Form.class::cast)
-                .collect(Collectors.toList());
-            forms.forEach(form -> transaction.evict(form.bmGetId()));
-            return forms.stream()
-                .flatMap(this::validateForm)
-                .map(InvalidItemIdCleanupTask::new)
-                .collect(Collectors.toList());
-        }
-
-        /**
-         * Validates a form and returns items that need fixing.
-         *
-         * @param form Form to be validated. Must not be {@code null}.
-         * @return Items that need to be fixed. Never {@code null}.
-         */
-        private Stream<FormItem> validateForm(Form form)
-        {
-            return invalidItemIdService.validate(form).keySet().stream();
+            List<ICleanUpBmObjectTask> fixTasks = new ArrayList<>();
+            while (formIterator.hasNext())
+            {
+                Form form = (Form)formIterator.next();
+                if (!invalidItemIdService.isValid(form))
+                {
+                    fixTasks.add(new InvalidFormCleanupTask(form.bmGetId()));
+                }
+                transaction.evict(form.bmGetId());
+            }
+            return fixTasks;
         }
 
     }
 
     /**
-     * Task that fixes invalid identifier of the individual specified {@link FormItem}.
+     * Task that fixes invalid identifiers of all {@link FormItem} on the specified form.
      * <p/>
-     * Actual fixing is delegated to {@link IInvalidItemIdService#fix(FormItem)}.
+     * This implementation first loads the form by its identifier,
+     * then delegates to {@link IInvalidItemIdService#validate(Form)} to
+     * find all invalid form items and then delegates to {@link IInvalidItemIdService#fix(FormItem)}
+     * to fix each one.
      */
-    private class InvalidItemIdCleanupTask
+    private class InvalidFormCleanupTask
         extends AbstractBmTask<Void>
         implements ICleanUpBmObjectTask
     {
 
         /**
-         * Form item whose identifier needs fixing.
+         * Identifier of the form that needs to be fixed.
          */
-        private final FormItem itemToFix;
+        private final long formIdToFix;
 
         /**
          * Creates new instance.
-         * @param itemToFix Form item whose identifier needs fixing. Must not be {@code null}.
+         * @param formIdToFix Identifier of the form that needs to be fixed.
          */
-        InvalidItemIdCleanupTask(FormItem itemToFix)
+        InvalidFormCleanupTask(long formIdToFix)
         {
             super(Messages.InvalidItemIdCleanup_Fixing_invalid_form_item_identifier);
-            this.itemToFix = itemToFix;
+            this.formIdToFix = formIdToFix;
         }
 
         @Override
         public Void execute(IBmTransaction transaction, IProgressMonitor progressMonitor)
         {
-            invalidItemIdService.fix(itemToFix);
+            Form form = (Form)transaction.getObjectById(formIdToFix);
+            invalidItemIdService.validate(form).keySet().forEach(invalidItemIdService::fix);
             return null;
         }
 

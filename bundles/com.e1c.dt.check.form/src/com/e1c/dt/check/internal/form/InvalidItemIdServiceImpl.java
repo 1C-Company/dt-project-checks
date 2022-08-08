@@ -15,11 +15,13 @@ package com.e1c.dt.check.internal.form;
 import java.text.MessageFormat;
 import java.util.AbstractMap;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.Spliterators;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -90,6 +92,28 @@ public class InvalidItemIdServiceImpl
     {
         Objects.requireNonNull(formIdentifierService, "formIdentifierService"); //$NON-NLS-1$
         this.formIdentifierService = formIdentifierService;
+    }
+
+    @Override
+    public boolean isValid(Form form)
+    {
+        CorePlugin.trace(DEBUG_OPTION, "Check: Quick check of form: {0}", form); //$NON-NLS-1$
+        Set<Integer> seenIdentifiers = new HashSet<>();
+        FormItemIterator itemIterator = new FormItemIterator(form);
+        while (itemIterator.hasNext())
+        {
+            FormItem item = itemIterator.next();
+            if (!hasValidId(item))
+            {
+                return false;
+            }
+            boolean uniqueId = seenIdentifiers.add(item.getId());
+            if (!uniqueId)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

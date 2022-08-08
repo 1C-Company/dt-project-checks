@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.assertj.core.api.Assertions;
 import org.eclipse.emf.common.util.BasicEList;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
@@ -34,6 +35,7 @@ import com._1c.g5.v8.dt.form.model.FormItem;
 import com._1c.g5.v8.dt.form.model.FormItemContainer;
 import com._1c.g5.v8.dt.form.model.Table;
 import com._1c.g5.v8.dt.form.service.FormIdentifierService;
+import com.e1c.dt.check.internal.form.IInvalidItemIdService;
 import com.e1c.dt.check.internal.form.InvalidItemIdServiceImpl;
 
 /**
@@ -388,4 +390,199 @@ public class InvalidItemIdServiceImplTest
         // then
         Mockito.verify(commandBar).setId(newId);
     }
+
+    /**
+     * {@link com.e1c.dt.check.internal.IBmIntegrityService#isValid()} allows {@code null}
+     * as object to be validated. So it should not cause an error. Instead, we should just tell there are
+     * no issues.
+     */
+    @Test
+    public final void testIsvalidNull()
+    {
+        // given
+        Form form = null;
+        // when
+        boolean actual = invalidItemIdServiceImpl.isValid(form);
+        // then
+        Assert.assertTrue(actual);
+    }
+
+    /**
+     * When form is empty then it is valid.
+     */
+    @Test
+    public final void testIsValidEmptyForm()
+    {
+        // given
+        Mockito.when(formMock.getItems()).thenReturn(new BasicEList<>());
+        // when
+        boolean actual = invalidItemIdServiceImpl.isValid(formMock);
+        // then
+        Assert.assertTrue(actual);
+    }
+
+    /**
+     * Zero identifier of form item means form is not valid.
+     */
+    @Test
+    public final void testIsValidZeroId()
+    {
+        // given
+        int id = 0;
+        FormItem item = Mockito.mock(FormItem.class);
+        Mockito.when(formMock.getItems()).thenReturn(new BasicEList<>(List.of(item)));
+        Mockito.when(item.getId()).thenReturn(id);
+        // when
+        boolean actual = invalidItemIdServiceImpl.isValid(formMock);
+        // then
+        Assert.assertFalse(actual);
+    }
+
+    /**
+     * Negative identifier of form item does not mean that form is invalid.
+     */
+    @Test
+    public final void testIsValideNegativeId()
+    {
+        // given
+        int id = -2;
+        FormItem item = Mockito.mock(FormItem.class);
+        Mockito.when(formMock.getItems()).thenReturn(new BasicEList<>(List.of(item)));
+        Mockito.when(item.getId()).thenReturn(id);
+        // when
+        boolean actual = invalidItemIdServiceImpl.isValid(formMock);
+        // then
+        Assert.assertTrue(actual);
+    }
+
+    /**
+     * Positive identifier of form item does not invalidate form.
+     */
+    @Test
+    public final void testIsValidPositiveId()
+    {
+        // given
+        int id = 1;
+        FormItem item = Mockito.mock(FormItem.class);
+        Mockito.when(formMock.getItems()).thenReturn(new BasicEList<>(List.of(item)));
+        Mockito.when(item.getId()).thenReturn(id);
+        // when
+        boolean actual = invalidItemIdServiceImpl.isValid(formMock);
+        // then
+        Assert.assertTrue(actual);
+    }
+
+    /**
+     * When form has multiple items with issues then {@link IInvalidItemIdService#isValid(Form)}
+     * tells the form is invalid.
+     */
+    @Test
+    public final void testIsValidMultipleIssues()
+    {
+        // given
+        FormItem invalidItem1 = Mockito.mock(FormItem.class);
+        Mockito.when(invalidItem1.getId()).thenReturn(0);
+        FormItem validItem2 = Mockito.mock(FormItem.class);
+        Mockito.when(validItem2.getId()).thenReturn(1);
+        FormItem invalidItem3 = Mockito.mock(FormItem.class);
+        Mockito.when(invalidItem3.getId()).thenReturn(0);
+        Mockito.when(formMock.getItems()).thenReturn(new BasicEList<>(List.of(invalidItem1, validItem2, invalidItem3)));
+        // when
+        boolean actual = invalidItemIdServiceImpl.isValid(formMock);
+        // then
+        Assert.assertFalse(actual);
+    }
+
+    /**
+     * When one form item contains another form item and this nested form item has an issue
+     * then the form is reported as invalid.
+     */
+    @Test
+    public final void testIsValidNestedIssues()
+    {
+        // given
+        FormItem innerItem = Mockito.mock(FormItem.class);
+        Mockito.when(innerItem.getId()).thenReturn(0);
+        FormItem outerItem = Mockito.mock(Table.class, Mockito.withSettings().extraInterfaces(FormItemContainer.class));
+        Mockito.when(outerItem.getId()).thenReturn(1);
+        Mockito.when(((FormItemContainer)outerItem).getItems()).thenReturn(new BasicEList<>(List.of(innerItem)));
+        Mockito.when(formMock.getItems()).thenReturn(new BasicEList<>(List.of(outerItem)));
+        // when
+        boolean actual = invalidItemIdServiceImpl.isValid(formMock);
+        // then
+        Assert.assertFalse(actual);
+    }
+
+    /**
+     * When there are two items with duplicate but otherwise correct identifiers
+     * then the form is reported as invalid.
+     */
+    @Test
+    public final void testIsValidDuplicate()
+    {
+        // given
+        FormItem duplicate1 = Mockito.mock(FormItem.class);
+        Mockito.when(duplicate1.getId()).thenReturn(1);
+        FormItem duplicate2 = Mockito.mock(FormItem.class);
+        Mockito.when(duplicate2.getId()).thenReturn(1);
+        Mockito.when(formMock.getItems()).thenReturn(new BasicEList<>(List.of(duplicate1, duplicate2)));
+        // when
+        boolean actual = invalidItemIdServiceImpl.isValid(formMock);
+        // then
+        Assert.assertFalse(actual);
+    }
+
+    /**
+     * It should not matter how form items are nested into each other when looking for
+     * duplicate identifiers. When there are two duplicates in different hierarchies
+     * then form should be reported as invalid.
+     */
+    @Test
+    public final void testIsValidDuplicatesInDifferentHierarchies()
+    {
+        // given
+        int id = 0;
+        FormItem duplicateInnerItem1 = Mockito.mock(FormItem.class);
+        Mockito.when(duplicateInnerItem1.getId()).thenReturn(++id);
+        FormItem outerItem1 =
+            Mockito.mock(Table.class, Mockito.withSettings().extraInterfaces(FormItemContainer.class));
+        Mockito.when(outerItem1.getId()).thenReturn(++id);
+        Mockito.when(((FormItemContainer)outerItem1).getItems())
+            .thenReturn(new BasicEList<>(List.of(duplicateInnerItem1)));
+        FormItem duplicateInnerItem2 = Mockito.mock(FormItem.class);
+        // We do not increment id here creating duplication at another nesting level.
+        Mockito.when(duplicateInnerItem2.getId()).thenReturn(id);
+        FormItem outerItem2 =
+            Mockito.mock(Table.class, Mockito.withSettings().extraInterfaces(FormItemContainer.class));
+        Mockito.when(outerItem2.getId()).thenReturn(++id);
+        Mockito.when(((FormItemContainer)outerItem2).getItems())
+            .thenReturn(new BasicEList<>(List.of(duplicateInnerItem2)));
+        Mockito.when(formMock.getItems()).thenReturn(new BasicEList<>(List.of(outerItem1, outerItem2)));
+        // when
+        boolean actual = invalidItemIdServiceImpl.isValid(formMock);
+        // then
+        Assert.assertFalse(actual);
+    }
+
+    /**
+    * Validation should ignore non-{@link FormItem} content like attributes.
+    */
+    @Test
+    public final void testIsValidIgnoresNonItems()
+    {
+        // given
+        FormAttribute duplicate1 = Mockito.mock(FormAttribute.class);
+        Mockito.when(duplicate1.getId()).thenReturn(1);
+        FormAttribute duplicate2 = Mockito.mock(FormAttribute.class);
+        Mockito.when(duplicate2.getId()).thenReturn(1);
+        FormAttribute incorrect = Mockito.mock(FormAttribute.class);
+        Mockito.when(incorrect.getId()).thenReturn(0);
+        Mockito.when(formMock.getAttributes()).thenReturn(new BasicEList<>(List.of(duplicate1, duplicate2, incorrect)));
+        Mockito.when(formMock.getItems()).thenReturn(new BasicEList<>());
+        // when
+        boolean actual = invalidItemIdServiceImpl.isValid(formMock);
+        // then
+        Assert.assertTrue(actual);
+    }
+
 }

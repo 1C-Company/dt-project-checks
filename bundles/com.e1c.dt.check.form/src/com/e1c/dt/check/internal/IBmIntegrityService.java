@@ -81,6 +81,24 @@ public interface IBmIntegrityService<S extends IBmObject, T extends IBmObject, R
     Map<T, R> validate(S startingObject);
 
     /**
+     * Checks for issues.
+     *
+     * Validation starts from {@code startingObject} and then traverses according to the algorithm
+     * specific to the particular implementation.
+     *
+     * The difference from {@link #validate(IBmObject)} is that this is a short-circuit operation
+     * that should return as soon as it is obvious that there are issues.
+     *
+     * @param startingObject Object to start validation from. May be {@code null}
+     * which by itself could be an issue to report in the result or not depending on validation logic.
+     * @return {@code true} if there are issues to be fixed.
+     */
+    default boolean isValid(S startingObject)
+    {
+        return !validate(startingObject).isEmpty();
+    }
+
+    /**
      * Fixes specified object.
      *
      * A way to fix the object is implementation specific.
