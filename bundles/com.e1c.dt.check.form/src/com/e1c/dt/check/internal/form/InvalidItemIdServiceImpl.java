@@ -159,7 +159,7 @@ public class InvalidItemIdServiceImpl
     public void fix(FormItem item)
     {
         boolean wasSet = item.eIsSet(FormPackage.Literals.FORM_ITEM__ID);
-        Object oldValue = item.eGet(FormPackage.Literals.FORM_ITEM__ID);
+        int oldValue = item.getId();
         Optional<Integer> newValue = calculateNewIdFor(item);
         if (newValue.isEmpty())
         {

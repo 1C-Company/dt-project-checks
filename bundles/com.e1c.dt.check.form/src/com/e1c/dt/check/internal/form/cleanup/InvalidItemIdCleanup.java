@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.ecore.EClass;
 
 import com._1c.g5.v8.bm.core.IBmObject;
 import com._1c.g5.v8.bm.core.IBmTransaction;
@@ -27,12 +28,10 @@ import com._1c.g5.v8.bm.integration.IBmModel;
 import com._1c.g5.v8.dt.core.model.EditingMode;
 import com._1c.g5.v8.dt.core.model.IModelEditingSupport;
 import com._1c.g5.v8.dt.core.platform.IBmModelManager;
-import com._1c.g5.v8.dt.core.platform.IConfigurationProvider;
 import com._1c.g5.v8.dt.core.platform.IDtProject;
 import com._1c.g5.v8.dt.form.model.Form;
 import com._1c.g5.v8.dt.form.model.FormItem;
 import com._1c.g5.v8.dt.form.model.FormPackage;
-import com._1c.g5.v8.dt.metadata.mdclass.Configuration;
 import com._1c.g5.v8.dt.migration.cleanup.ICleanUpProjectObjectTasksProvider;
 import com.e1c.dt.check.internal.form.CorePlugin;
 import com.e1c.dt.check.internal.form.IInvalidItemIdService;
@@ -42,13 +41,22 @@ import com.google.inject.Inject;
  * Cleans up invalid identifiers of form items.
  * <p/>
  * This implementation delegates actual checking of forms and fixing of found issues to {@link IInvalidItemIdService}.
- * This class contains just the wiring into cleanup infrastructure.
- * <p/>
- * Cleanup will be done only if it`s safe to do so:
+ * This class contains just the wiring into cleanup infrastructure:
  * <ul>
- * <li>project has a model and a configuration (that has been loaded) associated with it</li>
- * <li>the model is allowed to be edited directly as per {@link IModelEditingSupport}</li>
+ * <li>If BM instance can be obtained then non-lightweight read-only transaction is used to list forms
+ * (via {@link IBmTransaction#getTopObjectIterator(EClass)}) and</li>
+ * <li>for each form it is checked if it can be edited. Ineditable froms are omitted from validation and cleanup.</li>
+ * <li>Quick form checking is delegated to {@link IInvalidItemIdService}</li>
+ * <li>For each form with issues, a separate cleanup task will be returned for further management by
+ * {@code com._1c.g5.v8.dt.internal.migration.cleanup.CleanUpProjectSourcesManager}.</li>
+ * <li>After analsis of the form, it will be evicted from the transaction to conserve memory</li>
+ * <li>Form cleanup tasks will obtain corresponding form (by its identifier) from the transaction,
+ * perform full validation thanks to {@link IInvalidItemIdService} and fix each malformed form item identifier
+ * using the same service.</li>
  * </ul>
+ * Both scanning (before quick-checking each form) and
+ * fixing (before loading form to do full validation and before fixing each form item)
+ * will be stopped as soon as cancellation is reported.
  *
  * @author Nikolay Martynov
  */
@@ -67,11 +75,6 @@ public class InvalidItemIdCleanup
     private final IModelEditingSupport editingSupport;
 
     /**
-     * Service used to obtain project configuration.
-     */
-    private final IConfigurationProvider configurationProvider;
-
-    /**
      * Service to delegate checking and fixing to.
      */
     private final IInvalidItemIdService invalidItemIdService;
@@ -81,40 +84,31 @@ public class InvalidItemIdCleanup
      *
      * @param invalidItemIdService Service to which delegate actual checking and fixing of form item identifiers.
      * Must not be {@code null}.
-     * @param configurationProvider Service instance that is to be used to obtain configuration.
-     * Must not be {@code null}.
      * @param bmModelManager Service instance that is to be used to obtain project model.
      * Must not be {@code null}.
-     * @param editingSupport Service instance that is to be used to check if we're allowed to change configuration.
+     * @param editingSupport Service instance that is to be used to check if we're allowed to change forms.
      * Must not be {@code null}.
      */
     @Inject
-    public InvalidItemIdCleanup(IInvalidItemIdService invalidItemIdService,
-        IConfigurationProvider configurationProvider, IBmModelManager bmModelManager,
+    public InvalidItemIdCleanup(IInvalidItemIdService invalidItemIdService, IBmModelManager bmModelManager,
         IModelEditingSupport editingSupport)
     {
         Objects.requireNonNull(bmModelManager, "bmModelManager"); //$NON-NLS-1$
         Objects.requireNonNull(editingSupport, "editingSupport"); //$NON-NLS-1$
-        Objects.requireNonNull(configurationProvider, "configurationProvider"); //$NON-NLS-1$
         Objects.requireNonNull(invalidItemIdService, "invalidItemIdService"); //$NON-NLS-1$
         this.bmModelManager = bmModelManager;
         this.editingSupport = editingSupport;
-        this.configurationProvider = configurationProvider;
         this.invalidItemIdService = invalidItemIdService;
     }
 
     @Override
     public List<ICleanUpBmObjectTask> getCleanUpProjectTasks(IDtProject project)
     {
-        Configuration configuration = configurationProvider.getConfiguration(project);
         IBmModel model = bmModelManager.getModel(project);
-        boolean isSafeToClean = configuration != null && !configuration.eIsProxy()
-            && editingSupport.canEdit(configuration, EditingMode.DIRECT) && model != null;
-        if (!isSafeToClean)
+        if (model == null)
         {
             CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION,
-                "Clean: Skipping cleanup for safety reasons: configuration={0}, model={1}", //$NON-NLS-1$
-                configuration, model);
+                "Clean: Skipping cleanup because cannot obtain BM instance"); //$NON-NLS-1$
             return Collections.emptyList();
         }
         return model.executeReadonlyTask(new CollectCleanupTasksTask(), false);
@@ -122,14 +116,6 @@ public class InvalidItemIdCleanup
 
     /**
      * Task that checks what needs to be fixed and returns fixing tasks.
-     * <p/>
-     * To conserve memory this implementation will load each form one-by-one
-     * (by asking a transaction to iterate over all top objects that are {@link Form}),
-     * check it and then immediately unload ({@link IBmTransaction#evict(long)}) it.
-     * <p/>
-     * The implementation depends on {@link IInvalidItemIdService#isValid(Form)}
-     * to short-circuit after the first issue is detected to minimize double effort
-     * to validate form again in fixing tasks - {@link InvalidFormCleanupTask}.
      */
     private class CollectCleanupTasksTask
         extends AbstractBmTask<List<ICleanUpBmObjectTask>>
@@ -149,10 +135,10 @@ public class InvalidItemIdCleanup
             CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION, "Cleanup: Analyzing configuration"); //$NON-NLS-1$
             Iterator<IBmObject> formIterator = transaction.getTopObjectIterator(FormPackage.Literals.FORM);
             List<ICleanUpBmObjectTask> fixTasks = new ArrayList<>();
-            while (formIterator.hasNext())
+            while (formIterator.hasNext() && !progressMonitor.isCanceled())
             {
                 Form form = (Form)formIterator.next();
-                if (!invalidItemIdService.isValid(form))
+                if (editingSupport.canEdit(form, EditingMode.DIRECT) && !invalidItemIdService.isValid(form))
                 {
                     fixTasks.add(new InvalidFormCleanupTask(form.bmGetId()));
                 }
@@ -165,11 +151,6 @@ public class InvalidItemIdCleanup
 
     /**
      * Task that fixes invalid identifiers of all {@link FormItem} on the specified form.
-     * <p/>
-     * This implementation first loads the form by its identifier,
-     * then delegates to {@link IInvalidItemIdService#validate(Form)} to
-     * find all invalid form items and then delegates to {@link IInvalidItemIdService#fix(FormItem)}
-     * to fix each one.
      */
     private class InvalidFormCleanupTask
         extends AbstractBmTask<Void>
@@ -194,8 +175,19 @@ public class InvalidItemIdCleanup
         @Override
         public Void execute(IBmTransaction transaction, IProgressMonitor progressMonitor)
         {
+            if (progressMonitor.isCanceled())
+            {
+                return null;
+            }
             Form form = (Form)transaction.getObjectById(formIdToFix);
-            invalidItemIdService.validate(form).keySet().forEach(invalidItemIdService::fix);
+            for (FormItem itemToFix : invalidItemIdService.validate(form).keySet())
+            {
+                if (progressMonitor.isCanceled())
+                {
+                    return null;
+                }
+                invalidItemIdService.fix(itemToFix);
+            }
             return null;
         }
 

@@ -301,7 +301,7 @@ public class InvalidItemIdCheck
         public void collectContextOnFeatureChange(IBmObject bmObject, EStructuralFeature feature, BmSubEvent bmEvent,
             CheckContextCollectingSession contextSession)
         {
-            boolean formItemIdHasChanged = Objects.equals(feature, FormPackage.Literals.FORM_ITEM__ID)
+            boolean formItemIdHasChanged = FormPackage.Literals.FORM_ITEM__ID.equals(feature)
                 && bmObject instanceof FormItem && bmEvent instanceof BmChangeEvent;
             if (formItemIdHasChanged)
             {

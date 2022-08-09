@@ -21,7 +21,6 @@ import com._1c.g5.v8.dt.core.platform.IV8ProjectManager;
 import com._1c.g5.v8.dt.form.service.FormIdentifierService;
 import com._1c.g5.v8.dt.form.service.datasourceinfo.IDataSourceInfoAssociationService;
 import com._1c.g5.wiring.AbstractServiceAwareModule;
-import com.google.inject.Scopes;
 
 /**
  * External services bindings for plugin.
@@ -49,7 +48,6 @@ public class ExternalDependenciesModule
         bind(IBmModelManager.class).toService();
         bind(IModelEditingSupport.class).toService();
         bind(IConfigurationProvider.class).toService();
-        bind(IInvalidItemIdService.class).to(InvalidItemIdServiceImpl.class).in(Scopes.SINGLETON);
     }
 
 }
