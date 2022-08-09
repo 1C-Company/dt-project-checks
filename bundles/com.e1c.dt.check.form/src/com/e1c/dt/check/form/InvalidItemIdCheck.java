@@ -407,7 +407,7 @@ public class InvalidItemIdCheck
             }
             else
             {
-                if (!CorePlugin.getDefault().isDebugging())
+                if (CorePlugin.getDefault().isDebugging())
                 {
                     CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION,
                         "Check: Event ignored because it did not match re-validation criteria: handlerLabel={0}, changedObject={1}, feature={2}, event={2}", //$NON-NLS-1$
