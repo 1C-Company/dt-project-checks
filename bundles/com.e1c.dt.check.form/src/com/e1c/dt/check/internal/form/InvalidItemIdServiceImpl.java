@@ -132,8 +132,8 @@ public class InvalidItemIdServiceImpl
             .entrySet()
             .stream()
             .filter(idAndItems -> idAndItems.getValue().size() > 1);
-        Stream<Map.Entry<FormItem, String>> duplicateIdIssues = duplicateIdAndItems.flatMap(idAndItems -> idAndItems
-            .getValue()
+        Stream<Map.Entry<FormItem, String>> duplicateIdIssues =
+            duplicateIdAndItems.flatMap(idAndItems -> idAndItems.getValue()
                 .stream()
                 .skip(1)
                 .map(item -> new AbstractMap.SimpleEntry<>(item, MessageFormat
@@ -180,13 +180,8 @@ public class InvalidItemIdServiceImpl
             return Optional.of(-1);
         }
         IBmObject topObject = item.bmGetTopObject();
-        if (!(topObject instanceof Form))
-        {
-            return Optional.empty();
-        }
-        Form form = (Form)item.bmGetTopObject();
-        int newValue = formIdentifierService.getNextItemId(form);
-        return Optional.of(newValue);
+        return topObject instanceof Form ? Optional.of(formIdentifierService.getNextItemId((Form)topObject))
+            : Optional.empty();
     }
 
 }
