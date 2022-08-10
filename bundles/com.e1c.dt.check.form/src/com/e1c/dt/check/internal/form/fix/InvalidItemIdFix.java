@@ -12,8 +12,6 @@
  *******************************************************************************/
 package com.e1c.dt.check.internal.form.fix;
 
-import java.util.Objects;
-
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import com._1c.g5.v8.dt.form.model.FormItem;
@@ -55,7 +53,6 @@ public class InvalidItemIdFix
     @Inject
     public InvalidItemIdFix(IInvalidItemIdService invalidItemIdService)
     {
-        Objects.requireNonNull(invalidItemIdService, "invalidItemIdService"); //$NON-NLS-1$
         this.invalidItemIdService = invalidItemIdService;
     }
 

@@ -13,12 +13,10 @@
 package com.e1c.dt.check.form;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.notify.Notification;
@@ -31,7 +29,6 @@ import com._1c.g5.v8.bm.core.event.BmSubEvent;
 import com._1c.g5.v8.dt.form.model.Form;
 import com._1c.g5.v8.dt.form.model.FormItem;
 import com._1c.g5.v8.dt.form.model.FormPackage;
-import com.e1c.dt.check.internal.form.CorePlugin;
 import com.e1c.dt.check.internal.form.IInvalidItemIdService;
 import com.e1c.g5.v8.dt.check.CheckComplexity;
 import com.e1c.g5.v8.dt.check.ICheckDefinition;
@@ -82,7 +79,6 @@ public class InvalidItemIdCheck
     @Inject
     public InvalidItemIdCheck(IInvalidItemIdService invalidItemIdService)
     {
-        Objects.requireNonNull(invalidItemIdService, "invalidItemIdService"); //$NON-NLS-1$
         this.invalidItemIdservice = invalidItemIdService;
     }
 
@@ -121,7 +117,6 @@ public class InvalidItemIdCheck
         }
         if (progressMonitor.isCanceled())
         {
-            CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION, "Check: Check has been cancelled"); //$NON-NLS-1$
             return;
         }
         Form form = (Form)object;
@@ -146,71 +141,9 @@ public class InvalidItemIdCheck
         IBmObject topObject = bmObject.bmGetTopObject();
         if (!(topObject instanceof Form))
         {
-            CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION,
-                "Check: Unable to determine parent form: object={0}, topObject={1}", //$NON-NLS-1$
-                bmObject, bmObject.bmGetTopObject());
             return Optional.empty();
         }
         return Optional.of((Form)bmObject.bmGetTopObject());
-    }
-
-    /**
-     * Dumps diagnostic intofmation about event.
-     *
-     * @param event Event to diagnose. Could be {@code null}.
-     * @return Diagnostic information about event suitable for dumping into log. Never {@code null}.
-     */
-    private static String dumpEvent(BmSubEvent event)
-    {
-        StringBuilder buffer = new StringBuilder();
-        if (event == null)
-        {
-            buffer.append("null"); //$NON-NLS-1$
-        }
-        else
-        {
-            buffer.append(event.getClass().getName()).append("@").append(System.identityHashCode(event)); //$NON-NLS-1$
-            if (event instanceof BmChangeEvent)
-            {
-                BmChangeEvent changeEvent = (BmChangeEvent)event;
-                buffer.append("("); //$NON-NLS-1$
-                buffer.append("object=").append(changeEvent.getObject()); //$NON-NLS-1$
-                Map<Integer, String> notificationTypes = Map.of(
-                // @formatter:off
-                    0, "CREATE", //$NON-NLS-1$
-                    1, "SET", //$NON-NLS-1$
-                    2, "UNSET", //$NON-NLS-1$
-                    3, "ADD", //$NON-NLS-1$
-                    4, "REMOVE", //$NON-NLS-1$
-                    5, "ADD_MANY", //$NON-NLS-1$
-                    6, "REMOVE_MANY", //$NON-NLS-1$
-                    7, "MOVE", //$NON-NLS-1$
-                    8, "REMOVING_ADAPTER", //$NON-NLS-1$
-                    9, "RESOLVE" //$NON-NLS-1$
-                    // @formatter:on
-                );
-                buffer.append(", notifications=\n") //$NON-NLS-1$
-                    .append(
-
-                        changeEvent.getNotifications()
-                            .entrySet()
-                            .stream()
-                            .map(entry -> "feature=" + entry.getKey() + ", notifications=\n" //$NON-NLS-1$ //$NON-NLS-2$
-                                + entry.getValue()
-                                    .stream()
-                                    .map(notification -> "[type=" + notificationTypes.get(notification.getEventType()) //$NON-NLS-1$
-                                        + ", old=" //$NON-NLS-1$
-                                        + notification.getOldValue() + ", new=" + notification.getNewValue() + "]") //$NON-NLS-1$ //$NON-NLS-2$
-                                    .collect(Collectors.joining("\n"))) //$NON-NLS-1$
-                            .collect(Collectors.joining("\n"))); //$NON-NLS-1$
-                buffer.append("\n, fqnChanged=").append(changeEvent.isFqnChanged()); //$NON-NLS-1$
-                buffer.append(", oldFqn=").append(changeEvent.getOldFqn()); //$NON-NLS-1$
-                buffer.append(", propertiesChanged=").append(changeEvent.isPropertiesChanged()); //$NON-NLS-1$
-                buffer.append(", binaryAttachmentsChanged=").append(changeEvent.isBinaryAttachmentsChanged()); //$NON-NLS-1$
-                buffer.append(")"); //$NON-NLS-1$
-            }
-        }
-        return buffer.toString();
     }
 
     /**
@@ -279,8 +212,9 @@ public class InvalidItemIdCheck
             // each instance of the collector is called only once per-event
             // then additional optimisation should be done here:
             // Single instance should be created outside of loop and registered for all classes.
+            OnModelFeatureChangeContextCollector onDelete = new OnItemRemovalTriggerFormValidation();
             CONTAINER_CLASSES.forEach(containerClass -> definition.addModelFeatureChangeContextCollector(
-                new OnItemRemovalTriggerFormValidation(containerClass.getName()), containerClass));
+                onDelete, containerClass));
         }
     }
 
@@ -311,21 +245,7 @@ public class InvalidItemIdCheck
                     .anyMatch(notification -> !Objects.equals(notification.getOldValue(), notification.getNewValue()));
                 if (valueChanged)
                 {
-                    findFormOf(bmObject).ifPresent(form -> {
-                        CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION,
-                            "Check: Triggering re-validation of parent form due to change of from item identifier: formItem={0}, form={1}", //$NON-NLS-1$
-                            bmObject, form);
-                        contextSession.addModelCheck(form);
-                    });
-                }
-                else
-                {
-                    if (CorePlugin.getDefault().isDebugging())
-                    {
-                        CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION,
-                            "Check: Ignored strange update event for form item identifier: object={0}, event={1}", //$NON-NLS-1$
-                            bmObject, dumpEvent(bmEvent));
-                    }
+                    findFormOf(bmObject).ifPresent(contextSession::addModelCheck);
                 }
             }
         }
@@ -354,24 +274,6 @@ public class InvalidItemIdCheck
         implements OnModelFeatureChangeContextCollector
     {
 
-        /**
-         * Label for this instance.
-         *
-         * It is used to distinguish instances when dumping traces to log.
-         */
-        private final String instanceLabel;
-
-        /**
-         * Creates instance with the specified label.
-         *
-         * @param instanceLabel A label to be used for this instance. For example, trace message in the log will
-         * have this label added. May be {@code null}.
-         */
-        OnItemRemovalTriggerFormValidation(String instanceLabel)
-        {
-            this.instanceLabel = instanceLabel;
-        }
-
         @Override
         public void collectContextOnFeatureChange(IBmObject bmObject, EStructuralFeature feature, BmSubEvent bmEvent,
             CheckContextCollectingSession contextSession)
@@ -398,21 +300,7 @@ public class InvalidItemIdCheck
                 .anyMatch(someItemWasRemoved);
             if (hasItemBeenDeleted)
             {
-                findFormOf(bmObject).ifPresent(form -> {
-                    CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION,
-                        "Check: Triggering re-validation of form due to removal of an item: handlerLabel={0}, changedObject={1}, form={2}", //$NON-NLS-1$
-                        instanceLabel, bmObject, form);
-                    contextSession.addModelCheck(form);
-                });
-            }
-            else
-            {
-                if (CorePlugin.getDefault().isDebugging())
-                {
-                    CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION,
-                        "Check: Event ignored because it did not match re-validation criteria: handlerLabel={0}, changedObject={1}, feature={2}, event={2}", //$NON-NLS-1$
-                        instanceLabel, bmObject, feature, dumpEvent(changeEvent));
-                }
+                findFormOf(bmObject).ifPresent(contextSession::addModelCheck);
             }
         }
     }

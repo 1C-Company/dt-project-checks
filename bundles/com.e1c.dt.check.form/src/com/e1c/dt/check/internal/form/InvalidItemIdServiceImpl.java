@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Spliterators;
@@ -33,7 +32,6 @@ import com._1c.g5.v8.bm.core.IBmObject;
 import com._1c.g5.v8.dt.form.model.AutoCommandBar;
 import com._1c.g5.v8.dt.form.model.Form;
 import com._1c.g5.v8.dt.form.model.FormItem;
-import com._1c.g5.v8.dt.form.model.FormPackage;
 import com._1c.g5.v8.dt.form.service.FormIdentifierService;
 import com._1c.g5.v8.dt.form.service.item.FormItemIterator;
 import com.google.inject.Inject;
@@ -90,14 +88,12 @@ public class InvalidItemIdServiceImpl
     @Inject
     public InvalidItemIdServiceImpl(FormIdentifierService formIdentifierService)
     {
-        Objects.requireNonNull(formIdentifierService, "formIdentifierService"); //$NON-NLS-1$
         this.formIdentifierService = formIdentifierService;
     }
 
     @Override
     public boolean isValid(Form form)
     {
-        CorePlugin.trace(DEBUG_OPTION, "Check: Quick check of form: {0}", form); //$NON-NLS-1$
         Set<Integer> seenIdentifiers = new HashSet<>();
         FormItemIterator itemIterator = new FormItemIterator(form);
         while (itemIterator.hasNext())
@@ -119,7 +115,6 @@ public class InvalidItemIdServiceImpl
     @Override
     public Map<FormItem, String> validate(Form form)
     {
-        CorePlugin.trace(DEBUG_OPTION, "Check: Checking form: {0}", form); //$NON-NLS-1$
         if (form == null)
         {
             return Collections.emptyMap();
@@ -127,26 +122,18 @@ public class InvalidItemIdServiceImpl
         Map<Boolean, List<FormItem>> validAndInvalidIdentifiers =
             StreamSupport.stream(Spliterators.spliteratorUnknownSize(new FormItemIterator(form), 0), false)
                 .collect(Collectors.partitioningBy(this::hasValidId));
-        validAndInvalidIdentifiers.get(false)
-            .forEach(
-                item -> CorePlugin.trace(DEBUG_OPTION, "Check: Form item has an invalid identifier: id={0}, item={1}", //$NON-NLS-1$
-                    item.getId(), item));
         Stream<Map.Entry<FormItem, String>> invalidIdIssues = validAndInvalidIdentifiers.get(false)
             .stream()
             .map(item -> new AbstractMap.SimpleEntry<>(item,
                 Messages.InvalidItemIdServiceImpl_InvalidValueOfIdAttribute));
-        List<Entry<Integer, List<FormItem>>> duplicateIdAndItems = validAndInvalidIdentifiers.get(true)
+        Stream<Entry<Integer, List<FormItem>>> duplicateIdAndItems = validAndInvalidIdentifiers.get(true)
             .stream()
             .collect(Collectors.groupingBy(FormItem::getId))
             .entrySet()
             .stream()
-            .filter(idAndItems -> idAndItems.getValue().size() > 1)
-            .collect(Collectors.toList());
-        duplicateIdAndItems.forEach(idAndItems -> CorePlugin.trace(DEBUG_OPTION,
-            "Check: Form has items with duplicate itentifiers: id={0}, items={1}", //$NON-NLS-1$
-            idAndItems.getKey(), idAndItems.getValue()));
-        Stream<Map.Entry<FormItem, String>> duplicateIdIssues = duplicateIdAndItems.stream()
-            .flatMap(idAndItems -> idAndItems.getValue()
+            .filter(idAndItems -> idAndItems.getValue().size() > 1);
+        Stream<Map.Entry<FormItem, String>> duplicateIdIssues = duplicateIdAndItems.flatMap(idAndItems -> idAndItems
+            .getValue()
                 .stream()
                 .skip(1)
                 .map(item -> new AbstractMap.SimpleEntry<>(item, MessageFormat
@@ -158,19 +145,7 @@ public class InvalidItemIdServiceImpl
     @Override
     public void fix(FormItem item)
     {
-        boolean wasSet = item.eIsSet(FormPackage.Literals.FORM_ITEM__ID);
-        int oldValue = item.getId();
-        Optional<Integer> newValue = calculateNewIdFor(item);
-        if (newValue.isEmpty())
-        {
-            CorePlugin.trace(DEBUG_OPTION,
-                "Fix: To avoid data corruption, will not change identifier of {0} because unable to determine proper new value", //$NON-NLS-1$
-                item);
-            return;
-        }
-        item.setId(newValue.get());
-        CorePlugin.trace(DEBUG_OPTION, "Fix: Replaced identifier of {0}: wasSet={1}, oldValue={2}, newValue={3}", //$NON-NLS-1$
-            item, wasSet, oldValue, newValue.get());
+        calculateNewIdFor(item).ifPresent(item::setId);
     }
 
     /**
@@ -202,16 +177,11 @@ public class InvalidItemIdServiceImpl
         boolean commandBarOfForm = item instanceof AutoCommandBar && item.eContainer() instanceof Form;
         if (commandBarOfForm)
         {
-            CorePlugin.trace(DEBUG_OPTION,
-                "Fix: This seem as command bar of a form so will use -1 for identifier: item={0}, container={1}", item, //$NON-NLS-1$
-                item.eContainer());
             return Optional.of(-1);
         }
         IBmObject topObject = item.bmGetTopObject();
         if (!(topObject instanceof Form))
         {
-            CorePlugin.trace(DEBUG_OPTION, "Fix: Unable to determine enclosing form: item={0}, topObject={1}", item, //$NON-NLS-1$
-                item.bmGetTopObject());
             return Optional.empty();
         }
         Form form = (Form)item.bmGetTopObject();

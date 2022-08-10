@@ -45,9 +45,4 @@
     <extension point="com._1c.g5.v8.dt.migration.cleanup_project_sources">
         <object class="com.e1c.dt.check.internal.form.ExecutableExtensionFactory:com.e1c.dt.check.internal.form.cleanup.InvalidItemIdCleanup"/>
     </extension>
-    <extension point="org.eclipse.ui.trace.traceComponents">
-        <component id="com.e1c.dt.check.form.component" label="%traceComponentLabel">
-            <bundle consumed="true" name="com.e1c.dt.check.form"></bundle>
-        </component>
-    </extension>
 </plugin>

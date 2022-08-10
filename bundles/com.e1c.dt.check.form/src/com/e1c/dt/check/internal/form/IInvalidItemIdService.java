@@ -33,11 +33,6 @@ public interface IInvalidItemIdService
 {
 
     /**
-     * Name of the option that determines if tracing is enabled.
-     */
-    String DEBUG_OPTION = "/debug/InvalidItemId"; //$NON-NLS-1$
-
-    /**
      * Identifier of the check.
      */
     String CHECK_ID = "form-invalid-item-id"; //$NON-NLS-1$

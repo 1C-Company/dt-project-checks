@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EClass;
@@ -33,7 +32,6 @@ import com._1c.g5.v8.dt.form.model.Form;
 import com._1c.g5.v8.dt.form.model.FormItem;
 import com._1c.g5.v8.dt.form.model.FormPackage;
 import com._1c.g5.v8.dt.migration.cleanup.ICleanUpProjectObjectTasksProvider;
-import com.e1c.dt.check.internal.form.CorePlugin;
 import com.e1c.dt.check.internal.form.IInvalidItemIdService;
 import com.google.inject.Inject;
 
@@ -93,9 +91,6 @@ public class InvalidItemIdCleanup
     public InvalidItemIdCleanup(IInvalidItemIdService invalidItemIdService, IBmModelManager bmModelManager,
         IModelEditingSupport editingSupport)
     {
-        Objects.requireNonNull(bmModelManager, "bmModelManager"); //$NON-NLS-1$
-        Objects.requireNonNull(editingSupport, "editingSupport"); //$NON-NLS-1$
-        Objects.requireNonNull(invalidItemIdService, "invalidItemIdService"); //$NON-NLS-1$
         this.bmModelManager = bmModelManager;
         this.editingSupport = editingSupport;
         this.invalidItemIdService = invalidItemIdService;
@@ -107,8 +102,6 @@ public class InvalidItemIdCleanup
         IBmModel model = bmModelManager.getModel(project);
         if (model == null)
         {
-            CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION,
-                "Clean: Skipping cleanup because cannot obtain BM instance"); //$NON-NLS-1$
             return Collections.emptyList();
         }
         return model.executeReadonlyTask(new CollectCleanupTasksTask(), false);
@@ -132,7 +125,6 @@ public class InvalidItemIdCleanup
         @Override
         public List<ICleanUpBmObjectTask> execute(IBmTransaction transaction, IProgressMonitor progressMonitor)
         {
-            CorePlugin.trace(IInvalidItemIdService.DEBUG_OPTION, "Cleanup: Analyzing configuration"); //$NON-NLS-1$
             Iterator<IBmObject> formIterator = transaction.getTopObjectIterator(FormPackage.Literals.FORM);
             List<ICleanUpBmObjectTask> fixTasks = new ArrayList<>();
             while (formIterator.hasNext() && !progressMonitor.isCanceled())
