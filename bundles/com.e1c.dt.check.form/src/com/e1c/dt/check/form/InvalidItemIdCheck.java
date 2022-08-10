@@ -139,11 +139,7 @@ public class InvalidItemIdCheck
     private static Optional<Form> findFormOf(IBmObject bmObject)
     {
         IBmObject topObject = bmObject.bmGetTopObject();
-        if (!(topObject instanceof Form))
-        {
-            return Optional.empty();
-        }
-        return Optional.of((Form)bmObject.bmGetTopObject());
+        return topObject instanceof Form ? Optional.of((Form)topObject) : Optional.empty();
     }
 
     /**
@@ -213,8 +209,8 @@ public class InvalidItemIdCheck
             // then additional optimisation should be done here:
             // Single instance should be created outside of loop and registered for all classes.
             OnModelFeatureChangeContextCollector onDelete = new OnItemRemovalTriggerFormValidation();
-            CONTAINER_CLASSES.forEach(containerClass -> definition.addModelFeatureChangeContextCollector(
-                onDelete, containerClass));
+            CONTAINER_CLASSES
+                .forEach(containerClass -> definition.addModelFeatureChangeContextCollector(onDelete, containerClass));
         }
     }
 
