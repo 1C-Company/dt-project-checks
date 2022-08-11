@@ -33,4 +33,6 @@ Import-Package: com._1c.g5.v8.bm.core;version="[7.6.0,8.0.0)",
  com.e1c.g5.v8.dt.check.components;version="[2.0.0,3.0.0)",
  com.e1c.g5.v8.dt.check.context;version="[2.0.0,3.0.0)",
  com.e1c.g5.v8.dt.check.settings;version="[3.0.0,4.0.0)"
-Export-Package: com.e1c.dt.check.md;version="0.3.0"
+Export-Package: com.e1c.dt.check.internal.md;version="0.1.0",
+ com.e1c.dt.check.internal.md.fix;version="0.1.0",
+ com.e1c.dt.check.md;version="0.3.0"
