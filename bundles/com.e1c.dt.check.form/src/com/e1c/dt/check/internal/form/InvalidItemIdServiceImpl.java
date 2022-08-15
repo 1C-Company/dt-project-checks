@@ -13,18 +13,12 @@
 package com.e1c.dt.check.internal.form;
 
 import java.text.MessageFormat;
-import java.util.AbstractMap;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
-import java.util.Spliterators;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 
@@ -119,27 +113,27 @@ public class InvalidItemIdServiceImpl
         {
             return Collections.emptyMap();
         }
-        Map<Boolean, List<FormItem>> validAndInvalidIdentifiers =
-            StreamSupport.stream(Spliterators.spliteratorUnknownSize(new FormItemIterator(form), 0), false)
-                .collect(Collectors.partitioningBy(this::hasValidId));
-        Stream<Map.Entry<FormItem, String>> invalidIdIssues = validAndInvalidIdentifiers.get(false)
-            .stream()
-            .map(item -> new AbstractMap.SimpleEntry<>(item,
-                Messages.InvalidItemIdServiceImpl_InvalidValueOfIdAttribute));
-        Stream<Entry<Integer, List<FormItem>>> duplicateIdAndItems = validAndInvalidIdentifiers.get(true)
-            .stream()
-            .collect(Collectors.groupingBy(FormItem::getId))
-            .entrySet()
-            .stream()
-            .filter(idAndItems -> idAndItems.getValue().size() > 1);
-        Stream<Map.Entry<FormItem, String>> duplicateIdIssues =
-            duplicateIdAndItems.flatMap(idAndItems -> idAndItems.getValue()
-                .stream()
-                .skip(1)
-                .map(item -> new AbstractMap.SimpleEntry<>(item, MessageFormat
-                    .format(Messages.InvalidItemIdServiceImpl_DuplicateValueOfIdAttribute, idAndItems.getKey()))));
-        return Stream.concat(invalidIdIssues, duplicateIdIssues)
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        Map<FormItem, String> itemsWithIssues = new HashMap<>();
+        Set<Integer> seenIdentifiers = new HashSet<>();
+        FormItemIterator itemIterator = new FormItemIterator(form);
+        while (itemIterator.hasNext())
+        {
+            FormItem item = itemIterator.next();
+            if (!hasValidId(item))
+            {
+                itemsWithIssues.put(item, Messages.InvalidItemIdServiceImpl_InvalidValueOfIdAttribute);
+            }
+            else
+            {
+                int itemId = item.getId();
+                if (!seenIdentifiers.add(itemId))
+                {
+                    itemsWithIssues.put(item,
+                        MessageFormat.format(Messages.InvalidItemIdServiceImpl_DuplicateValueOfIdAttribute, itemId));
+                }
+            }
+        }
+        return itemsWithIssues;
     }
 
     @Override

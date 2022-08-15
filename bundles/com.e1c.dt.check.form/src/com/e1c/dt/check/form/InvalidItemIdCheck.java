@@ -13,10 +13,11 @@
 package com.e1c.dt.check.form;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.notify.Notification;
@@ -120,11 +121,11 @@ public class InvalidItemIdCheck
             return;
         }
         Form form = (Form)object;
-        invalidItemIdservice.validate(form)
-            .entrySet()
-            .stream()
-            .forEach(itemAndMesage -> resultAcceptor.addIssue(itemAndMesage.getValue(), itemAndMesage.getKey(),
-                FormPackage.Literals.FORM_ITEM__ID));
+        for (Entry<FormItem, String> itemAndMesage : invalidItemIdservice.validate(form).entrySet())
+        {
+            resultAcceptor.addIssue(itemAndMesage.getValue(), itemAndMesage.getKey(),
+                FormPackage.Literals.FORM_ITEM__ID);
+        }
     }
 
     /**
@@ -236,12 +237,14 @@ public class InvalidItemIdCheck
             if (formItemIdHasChanged)
             {
                 BmChangeEvent changeEvent = (BmChangeEvent)bmEvent;
-                boolean valueChanged = changeEvent.getNotifications(FormPackage.Literals.FORM_ITEM__ID)
-                    .stream()
-                    .anyMatch(notification -> !Objects.equals(notification.getOldValue(), notification.getNewValue()));
-                if (valueChanged)
+                for (Notification notification : changeEvent.getNotifications(FormPackage.Literals.FORM_ITEM__ID))
                 {
-                    findFormOf(bmObject).ifPresent(contextSession::addModelCheck);
+                    boolean valueChanged = !Objects.equals(notification.getOldValue(), notification.getNewValue());
+                    if (valueChanged)
+                    {
+                        findFormOf(bmObject).ifPresent(contextSession::addModelCheck);
+                        break;
+                    }
                 }
             }
         }
@@ -279,25 +282,52 @@ public class InvalidItemIdCheck
                 return;
             }
             BmChangeEvent changeEvent = (BmChangeEvent)bmEvent;
-            Predicate<Notification> isRemoveSingle = notification -> notification.getEventType() == Notification.REMOVE;
-            Predicate<Notification> oldValueIsFormItem = notification -> notification.getOldValue() instanceof FormItem;
-            Predicate<Notification> removedSingleItem = isRemoveSingle.and(oldValueIsFormItem);
-            Predicate<Notification> isRemoveMany =
-                notification -> notification.getEventType() == Notification.REMOVE_MANY;
-            Predicate<Notification> oldValueContainsFormItem =
-                notification -> (notification.getOldValue() instanceof Collection)
-                    && (((Collection<?>)notification.getOldValue()).stream().anyMatch(FormItem.class::isInstance));
-            Predicate<Notification> removedManyItems = isRemoveMany.and(oldValueContainsFormItem);
-            Predicate<Notification> someItemWasRemoved = removedSingleItem.or(removedManyItems);
-            boolean hasItemBeenDeleted = changeEvent.getNotifications()
-                .values()
-                .stream()
-                .flatMap(Collection::stream)
-                .anyMatch(someItemWasRemoved);
-            if (hasItemBeenDeleted)
+            for (List<Notification> notifications : changeEvent.getNotifications().values())
             {
-                findFormOf(bmObject).ifPresent(contextSession::addModelCheck);
+                for (Notification notification : notifications)
+                {
+                    if (isOneFormItemRemoved(notification) || isManyFormItemsRemoved(notification))
+                    {
+                        findFormOf(bmObject).ifPresent(contextSession::addModelCheck);
+                        return;
+                    }
+                }
             }
+        }
+
+        /**
+         * Checks if notification indicates that one form item has been removed.
+         *
+         * @param notification Notification to check. Must not be {@code null}.
+         * @return {@code true} if notification indicates that one object has been removed and it was a form item.
+         */
+        private boolean isOneFormItemRemoved(Notification notification)
+        {
+            return notification.getEventType() == Notification.REMOVE && notification.getOldValue() instanceof FormItem;
+        }
+
+        /**
+         * Checks if notification indicates that a form item has been deleted among other multiple objects.
+         *
+         * @param notification Notification to check. Must not be {@code null}.
+         * @return {@code true} if notification indicates that multiple items have been removed and a form
+         * item was among them.
+         */
+        private boolean isManyFormItemsRemoved(Notification notification)
+        {
+            if (notification.getEventType() != Notification.REMOVE_MANY
+                || !(notification.getOldValue() instanceof Collection))
+            {
+                return false;
+            }
+            for (Object removedObject : (Collection<?>)notification.getOldValue())
+            {
+                if (removedObject instanceof FormItem)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 

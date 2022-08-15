@@ -293,12 +293,14 @@ public class InvalidItemIdServiceImplTest
     {
         // given
         FormAttribute duplicate1 = Mockito.mock(FormAttribute.class);
-        Mockito.when(duplicate1.getId()).thenReturn(1);
+        Mockito.lenient().when(duplicate1.getId()).thenReturn(1);
         FormAttribute duplicate2 = Mockito.mock(FormAttribute.class);
-        Mockito.when(duplicate2.getId()).thenReturn(1);
+        Mockito.lenient().when(duplicate2.getId()).thenReturn(1);
         FormAttribute incorrect = Mockito.mock(FormAttribute.class);
-        Mockito.when(incorrect.getId()).thenReturn(0);
-        Mockito.when(formMock.getAttributes()).thenReturn(new BasicEList<>(List.of(duplicate1, duplicate2, incorrect)));
+        Mockito.lenient().when(incorrect.getId()).thenReturn(0);
+        Mockito.lenient()
+            .when(formMock.getAttributes())
+            .thenReturn(new BasicEList<>(List.of(duplicate1, duplicate2, incorrect)));
         Mockito.when(formMock.getItems()).thenReturn(new BasicEList<>());
         // when
         Map<FormItem, String> actual = invalidItemIdServiceImpl.validate(formMock);
@@ -318,7 +320,7 @@ public class InvalidItemIdServiceImplTest
         int newId = 1;
         Mockito.when(formIdentifierServiceMock.getNextItemId(formMock)).thenReturn(newId);
         FormItem item = Mockito.mock(FormItem.class);
-        Mockito.when(item.getId()).thenReturn(oldId);
+        Mockito.lenient().when(item.getId()).thenReturn(oldId);
         Mockito.when(item.bmGetTopObject()).thenReturn(formMock);
         // when
         invalidItemIdServiceImpl.fix(item);
@@ -330,7 +332,7 @@ public class InvalidItemIdServiceImplTest
      * When fixing an item, it should not matter if current identifier value seems correct
      * (because it might be a duplicate).
      * We still should ask identifeirs service for new value and assign it.
-     * Identifeirs serice wants to inspect a form. It should be obtained as top object of the item.
+     * Identifiers serice wants to inspect a form. It should be obtained as top object of the item.
      */
     @Test
     public final void testFixCorrectId()
@@ -340,7 +342,7 @@ public class InvalidItemIdServiceImplTest
         int newId = 2;
         Mockito.when(formIdentifierServiceMock.getNextItemId(formMock)).thenReturn(newId);
         FormItem item = Mockito.mock(FormItem.class);
-        Mockito.when(item.getId()).thenReturn(oldId);
+        Mockito.lenient().when(item.getId()).thenReturn(oldId);
         Mockito.when(item.bmGetTopObject()).thenReturn(formMock);
         // when
         invalidItemIdServiceImpl.fix(item);
@@ -483,9 +485,9 @@ public class InvalidItemIdServiceImplTest
         FormItem invalidItem1 = Mockito.mock(FormItem.class);
         Mockito.when(invalidItem1.getId()).thenReturn(0);
         FormItem validItem2 = Mockito.mock(FormItem.class);
-        Mockito.when(validItem2.getId()).thenReturn(1);
+        Mockito.lenient().when(validItem2.getId()).thenReturn(1);
         FormItem invalidItem3 = Mockito.mock(FormItem.class);
-        Mockito.when(invalidItem3.getId()).thenReturn(0);
+        Mockito.lenient().when(invalidItem3.getId()).thenReturn(0);
         Mockito.when(formMock.getItems()).thenReturn(new BasicEList<>(List.of(invalidItem1, validItem2, invalidItem3)));
         // when
         boolean actual = invalidItemIdServiceImpl.isValid(formMock);
@@ -572,12 +574,14 @@ public class InvalidItemIdServiceImplTest
     {
         // given
         FormAttribute duplicate1 = Mockito.mock(FormAttribute.class);
-        Mockito.when(duplicate1.getId()).thenReturn(1);
+        Mockito.lenient().when(duplicate1.getId()).thenReturn(1);
         FormAttribute duplicate2 = Mockito.mock(FormAttribute.class);
-        Mockito.when(duplicate2.getId()).thenReturn(1);
+        Mockito.lenient().when(duplicate2.getId()).thenReturn(1);
         FormAttribute incorrect = Mockito.mock(FormAttribute.class);
-        Mockito.when(incorrect.getId()).thenReturn(0);
-        Mockito.when(formMock.getAttributes()).thenReturn(new BasicEList<>(List.of(duplicate1, duplicate2, incorrect)));
+        Mockito.lenient().when(incorrect.getId()).thenReturn(0);
+        Mockito.lenient()
+            .when(formMock.getAttributes())
+            .thenReturn(new BasicEList<>(List.of(duplicate1, duplicate2, incorrect)));
         Mockito.when(formMock.getItems()).thenReturn(new BasicEList<>());
         // when
         boolean actual = invalidItemIdServiceImpl.isValid(formMock);
