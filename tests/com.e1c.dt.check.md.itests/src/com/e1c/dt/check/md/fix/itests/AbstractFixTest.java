@@ -19,6 +19,20 @@ import com.e1c.g5.v8.dt.check.qfix.IFixManager;
 import com.e1c.g5.v8.dt.testing.check.CheckTestBase;
 import com.google.inject.Inject;
 
+/**
+ *  @author alexandr
+ *
+ *  Abstract tests for the quick fix.
+ *
+ *  Example of test
+ *  1. Create an IDtProject dtProject
+ *  2. Prepare an IBmModel with all necessary data
+ *  3. Then get a marker Marker marker = getFirstMarker(CHECK_ID, object, dtProject);
+ *  4. And applyFix(marker, dtProject, "Fix Title");
+ *  5. Get the marker again marker = getFirstMarker(CHECK_ID, object, dtProject);
+ *  6. Check that the marker is null assertNull(marker);
+ *
+ */
 @GuiceModules(modules = { ExternalDependenciesModule.class })
 public abstract class AbstractFixTest
     extends CheckTestBase
@@ -32,6 +46,14 @@ public abstract class AbstractFixTest
     @Inject
     private IFixManager fixManager;
 
+    /**
+     *
+     * Method which applies a quick fix for error on the marker.
+     *
+     * @param marker {@link Marker} marker with error. May not be {@code null}.
+     * @param dtProject {@link IDtProject} EDT project. May not be {@code null}. Should match the sub-folder name of the 'workspaces' folder
+     * @param targetFixDescription {@link String} Fix title. May not be {@code null}.
+     */
     public void applyFix(Marker marker, IDtProject dtProject, String targetFixDescription)
     {
         IMarkerWrapper markerWrapper = new BmMarkerWrapper(marker, dtProject.getWorkspaceProject(), bmModelManager,

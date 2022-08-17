@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNull;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.junit.ClassRule;
 import org.junit.Test;
 
 import com._1c.g5.v8.bm.core.IBmObject;
@@ -15,8 +14,6 @@ import com._1c.g5.v8.bm.core.IBmTransaction;
 import com._1c.g5.v8.bm.integration.AbstractBmTask;
 import com._1c.g5.v8.bm.integration.IBmModel;
 import com._1c.g5.v8.dt.core.platform.IDtProject;
-import com._1c.g5.v8.dt.platform.version.Version;
-import com._1c.g5.v8.dt.testing.TestingPlatformSupport;
 import com._1c.g5.v8.dt.validation.marker.Marker;
 
 /**
@@ -26,10 +23,6 @@ import com._1c.g5.v8.dt.validation.marker.Marker;
 public class MdReferenceIntegrityCheckQuickFixTest
     extends AbstractFixTest
 {
-
-    @ClassRule
-    public static TestingPlatformSupport testingPlatformSupport = new TestingPlatformSupport(Version.V8_3_20);
-
     private static final String CHECK_ID = "md-reference-intergrity";
 
     private static final String PROJECT_NAME = "MdIntegrity";
@@ -65,7 +58,7 @@ public class MdReferenceIntegrityCheckQuickFixTest
         Marker marker = getFirstMarker(CHECK_ID, object, dtProject);
 
         // make fix
-        applyFix(marker, dtProject, Messages.MdReferenceIntegrity_FixTitle);
+        applyFix(marker, dtProject, "Proxy reference deletion"); //$NON-NLS-1$
         waitForDD(dtProject);
         object = getTopObjectByFqn(FQN_CONFIGURATION, dtProject);
         marker = getFirstMarker(CHECK_ID, object, dtProject);
