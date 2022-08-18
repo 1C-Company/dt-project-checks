@@ -20,17 +20,20 @@ import com.e1c.g5.v8.dt.testing.check.CheckTestBase;
 import com.google.inject.Inject;
 
 /**
- *  @author alexandr
  *
  *  Abstract tests for the quick fix.
  *
- *  Example of test
- *  1. Create an IDtProject dtProject
- *  2. Prepare an IBmModel with all necessary data
- *  3. Then get a marker Marker marker = getFirstMarker(CHECK_ID, object, dtProject);
- *  4. And applyFix(marker, dtProject, "Fix Title");
- *  5. Get the marker again marker = getFirstMarker(CHECK_ID, object, dtProject);
- *  6. Check that the marker is null assertNull(marker);
+ *  Example of test:
+ *  <ol>
+ *  <li>Create an IDtProject dtProject</li>
+ *  <li>Prepare an IBmModel with all necessary data</li>
+ *  <li>Then get a marker Marker marker = getFirstMarker(CHECK_ID, object, dtProject);</li>
+ *  <li>And applyFix(marker, dtProject, "Fix Title");</li>
+ *  <li>Get the marker again marker = getFirstMarker(CHECK_ID, object, dtProject);</li>
+ *  <li>Check that the marker is null assertNull(marker);</li>
+ *  </ol>
+ *
+ *  @author Alexandr Sanarov
  *
  */
 @GuiceModules(modules = { ExternalDependenciesModule.class })
