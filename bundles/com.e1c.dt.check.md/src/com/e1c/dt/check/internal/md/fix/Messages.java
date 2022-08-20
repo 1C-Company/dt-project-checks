@@ -10,24 +10,21 @@
  * Contributors:
  *     1C-Soft LLC - initial implementation
  *******************************************************************************/
-package com.e1c.dt.check.internal.md;
+package com.e1c.dt.check.internal.md.fix;
 
 import org.eclipse.osgi.util.NLS;
 
 /**
- * Messages.
+ * Messages
  *
- * @author Alexander Tretyakevich
+ * @author Alexandr Sanarov
+ *
  */
 final class Messages
     extends NLS
 {
-    private static final String BUNDLE_NAME = "com.e1c.dt.check.internal.md.messages"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "com.e1c.dt.check.internal.md.fix.messages"; //$NON-NLS-1$
 
-    public static String MdReferenceIntegrity_LostReference_Single;
-    public static String MdReferenceIntegrity_LostReference_Many;
-    public static String MdReferenceIntegrity_Title;
-    public static String MdReferenceIntegrity_Description;
     public static String MdReferenceIntegrity_FixDescription;
     public static String MdReferenceIntegrity_FixTitle;
 

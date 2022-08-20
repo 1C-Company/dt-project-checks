@@ -30,9 +30,9 @@ public class ExternalDependenciesModule
      *
      * @param bundle the parent bundle, cannot be {@code null}
      */
-    public ExternalDependenciesModule(Plugin plugin)
+    public ExternalDependenciesModule(Plugin bundle)
     {
-        super(plugin);
+        super(bundle);
     }
 
     @Override

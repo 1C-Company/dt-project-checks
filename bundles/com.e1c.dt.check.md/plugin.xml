@@ -42,4 +42,10 @@
           class="com.e1c.dt.check.internal.md.MdReferenceIntegrity">
       </check>            
     </extension>
+    <extension
+          point="com.e1c.g5.v8.dt.check.fixes">
+       <fix
+             class="com.e1c.dt.check.internal.md.fix.MdReferenceIntegrityFix">
+       </fix>
+    </extension>
 </plugin>
