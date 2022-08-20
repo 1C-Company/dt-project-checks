@@ -4,7 +4,6 @@
 package com.e1c.dt.check.md.fix.itests;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -32,6 +31,7 @@ public class MdReferenceIntegrityCheckQuickFixTest
     private static final String CATALOG_NAME = "Catalog";
     private static final String FQN_CATALOG = CATALOG_TYPE + CATALOG_NAME;
     private static final String FQN_CONFIGURATION = "Configuration";
+    private static boolean check = true;
 
     @Test
     public void testMdObjectRemovalByQuickFix() throws CoreException
@@ -57,14 +57,12 @@ public class MdReferenceIntegrityCheckQuickFixTest
         // Configuration references
         IBmObject object = getTopObjectByFqn(FQN_CONFIGURATION, dtProject);
         Marker marker = getFirstMarker(CHECK_ID, object, dtProject);
-
         // make fix
         applyFix(marker, dtProject, "Proxy reference deletion"); //$NON-NLS-1$
         waitForDD(dtProject);
         object = getTopObjectByFqn(FQN_CONFIGURATION, dtProject);
         marker = getFirstMarker(CHECK_ID, object, dtProject);
-        waitForDD(dtProject);
+        assertQuickFixResult(object, dtProject, marker);
         assertFalse(model.isDisposed());
-        assertNull(marker);
     }
 }

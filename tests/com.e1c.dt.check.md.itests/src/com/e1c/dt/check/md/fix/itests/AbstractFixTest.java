@@ -1,12 +1,18 @@
 package com.e1c.dt.check.md.fix.itests;
 
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Collection;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 
+import com._1c.g5.v8.bm.core.IBmObject;
 import com._1c.g5.v8.dt.core.naming.ISymbolicLinkLocalizer;
 import com._1c.g5.v8.dt.core.platform.IDtProject;
 import com._1c.g5.v8.dt.core.platform.IV8ProjectManager;
+import com._1c.g5.v8.dt.metadata.mdclass.Catalog;
+import com._1c.g5.v8.dt.metadata.mdclass.Configuration;
 import com._1c.g5.v8.dt.testing.GuiceModules;
 import com._1c.g5.v8.dt.ui.util.OpenHelper;
 import com._1c.g5.v8.dt.ui.validation.BmMarkerWrapper;
@@ -72,5 +78,30 @@ public abstract class AbstractFixTest
                 fixManager.executeFix(handle, new NullProgressMonitor());
                 fixManager.finishFix(handle);
             });
+    }
+
+    /**
+     *
+     * Asserts that an quick fix has done well.
+     *
+     * @param object
+     * @param dtProject
+     * @param marker
+     */
+    public void assertQuickFixResult(IBmObject object, IDtProject dtProject, Marker marker)
+    {
+        boolean check = true;
+        Configuration configuration = (Configuration)object;
+        for (Catalog catalog : configuration.getCatalogs())
+        {
+            if (catalog.eIsProxy())
+            {
+                check = false;
+                break;
+            }
+        }
+        waitForDD(dtProject);
+        assertNull(marker);
+        assertTrue(check);
     }
 }
