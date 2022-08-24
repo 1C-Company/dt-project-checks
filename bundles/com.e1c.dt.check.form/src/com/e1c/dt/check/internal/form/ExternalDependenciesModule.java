@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.Plugin;
 
 import com._1c.g5.v8.dt.core.model.IModelEditingSupport;
 import com._1c.g5.v8.dt.core.platform.IBmModelManager;
-import com._1c.g5.v8.dt.core.platform.IConfigurationProvider;
 import com._1c.g5.v8.dt.core.platform.IV8ProjectManager;
 import com._1c.g5.v8.dt.form.service.FormIdentifierService;
 import com._1c.g5.v8.dt.form.service.datasourceinfo.IDataSourceInfoAssociationService;
@@ -47,7 +46,6 @@ public class ExternalDependenciesModule
         bind(FormIdentifierService.class).toService();
         bind(IBmModelManager.class).toService();
         bind(IModelEditingSupport.class).toService();
-        bind(IConfigurationProvider.class).toService();
     }
 
 }

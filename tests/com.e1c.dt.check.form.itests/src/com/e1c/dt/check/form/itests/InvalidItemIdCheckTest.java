@@ -41,7 +41,6 @@ import com._1c.g5.v8.dt.validation.marker.BmObjectMarker;
 import com._1c.g5.v8.dt.validation.marker.Marker;
 import com._1c.g5.v8.dt.validation.marker.MarkerSeverity;
 import com.e1c.dt.check.form.InvalidItemIdCheck;
-import com.e1c.dt.check.internal.form.IInvalidItemIdService;
 import com.e1c.g5.v8.dt.testing.check.SingleProjectReadOnlyCheckTestBase;
 import com.google.common.base.Preconditions;
 
@@ -68,7 +67,7 @@ public class InvalidItemIdCheckTest
     {
         IBmObject form = getTopObjectByFqn("Catalog.Catalog.Form.DefaultListForm.Form", getProject());
         List<Marker> markers = streamAllMarkers(getWorkspaceProject()).filter(byForm(form))
-            .filter(byNaturalCheckId(IInvalidItemIdService.CHECK_ID, getWorkspaceProject()))
+            .filter(byNaturalCheckId(InvalidItemIdCheck.CHECK_ID, getWorkspaceProject()))
             .collect(Collectors.toList());
         assertEquals("Markers found", 0, markers.size());
     }
@@ -84,7 +83,7 @@ public class InvalidItemIdCheckTest
         IBmObject form = getTopObjectByFqn("Catalog.Catalog.Form.Id0ImmediateChild.Form", getProject());
         Optional<Marker> marker = streamAllMarkers(getWorkspaceProject()).filter(byForm(form))
             .filter(byTarget((FormField)findChildByName(form, "Code")))
-            .filter(byNaturalCheckId(IInvalidItemIdService.CHECK_ID, getWorkspaceProject()))
+            .filter(byNaturalCheckId(InvalidItemIdCheck.CHECK_ID, getWorkspaceProject()))
             .findFirst();
         assertMarkerIsCorrect(marker);
     }
@@ -100,7 +99,7 @@ public class InvalidItemIdCheckTest
         IBmObject form = getTopObjectByFqn("Catalog.Catalog.Form.Id0NestedChild.Form", getProject());
         Optional<Marker> marker = streamAllMarkers(getWorkspaceProject()).filter(byForm(form))
             .filter(byTarget(((FormField)findChildByName(form, "Code")).getContextMenu()))
-            .filter(byNaturalCheckId(IInvalidItemIdService.CHECK_ID, getWorkspaceProject()))
+            .filter(byNaturalCheckId(InvalidItemIdCheck.CHECK_ID, getWorkspaceProject()))
             .findFirst();
         assertMarkerIsCorrect(marker);
     }
@@ -116,7 +115,7 @@ public class InvalidItemIdCheckTest
         IBmObject form = getTopObjectByFqn("Catalog.Catalog.Form.MissingId.Form", getProject());
         Optional<Marker> marker = streamAllMarkers(getWorkspaceProject()).filter(byForm(form))
             .filter(byTarget((FormField)findChildByName(form, "Code")))
-            .filter(byNaturalCheckId(IInvalidItemIdService.CHECK_ID, getWorkspaceProject()))
+            .filter(byNaturalCheckId(InvalidItemIdCheck.CHECK_ID, getWorkspaceProject()))
             .findFirst();
         assertMarkerIsCorrect(marker);
     }
@@ -132,7 +131,7 @@ public class InvalidItemIdCheckTest
         IBmObject form = getTopObjectByFqn("Catalog.Catalog.Form.NegativeId.Form", getProject());
         Optional<Marker> marker = streamAllMarkers(getWorkspaceProject()).filter(byForm(form))
             .filter(byTarget((FormField)findChildByName(form, "Code")))
-            .filter(byNaturalCheckId(IInvalidItemIdService.CHECK_ID, getWorkspaceProject()))
+            .filter(byNaturalCheckId(InvalidItemIdCheck.CHECK_ID, getWorkspaceProject()))
             .findFirst();
         assertTrue("Marker found", marker.isEmpty());
     }
@@ -150,7 +149,7 @@ public class InvalidItemIdCheckTest
         int brokenElementsCount = 22;
         IBmObject form = getTopObjectByFqn("Catalog.Catalog.Form.MissingIdMultiple.Form", getProject());
         List<Marker> markers = streamAllMarkers(getWorkspaceProject()).filter(byForm(form))
-            .filter(byNaturalCheckId(IInvalidItemIdService.CHECK_ID, getWorkspaceProject()))
+            .filter(byNaturalCheckId(InvalidItemIdCheck.CHECK_ID, getWorkspaceProject()))
             .collect(Collectors.toList());
         assertEquals("Markers count", brokenElementsCount, markers.size());
         assertEquals("Not all markers target their own object", brokenElementsCount,
@@ -209,7 +208,7 @@ public class InvalidItemIdCheckTest
         Marker marker = optionalMarker.orElseThrow(() -> new AssertionError("Marker not found"));
         assertEquals("Severity is unexpected", MarkerSeverity.MAJOR, marker.getSeverity());
         assertTrue("Check is unexpected",
-            checkRepository.toUid(IInvalidItemIdService.CHECK_ID, getProject().getWorkspaceProject())
+            checkRepository.toUid(InvalidItemIdCheck.CHECK_ID, getProject().getWorkspaceProject())
                 .stream()
                 .map(uid -> checkRepository.getShortUid(uid, getProject()))
                 .collect(Collectors.toSet())

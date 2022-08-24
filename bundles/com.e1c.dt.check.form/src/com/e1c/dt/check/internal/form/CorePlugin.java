@@ -121,8 +121,8 @@ public class CorePlugin
     {
         plugin = null;
         injector = null;
-        super.stop(bundleContext);
 
+        super.stop(bundleContext);
     }
 
     /**
@@ -152,7 +152,7 @@ public class CorePlugin
     {
         try
         {
-            return Guice.createInjector(new ExternalDependenciesModule(this), new ServiceModule());
+            return Guice.createInjector(new ExternalDependenciesModule(this));
         }
         catch (Exception e)
         {

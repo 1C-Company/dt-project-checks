@@ -12,8 +12,13 @@
  *******************************************************************************/
 package com.e1c.dt.check.form;
 
+import java.text.MessageFormat;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
@@ -27,10 +32,11 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import com._1c.g5.v8.bm.core.IBmObject;
 import com._1c.g5.v8.bm.core.event.BmChangeEvent;
 import com._1c.g5.v8.bm.core.event.BmSubEvent;
+import com._1c.g5.v8.dt.form.model.AutoCommandBar;
 import com._1c.g5.v8.dt.form.model.Form;
 import com._1c.g5.v8.dt.form.model.FormItem;
 import com._1c.g5.v8.dt.form.model.FormPackage;
-import com.e1c.dt.check.internal.form.IInvalidItemIdService;
+import com._1c.g5.v8.dt.form.service.item.FormItemIterator;
 import com.e1c.g5.v8.dt.check.CheckComplexity;
 import com.e1c.g5.v8.dt.check.ICheckDefinition;
 import com.e1c.g5.v8.dt.check.ICheckParameters;
@@ -42,15 +48,31 @@ import com.e1c.g5.v8.dt.check.context.OnModelFeatureChangeContextCollector;
 import com.e1c.g5.v8.dt.check.context.OnModelObjectRemovalContextCollector;
 import com.e1c.g5.v8.dt.check.settings.IssueSeverity;
 import com.e1c.g5.v8.dt.check.settings.IssueType;
-import com.google.inject.Inject;
 
 /**
  * Checks that form items have valid identifiers.
  * <p/>
- * This implementation delegates actual verification to {@link IInvalidItemIdService}.
- * This class itself contains only the wiring into {@link com.e1c.g5.v8.dt.check.ICheck}
- * and the rest of the infrastructure that triggers validation.
- * <p/>
+ * <ul>
+ * <li>Each {@link FormItem} on a form is checked regardless of how deep it is nested.</li>
+ * <li>{@link FormItem#getId()} is considered to be invalid if its value is {@code 0}
+ * which is a default value for {@link org.eclipse.emf.ecore.EObject#eGet(EStructuralFeature, boolean)}
+ * in case of {@link java.lang.Integer} feature.
+ * <li>Negative values are not considered to be invalid. That is because such values are perfectly valid
+ * at least for some of the cases. For example, {@link AutoCommandBar}
+ * might have {@code -1} as in identifier. This can be seen in the implementation of
+ * {@code com._1c.g5.v8.dt.internal.form.generator.FormGeneratorCore}.</li>
+ * <li>Additionally, form items have to have a unique identifier value
+ * accross all other items on this {@link Form} regardless of how they are nested into each other.
+ * When there are multiple form items with the same identifier then one of
+ * them is considered to be valid while others are deemed to be problematic duplicates.
+ * This is to reduce number of errors shown to user.</li>
+ * <li>Identifiers that are already invalid (as described previously) do not paticipate into
+ * duplicates check and are just reported as incorrect. This means that if there are two from items
+ * with {@code 0} identifiers then both of them will be reported as having incorrect rather than duplicate
+ * identifiers.</li>
+ * <li>Only {@link FormItem}`s are checked. {@link com._1c.g5.v8.dt.form.model.FormAttribute}
+ * and other child content is ignored.</li>
+ * </ul>
  * Since the check tries to find child items with duplicate identifiers, it has to walk through whole
  * child content. To make sure we do not try to walk the whole form when validating every form item,
  * the check specifies the form itself as an object to be validated.
@@ -60,7 +82,8 @@ import com.google.inject.Inject;
  * For this purpose implementation uses {@link AdditionalRevalidationRules} extension to specify extra rules.
  * <p/>
  * This check will put a marker for each {@link FormItem} as target object with a
- * description of the issue (as specified by {@link IInvalidItemIdService}).
+ * description of the issue (regardless of how deep it is nested)
+ * that has a problem with its identifier.
  *
  * @author Nikolay Martynov
  */
@@ -69,24 +92,14 @@ public class InvalidItemIdCheck
 {
 
     /**
-     * Service to delegate checking to.
+     * Identifier of the check.
      */
-    private final IInvalidItemIdService invalidItemIdservice;
-
-    /**
-     * Creates new instance.
-     * @param invalidItemIdService Service that will be used to delegate checks to. Must not be {@code null}.
-     */
-    @Inject
-    public InvalidItemIdCheck(IInvalidItemIdService invalidItemIdService)
-    {
-        this.invalidItemIdservice = invalidItemIdService;
-    }
+    public static final String CHECK_ID = "form-invalid-item-id"; //$NON-NLS-1$
 
     @Override
     public String getCheckId()
     {
-        return IInvalidItemIdService.CHECK_ID;
+        return CHECK_ID;
     }
 
     @Override
@@ -121,7 +134,7 @@ public class InvalidItemIdCheck
             return;
         }
         Form form = (Form)object;
-        for (Entry<FormItem, String> itemAndMesage : invalidItemIdservice.validate(form).entrySet())
+        for (Entry<FormItem, String> itemAndMesage : validate(form).entrySet())
         {
             resultAcceptor.addIssue(itemAndMesage.getValue(), itemAndMesage.getKey(),
                 FormPackage.Literals.FORM_ITEM__ID);
@@ -141,6 +154,58 @@ public class InvalidItemIdCheck
     {
         IBmObject topObject = bmObject.bmGetTopObject();
         return topObject instanceof Form ? Optional.of((Form)topObject) : Optional.empty();
+    }
+
+    /**
+     * Checks whether specified form item has a valid identifier.
+     *
+     * @param item Form item whose identifier is to be checked. Must not be {@code null}.
+     * @return {@code true} if specified item has a valid identifier.
+     */
+    private boolean hasValidId(FormItem item)
+    {
+        return item.getId() != 0;
+    }
+
+    /**
+     * Validates specified form.
+     *
+     * @param form Form to validate. May be {@code null}.
+     * @return A map where keys are form items with issues and values describe those issues.
+     * If a form item is missing among the keys then it means that this form item has no issues.
+     * The result should not contain {@code null} keys or values.
+     * Only form items with issues should be among the keys.
+     * An empty map means no issues with any of the form items.
+     * Also, result will be an empty map if {@code form} is {@code null}.
+     * The result must never be {@code null}.
+     */
+    private Map<FormItem, String> validate(Form form)
+    {
+        if (form == null)
+        {
+            return Collections.emptyMap();
+        }
+        Map<FormItem, String> itemsWithIssues = new HashMap<>();
+        Set<Integer> seenIdentifiers = new HashSet<>();
+        FormItemIterator itemIterator = new FormItemIterator(form);
+        while (itemIterator.hasNext())
+        {
+            FormItem item = itemIterator.next();
+            if (!hasValidId(item))
+            {
+                itemsWithIssues.put(item, Messages.InvalidItemIdCheck_InvalidValueOfIdAttribute);
+            }
+            else
+            {
+                int itemId = item.getId();
+                if (!seenIdentifiers.add(itemId))
+                {
+                    itemsWithIssues.put(item,
+                        MessageFormat.format(Messages.InvalidItemIdCheck_DuplicateValueOfIdAttribute, itemId));
+                }
+            }
+        }
+        return itemsWithIssues;
     }
 
     /**
