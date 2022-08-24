@@ -196,12 +196,7 @@ public class InvalidItemIdCleanup
             while (itemIterator.hasNext())
             {
                 FormItem item = itemIterator.next();
-                if (!hasValidId(item))
-                {
-                    return false;
-                }
-                boolean uniqueId = seenIdentifiers.add(item.getId());
-                if (!uniqueId)
+                if (!hasValidId(item) || !seenIdentifiers.add(item.getId()))
                 {
                     return false;
                 }
@@ -298,17 +293,9 @@ public class InvalidItemIdCleanup
             while (itemIterator.hasNext())
             {
                 FormItem item = itemIterator.next();
-                if (!hasValidId(item))
+                if (!hasValidId(item) || !seenIdentifiers.add(item.getId()))
                 {
                     itemsWithIssues.add(item);
-                }
-                else
-                {
-                    int itemId = item.getId();
-                    if (!seenIdentifiers.add(itemId))
-                    {
-                        itemsWithIssues.add(item);
-                    }
                 }
             }
             return itemsWithIssues;
