@@ -9,6 +9,7 @@ Automatic-Module-Name: com.e1c.dt.check.form.itests
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Localization: fragment
 Import-Package: com._1c.g5.v8.bm.integration;version="[10.0.0,11.0.0)",
+ com._1c.g5.v8.derived;version="[14.0.0,15.0.0)",
  com._1c.g5.v8.dt.core.operations;version="4.0.0",
  com._1c.g5.v8.dt.core.platform;version="[10.3.0,11.0.0)",
  com._1c.g5.v8.dt.mcore;version="[6.3.0,7.0.0)",

@@ -32,7 +32,6 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -43,12 +42,18 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com._1c.g5.v8.bm.integration.BmSaveManagerTask;
+import com._1c.g5.v8.bm.integration.IBatchSessionController;
+import com._1c.g5.v8.bm.integration.IBmModel;
+import com._1c.g5.v8.derived.IDerivedDataManager;
+import com._1c.g5.v8.dt.core.model.IModelEditingSupport;
 import com._1c.g5.v8.dt.core.operations.ProjectPipelineJob;
 import com._1c.g5.v8.dt.core.platform.IBmModelManager;
 import com._1c.g5.v8.dt.core.platform.IDerivedDataManagerProvider;
 import com._1c.g5.v8.dt.core.platform.IDtProject;
 import com._1c.g5.v8.dt.core.platform.IDtProjectManager;
 import com._1c.g5.v8.dt.core.platform.IWorkspaceOrchestrator;
+import com._1c.g5.v8.dt.form.service.FormIdentifierService;
 import com._1c.g5.v8.dt.migration.cleanup.ICleanUpProjectSourcesManager;
 import com._1c.g5.v8.dt.platform.version.Version;
 import com._1c.g5.v8.dt.testing.GuiceModules;
@@ -85,7 +90,16 @@ public class InvalidItemIdCleanupTest
     private IDtProjectManager dtProjectManager;
 
     @Inject
-    private ICleanUpProjectSourcesManager cleanupService;
+    private IBmModelManager bmModelManager;
+
+    @Inject
+    private IModelEditingSupport editingSupport;
+
+    @Inject
+    private FormIdentifierService formIdentifierService;
+
+    @Inject
+    private IDerivedDataManagerProvider derivedDataManagerProvider;
 
     private IProject testProject;
 
@@ -378,12 +392,75 @@ public class InvalidItemIdCleanupTest
      */
     private void cleanup()
     {
+        // From CleanUpProjectSourcesManager.executeBmObjectCleanUp(IDtProject, SubMonitor)
         IDtProject dtProject = dtProjectManager.getDtProject(testProject);
-        cleanupService.cleanUp(testProject, new NullProgressMonitor());
-        // From CleanUpProjectSourceApi.cleanUpProjectSources(Path)
-        Object handle = workspaceOrchestrator.beginExclusiveOperation("Wait for export to finish", //$NON-NLS-1$
-            Collections.singleton(dtProject), ProjectPipelineJob.BEFORE_BUILD_DD);
-        workspaceOrchestrator.endOperation(handle);
+        IBmModel bmModel = bmModelManager.getModel(dtProject);
+        IDerivedDataManager derivedDataManager = derivedDataManagerProvider.get(dtProject);
+        derivedDataManager.disableImplicitWaiting();
+        try
+        {
+            Object cleanUpModelOperationHandle =
+                workspaceOrchestrator.beginExclusiveOperation("CleanObjects", Collections.singleton(dtProject), //$NON-NLS-1$
+                    ProjectPipelineJob.BUILD);
+            try
+            {
+                Object batchSessionHandle = bmModel.beginBatchSession(new IBatchSessionController()
+                {
+
+                    @Override
+                    public void onBeforeSave(List<BmSaveManagerTask> tasks)
+                    {
+                        // Nothing
+                    }
+
+                    @Override
+                    public void onBeforeEventProcessing()
+                    {
+                        // Nothing
+                    }
+
+                    @Override
+                    public void onAfterSave()
+                    {
+                        // Nothing
+                    }
+
+                    @Override
+                    public void onAfterEventProcessing()
+                    {
+                        // Nothing
+                    }
+
+                    @Override
+                    public boolean isParallelSaveAllowed()
+                    {
+                        return true;
+                    }
+                });
+                try
+                {
+                    new InvalidItemIdCleanup(bmModelManager, editingSupport, formIdentifierService)
+                        .getCleanUpProjectTasks(dtProject)
+                        .forEach(cleaupTask -> bmModel.executeInBatchSession(batchSessionHandle, cleaupTask));
+                }
+                finally
+                {
+                    bmModel.endBatchSession(batchSessionHandle);
+                }
+            }
+            finally
+            {
+                workspaceOrchestrator.endOperation(cleanUpModelOperationHandle);
+            }
+            // From CleanUpProjectSourceApi.cleanUpProjectSources(Path)
+            Object handle = workspaceOrchestrator.beginExclusiveOperation("Wait for export to finish", //$NON-NLS-1$
+                Collections.singleton(dtProject), ProjectPipelineJob.BEFORE_BUILD_DD);
+            workspaceOrchestrator.endOperation(handle);
+        }
+        finally
+        {
+            derivedDataManager.enableImplicitWaiting();
+        }
     }
 
     /**
@@ -535,6 +612,8 @@ public class InvalidItemIdCleanupTest
             bind(IBmModelManager.class).toService();
             bind(IDtProjectManager.class).toService();
             bind(IDerivedDataManagerProvider.class).toService();
+            bind(IModelEditingSupport.class).toService();
+            bind(FormIdentifierService.class).toService();
         }
 
     }
