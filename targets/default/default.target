@@ -119,6 +119,8 @@
 <unit id="org.objenesis" version="0.0.0"/>
 <unit id="net.bytebuddy.byte-buddy" version="0.0.0"/>
 <unit id="net.bytebuddy.byte-buddy-agent" version="0.0.0"/>
+<unit id="org.assertj" version="0.0.0"/>
+<unit id="org.assertj.source" version="0.0.0"/>
 <unit id="org.apache.xalan" version="0.0.0"/>
 <unit id="org.apache.batik.script" version="0.0.0"/>
 <unit id="org.apache.batik.codec" version="0.0.0"/>

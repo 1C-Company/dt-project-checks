@@ -13,7 +13,7 @@
     </dataPath>
     <!-- If you remove contextMenu then editor does not display form properly. -->
     <contextMenu>
-      <name>CodeContextMenu</name>
+      <name>id0</name>
       <!-- This is the invalid id. -->
       <id>0</id>
       <visible>true</visible>

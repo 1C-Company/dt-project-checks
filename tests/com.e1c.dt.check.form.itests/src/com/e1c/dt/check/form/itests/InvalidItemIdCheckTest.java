@@ -82,7 +82,7 @@ public class InvalidItemIdCheckTest
     {
         IBmObject form = getTopObjectByFqn("Catalog.Catalog.Form.Id0ImmediateChild.Form", getProject());
         Optional<Marker> marker = streamAllMarkers(getWorkspaceProject()).filter(byForm(form))
-            .filter(byTarget((FormField)findChildByName(form, "Code")))
+            .filter(byTarget((FormField)findChildByName(form, "id0")))
             .filter(byNaturalCheckId(InvalidItemIdCheck.CHECK_ID, getWorkspaceProject()))
             .findFirst();
         assertMarkerIsCorrect(marker);
@@ -114,7 +114,7 @@ public class InvalidItemIdCheckTest
     {
         IBmObject form = getTopObjectByFqn("Catalog.Catalog.Form.MissingId.Form", getProject());
         Optional<Marker> marker = streamAllMarkers(getWorkspaceProject()).filter(byForm(form))
-            .filter(byTarget((FormField)findChildByName(form, "Code")))
+            .filter(byTarget((FormField)findChildByName(form, "missing")))
             .filter(byNaturalCheckId(InvalidItemIdCheck.CHECK_ID, getWorkspaceProject()))
             .findFirst();
         assertMarkerIsCorrect(marker);
@@ -130,7 +130,7 @@ public class InvalidItemIdCheckTest
     {
         IBmObject form = getTopObjectByFqn("Catalog.Catalog.Form.NegativeId.Form", getProject());
         Optional<Marker> marker = streamAllMarkers(getWorkspaceProject()).filter(byForm(form))
-            .filter(byTarget((FormField)findChildByName(form, "Code")))
+            .filter(byTarget((FormField)findChildByName(form, "negative")))
             .filter(byNaturalCheckId(InvalidItemIdCheck.CHECK_ID, getWorkspaceProject()))
             .findFirst();
         assertTrue("Marker found", marker.isEmpty());
