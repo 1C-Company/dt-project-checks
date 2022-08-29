@@ -18,12 +18,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 
 import com._1c.g5.v8.bm.core.IBmObject;
 import com._1c.g5.v8.bm.core.IBmTransaction;
@@ -33,7 +31,6 @@ import com._1c.g5.v8.dt.core.model.EditingMode;
 import com._1c.g5.v8.dt.core.model.IModelEditingSupport;
 import com._1c.g5.v8.dt.core.platform.IBmModelManager;
 import com._1c.g5.v8.dt.core.platform.IDtProject;
-import com._1c.g5.v8.dt.form.model.AutoCommandBar;
 import com._1c.g5.v8.dt.form.model.Form;
 import com._1c.g5.v8.dt.form.model.FormItem;
 import com._1c.g5.v8.dt.form.model.FormPackage;
@@ -63,13 +60,8 @@ import com.google.inject.Inject;
  * Checking.
  * <ul>
  * <li>Each {@link FormItem} on a form is checked regardless of how deep it is nested.</li>
- * <li>{@link FormItem#getId()} is considered to be invalid if its value is {@code 0}
- * which is a default value for {@link org.eclipse.emf.ecore.EObject#eGet(EStructuralFeature, boolean)}
- * in case of {@link java.lang.Integer} feature.
- * <li>Negative values are not considered to be invalid. That is because such values are perfectly valid
- * at least for some of the cases. For example, {@link AutoCommandBar}
- * might have {@code -1} as in identifier. This can be seen in the implementation of
- * {@code com._1c.g5.v8.dt.internal.form.generator.FormGeneratorCore}.</li>
+ * <li>Correctness of individual form item identifiers is determined as per
+ * {@link FormIdentifierService#hasValidId(FormItem)}.</li>
  * <li>Additionally, form items have to have a unique identifier value
  * accross all other items on this {@link Form} regardless of how they are nested into each other.
  * When there are multiple form items with the same identifier then one of
@@ -80,10 +72,8 @@ import com.google.inject.Inject;
  * Fixing.
  * <ul>
  * <li>Fixing {@link FormItem} means replacing its identifier with a new value.</li>
- * <li>{@link FormIdentifierService} is used to determine what this new value should be.
- * However, there are exclusions. For example, {@link AutoCommandBar}
- * of a form will get predefined value of {@code -1} while {@link AutoCommandBar} of any
- * other item will get identifer from {@link FormIdentifierService}.</li>
+ * <li>{@link FormIdentifierService#calculateNewIdFor(FormItem)} is used to determine
+ * what this new value should be.</li>
  * </ul>
  *
  * @author Nikolay Martynov
@@ -138,17 +128,6 @@ public class InvalidItemIdCleanup
     }
 
     /**
-     * Checks whether specified form item has a valid identifier.
-     *
-     * @param item Form item whose identifier is to be checked. Must not be {@code null}.
-     * @return {@code true} if specified item has a valid identifier.
-     */
-    private boolean hasValidId(FormItem item)
-    {
-        return item.getId() != 0;
-    }
-
-    /**
      * Task that checks what needs to be fixed and returns fixing tasks.
      */
     private class CollectCleanupTasksTask
@@ -196,7 +175,7 @@ public class InvalidItemIdCleanup
             while (itemIterator.hasNext())
             {
                 FormItem item = itemIterator.next();
-                if (!hasValidId(item) || !seenIdentifiers.add(item.getId()))
+                if (!formIdentifierService.hasValidId(item) || !seenIdentifiers.add(item.getId()))
                 {
                     return false;
                 }
@@ -243,34 +222,9 @@ public class InvalidItemIdCleanup
                 {
                     return null;
                 }
-                fix(itemToFix);
+                formIdentifierService.calculateNewIdFor(itemToFix).ifPresent(itemToFix::setId);
             }
             return null;
-        }
-
-        /**
-         * Calculates new identifier for the specified form item.
-         *
-         * Some form items have special rules for identifiers.
-         * For example, {@code com._1c.g5.v8.dt.internal.form.generator.FormGeneratorCore}
-         * creates new forms with {@link com._1c.g5.v8.dt.form.model.AutoCommandBar}
-         * that has identifier of {@code -1}.
-         * We try to do the same here.
-         *
-         * @param item Form item that needs new identifier. Most not be {@code null}.
-         * @return New value of identifier for the specified item or an empty holder if
-         * unable to determine proper new identifier value.
-         */
-        private Optional<Integer> calculateNewIdFor(FormItem item)
-        {
-            boolean commandBarOfForm = item instanceof AutoCommandBar && item.eContainer() instanceof Form;
-            if (commandBarOfForm)
-            {
-                return Optional.of(-1);
-            }
-            IBmObject topObject = item.bmGetTopObject();
-            return topObject instanceof Form ? Optional.of(formIdentifierService.getNextItemId((Form)topObject))
-                : Optional.empty();
         }
 
         /**
@@ -293,24 +247,12 @@ public class InvalidItemIdCleanup
             while (itemIterator.hasNext())
             {
                 FormItem item = itemIterator.next();
-                if (!hasValidId(item) || !seenIdentifiers.add(item.getId()))
+                if (!formIdentifierService.hasValidId(item) || !seenIdentifiers.add(item.getId()))
                 {
                     itemsWithIssues.add(item);
                 }
             }
             return itemsWithIssues;
-        }
-
-        /**
-         * Fixes specified form item.
-         *
-         * @param formItemToFix A particular form item with an issue
-         * (one of the keys in result returned by {@link #validate(Form)})
-         * that is to be fixed. Must not be {@code null}.
-         */
-        private void fix(FormItem item)
-        {
-            calculateNewIdFor(item).ifPresent(item::setId);
         }
 
     }

@@ -12,13 +12,8 @@
  *******************************************************************************/
 package com.e1c.dt.check.internal.form.fix;
 
-import java.util.Optional;
-
 import org.eclipse.emf.ecore.EStructuralFeature;
 
-import com._1c.g5.v8.bm.core.IBmObject;
-import com._1c.g5.v8.dt.form.model.AutoCommandBar;
-import com._1c.g5.v8.dt.form.model.Form;
 import com._1c.g5.v8.dt.form.model.FormItem;
 import com._1c.g5.v8.dt.form.service.FormIdentifierService;
 import com.e1c.dt.check.form.InvalidItemIdCheck;
@@ -34,10 +29,8 @@ import com.google.inject.Inject;
  * <p/>
  * When fixing, it does not try to understand why identifier is not good enough.
  * It just replaces it with a new value.
- * {@link FormIdentifierService} is used to determine what this new value should be.
- * However, there are exclusions. For example, {@link AutoCommandBar}
- * of a form will get predefined value of {@code -1} while {@link AutoCommandBar} of any
- * other item will get identifer from {@link FormIdentifierService}.
+ * {@link FormIdentifierService#calculateNewIdFor(FormItem)} is used to determine
+ * what this new value should be.
  * <p/>
  * Expects to get {@link FormItem} with a broken {@link com._1c.g5.v8.dt.form.model.FormPackage.Literals.FORM_ITEM__ID}
  * as the target object.
@@ -77,32 +70,7 @@ public class InvalidItemIdFix
     protected void applyChanges(FormItem modelObject, EStructuralFeature targetFeature, BasicModelFixContext context,
         IFixSession session)
     {
-        calculateNewIdFor(modelObject).ifPresent(modelObject::setId);
-    }
-
-    /**
-     * Calculates new identifier for the specified form item.
-     *
-     * Some form items have special rules for identifiers.
-     * For example, {@code com._1c.g5.v8.dt.internal.form.generator.FormGeneratorCore}
-     * creates new forms with {@link com._1c.g5.v8.dt.form.model.AutoCommandBar}
-     * that has identifier of {@code -1}.
-     * We try to do the same here.
-     *
-     * @param item Form item that needs new identifier. Most not be {@code null}.
-     * @return New value of identifier for the specified item or an empty holder if
-     * unable to determine proper new identifier value.
-     */
-    private Optional<Integer> calculateNewIdFor(FormItem item)
-    {
-        boolean commandBarOfForm = item instanceof AutoCommandBar && item.eContainer() instanceof Form;
-        if (commandBarOfForm)
-        {
-            return Optional.of(-1);
-        }
-        IBmObject topObject = item.bmGetTopObject();
-        return topObject instanceof Form ? Optional.of(formIdentifierService.getNextItemId((Form)topObject))
-            : Optional.empty();
+        formIdentifierService.calculateNewIdFor(modelObject).ifPresent(modelObject::setId);
     }
 
 }

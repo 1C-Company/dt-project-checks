@@ -32,10 +32,10 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import com._1c.g5.v8.bm.core.IBmObject;
 import com._1c.g5.v8.bm.core.event.BmChangeEvent;
 import com._1c.g5.v8.bm.core.event.BmSubEvent;
-import com._1c.g5.v8.dt.form.model.AutoCommandBar;
 import com._1c.g5.v8.dt.form.model.Form;
 import com._1c.g5.v8.dt.form.model.FormItem;
 import com._1c.g5.v8.dt.form.model.FormPackage;
+import com._1c.g5.v8.dt.form.service.FormIdentifierService;
 import com._1c.g5.v8.dt.form.service.item.FormItemIterator;
 import com.e1c.g5.v8.dt.check.CheckComplexity;
 import com.e1c.g5.v8.dt.check.ICheckDefinition;
@@ -48,19 +48,15 @@ import com.e1c.g5.v8.dt.check.context.OnModelFeatureChangeContextCollector;
 import com.e1c.g5.v8.dt.check.context.OnModelObjectRemovalContextCollector;
 import com.e1c.g5.v8.dt.check.settings.IssueSeverity;
 import com.e1c.g5.v8.dt.check.settings.IssueType;
+import com.google.inject.Inject;
 
 /**
  * Checks that form items have valid identifiers.
  * <p/>
  * <ul>
+ * <li>Correctness of individual form item identifiers is determined as per
+ * {@link FormIdentifierService#hasValidId(FormItem)}.</li>
  * <li>Each {@link FormItem} on a form is checked regardless of how deep it is nested.</li>
- * <li>{@link FormItem#getId()} is considered to be invalid if its value is {@code 0}
- * which is a default value for {@link org.eclipse.emf.ecore.EObject#eGet(EStructuralFeature, boolean)}
- * in case of {@link java.lang.Integer} feature.
- * <li>Negative values are not considered to be invalid. That is because such values are perfectly valid
- * at least for some of the cases. For example, {@link AutoCommandBar}
- * might have {@code -1} as in identifier. This can be seen in the implementation of
- * {@code com._1c.g5.v8.dt.internal.form.generator.FormGeneratorCore}.</li>
  * <li>Additionally, form items have to have a unique identifier value
  * accross all other items on this {@link Form} regardless of how they are nested into each other.
  * When there are multiple form items with the same identifier then one of
@@ -95,6 +91,22 @@ public class InvalidItemIdCheck
      * Identifier of the check.
      */
     public static final String CHECK_ID = "form-invalid-item-id"; //$NON-NLS-1$
+
+    /**
+     * Service that is used to generate new identifiers for broken form items.
+     */
+    private final FormIdentifierService formIdentifierService;
+
+    /**
+     * Creates new instnce.
+     *
+     * @param formIdentifierService Service to be used to form item identifiers. Must not be {@code null}.
+     */
+    @Inject
+    public InvalidItemIdCheck(FormIdentifierService formIdentifierService)
+    {
+        this.formIdentifierService = formIdentifierService;
+    }
 
     @Override
     public String getCheckId()
@@ -157,17 +169,6 @@ public class InvalidItemIdCheck
     }
 
     /**
-     * Checks whether specified form item has a valid identifier.
-     *
-     * @param item Form item whose identifier is to be checked. Must not be {@code null}.
-     * @return {@code true} if specified item has a valid identifier.
-     */
-    private boolean hasValidId(FormItem item)
-    {
-        return item.getId() != 0;
-    }
-
-    /**
      * Validates specified form.
      *
      * @param form Form to validate. May be {@code null}.
@@ -191,7 +192,7 @@ public class InvalidItemIdCheck
         while (itemIterator.hasNext())
         {
             FormItem item = itemIterator.next();
-            if (!hasValidId(item))
+            if (!formIdentifierService.hasValidId(item))
             {
                 itemsWithIssues.put(item, Messages.InvalidItemIdCheck_InvalidValueOfIdAttribute);
             }
