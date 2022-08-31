@@ -30,12 +30,19 @@
             category="com.e1c.dt.check.form"
             class="com.e1c.dt.check.internal.form.ExecutableExtensionFactory:com.e1c.dt.check.form.NamedElementNameCheck">
       </check>
+      <check
+            category="com.e1c.dt.check.form"
+            class="com.e1c.dt.check.internal.form.ExecutableExtensionFactory:com.e1c.dt.check.form.InvalidItemIdCheck">
+      </check>
    </extension>
    <extension
          point="com.e1c.g5.v8.dt.check.fixes">
       <fix
             class="com.e1c.dt.check.internal.form.fix.DataPathRemoveFix">
       </fix>
+      <fix class="com.e1c.dt.check.internal.form.ExecutableExtensionFactory:com.e1c.dt.check.internal.form.fix.InvalidItemIdFix"/>
    </extension>
-
+    <extension point="com._1c.g5.v8.dt.migration.cleanup_project_sources">
+        <object class="com.e1c.dt.check.internal.form.ExecutableExtensionFactory:com.e1c.dt.check.internal.form.cleanup.InvalidItemIdCleanup"/>
+    </extension>
 </plugin>

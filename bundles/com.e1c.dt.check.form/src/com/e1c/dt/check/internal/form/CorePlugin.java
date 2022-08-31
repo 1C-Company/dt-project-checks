@@ -110,7 +110,6 @@ public class CorePlugin
         super.start(bundleContext);
 
         plugin = this;
-
     }
 
     /*
