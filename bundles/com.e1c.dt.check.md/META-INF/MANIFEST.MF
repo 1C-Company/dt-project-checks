@@ -14,10 +14,10 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: com.e1c.dt.check.md
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
-Import-Package: com._1c.g5.v8.bm.core;version="[7.6.0,8.0.0)",
- com._1c.g5.v8.bm.core.event;version="[2.1.0,3.0.0)",
+Import-Package: com._1c.g5.v8.bm.core;version="[8.0.0,9.0.0)",
+ com._1c.g5.v8.bm.core.event;version="[3.0.0,4.0.0)",
  com._1c.g5.v8.dt.common;version="[6.5.0,7.0.0)",
- com._1c.g5.v8.dt.core.platform;version="[10.2.0,11.0.0)",
+ com._1c.g5.v8.dt.core.platform;version="[11.0.0,12.0.0)",
  com._1c.g5.v8.dt.md.availability;version="[2.2.0,3.0.0)",
  com._1c.g5.v8.dt.metadata;version="[5.0.0,6.0.0)",
  com._1c.g5.v8.dt.metadata.common;version="[3.8.0,4.0.0)",

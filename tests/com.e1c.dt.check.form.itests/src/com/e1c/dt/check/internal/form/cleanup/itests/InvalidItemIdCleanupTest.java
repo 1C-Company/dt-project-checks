@@ -42,7 +42,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com._1c.g5.v8.bm.integration.BmSaveManagerTask;
 import com._1c.g5.v8.bm.integration.IBatchSessionController;
 import com._1c.g5.v8.bm.integration.IBmModel;
 import com._1c.g5.v8.derived.IDerivedDataManager;
@@ -408,12 +407,6 @@ public class InvalidItemIdCleanupTest
                 {
 
                     @Override
-                    public void onBeforeSave(List<BmSaveManagerTask> tasks)
-                    {
-                        // Nothing
-                    }
-
-                    @Override
                     public void onBeforeEventProcessing()
                     {
                         // Nothing
@@ -435,6 +428,12 @@ public class InvalidItemIdCleanupTest
                     public boolean isParallelSaveAllowed()
                     {
                         return true;
+                    }
+
+                    @Override
+                    public void onBeforeSave(int taskCount)
+                    {
+                        // Nothing
                     }
                 });
                 try
