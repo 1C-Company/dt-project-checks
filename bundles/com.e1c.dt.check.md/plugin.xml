@@ -14,13 +14,6 @@
  -->
 <plugin>
     <extension point="com.e1c.g5.v8.dt.check.checks">
-    
-      <category
-          id="com.e1c.dt.check.md"
-          description="%category.md.description"
-          title="%category.md.title"
-          category="com.e1c.g5.v8.dt.check.edt.checks">
-      </category>
  
       <check
           category="com.e1c.dt.check.md"
