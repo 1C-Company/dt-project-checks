@@ -39,6 +39,7 @@ import com._1c.g5.v8.dt.form.model.FormPackage;
 import com._1c.g5.v8.dt.mcore.NamedElement;
 import com._1c.g5.v8.dt.validation.marker.BmObjectMarker;
 import com._1c.g5.v8.dt.validation.marker.Marker;
+import com._1c.g5.v8.dt.validation.marker.MarkerFilter;
 import com._1c.g5.v8.dt.validation.marker.MarkerSeverity;
 import com.e1c.dt.check.form.InvalidItemIdCheck;
 import com.e1c.g5.v8.dt.testing.check.SingleProjectReadOnlyCheckTestBase;
@@ -253,7 +254,7 @@ public class InvalidItemIdCheckTest
     private Stream<Marker> streamAllMarkers(IProject project)
     {
         Preconditions.checkNotNull(project, "project"); //$NON-NLS-1$
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(markerManager.iterator(project), 0), false);
+        return markerManager.markers(MarkerFilter.createProjectFilter(project));
     }
 
     /**
