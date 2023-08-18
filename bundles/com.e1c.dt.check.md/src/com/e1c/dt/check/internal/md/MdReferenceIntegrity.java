@@ -295,6 +295,13 @@ public final class MdReferenceIntegrity
             for (IBmCrossReference reference : references)
             {
                 IBmObject referenceHolder = reference.getObject();
+                if (referenceHolder == null)
+                {
+                    // The object may be removed at the time the processing is being done so we simply ignore it,
+                    // as removed object is not a target for this check
+                    continue;
+                }
+
                 IBmObject topBmObject = referenceHolder.bmGetTopObject();
                 boolean isTopTarget = topBmObject.bmGetId() == referenceHolder.bmGetId();
                 CheckDef checkDef = CHECKED_COLLECTIONS.get(topBmObject.eClass());
