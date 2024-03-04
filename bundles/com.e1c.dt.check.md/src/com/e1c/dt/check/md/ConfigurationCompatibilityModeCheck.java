@@ -26,6 +26,7 @@ import com._1c.g5.v8.dt.platform.version.Version;
 import com.e1c.g5.v8.dt.check.ICheckParameters;
 import com.e1c.g5.v8.dt.check.components.BasicCheck;
 import com.e1c.g5.v8.dt.check.components.TopObjectFilterExtension;
+import com.e1c.g5.v8.dt.check.settings.IssueSeverity;
 import com.e1c.g5.v8.dt.check.settings.IssueType;
 import com.google.inject.Inject;
 
@@ -58,6 +59,8 @@ public final class ConfigurationCompatibilityModeCheck
             .description(Messages.ConfigurationCompatibilityModeCheck_Description)
             .extension(new TopObjectFilterExtension())
             .issueType(IssueType.CRITICAL_DATA_INTEGRITY)
+            .severity(IssueSeverity.CRITICAL)
+            .criticalDataIntegrityCheck()
             .topObject(MdClassPackage.Literals.CONFIGURATION)
             .features(MdClassPackage.Literals.CONFIGURATION__COMPATIBILITY_MODE);
     }
@@ -75,7 +78,7 @@ public final class ConfigurationCompatibilityModeCheck
                 MdClassUtil.getCompatibilityMode(version.getMajor(), version.getMinor(), version.getMicro());
             CompatibilityMode currentCompatibilityMode = configuration.getCompatibilityMode();
 
-            if (currentCompatibilityMode.getValue() < CompatibilityMode.VERSION8_36_VALUE)
+            if (currentCompatibilityMode.getValue() < CompatibilityMode.VERSION8_38_VALUE)
             {
                 resultAceptor.addIssue(Messages.ConfigurationCompatibilityModeCheck_Unsupported_compatibility_mode_min,
                     configuration, MdClassPackage.Literals.CONFIGURATION__COMPATIBILITY_MODE);
