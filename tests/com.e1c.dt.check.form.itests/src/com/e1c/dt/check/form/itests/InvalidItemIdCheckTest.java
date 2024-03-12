@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.core.resources.IProject;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 import com._1c.g5.v8.bm.core.IBmObject;
@@ -37,6 +38,8 @@ import com._1c.g5.v8.dt.core.platform.IDtProject;
 import com._1c.g5.v8.dt.form.model.FormField;
 import com._1c.g5.v8.dt.form.model.FormPackage;
 import com._1c.g5.v8.dt.mcore.NamedElement;
+import com._1c.g5.v8.dt.platform.version.Version;
+import com._1c.g5.v8.dt.testing.TestingPlatformSupport;
 import com._1c.g5.v8.dt.validation.marker.BmObjectMarker;
 import com._1c.g5.v8.dt.validation.marker.Marker;
 import com._1c.g5.v8.dt.validation.marker.MarkerFilter;
@@ -53,6 +56,8 @@ import com.google.common.base.Preconditions;
 public class InvalidItemIdCheckTest
     extends SingleProjectReadOnlyCheckTestBase
 {
+    @ClassRule
+    public static TestingPlatformSupport testingPlatformSupport = new TestingPlatformSupport(Version.V8_3_19);
 
     /**
      * Test that correct form does not cause markers.
