@@ -39,6 +39,7 @@ import com._1c.g5.v8.dt.platform.version.Version;
 import com.e1c.g5.v8.dt.check.ICheckParameters;
 import com.e1c.g5.v8.dt.check.components.BasicCheck;
 import com.e1c.g5.v8.dt.check.components.TopObjectFilterExtension;
+import com.e1c.g5.v8.dt.check.settings.IssueSeverity;
 import com.e1c.g5.v8.dt.check.settings.IssueType;
 import com.google.inject.Inject;
 
@@ -70,7 +71,8 @@ public final class ConfigurationUsedMobileApplicationFunctionalitiesCheck
         builder.title(Messages.ConfigurationUsedMobileApplicationFunctionalitiesCheck_Title)
             .description(Messages.ConfigurationUsedMobileApplicationFunctionalitiesCheck_Description)
             .extension(new TopObjectFilterExtension())
-            .issueType(IssueType.CRITICAL_DATA_INTEGRITY)
+            .issueType(IssueType.ERROR)
+            .severity(IssueSeverity.MINOR)
             .topObject(MdClassPackage.Literals.CONFIGURATION)
             .features(MdClassPackage.Literals.CONFIGURATION__REQUIRED_MOBILE_APPLICATION_PERMISSIONS,
                 MdClassPackage.Literals.CONFIGURATION__REQUIRED_MOBILE_APPLICATION_PERMISSIONS,
