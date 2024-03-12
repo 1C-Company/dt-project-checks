@@ -17,12 +17,15 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.eclipse.emf.ecore.EObject;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 import com._1c.g5.v8.bm.core.IBmObject;
 import com._1c.g5.v8.dt.core.platform.IDtProject;
 import com._1c.g5.v8.dt.form.model.Form;
 import com._1c.g5.v8.dt.form.model.FormField;
+import com._1c.g5.v8.dt.platform.version.Version;
+import com._1c.g5.v8.dt.testing.TestingPlatformSupport;
 import com._1c.g5.v8.dt.validation.marker.Marker;
 import com.e1c.dt.check.form.NamedElementNameCheck;
 import com.e1c.g5.v8.dt.testing.check.SingleProjectReadOnlyCheckTestBase;
@@ -35,6 +38,9 @@ import com.e1c.g5.v8.dt.testing.check.SingleProjectReadOnlyCheckTestBase;
 public class NamedElementNameCheckTest
     extends SingleProjectReadOnlyCheckTestBase
 {
+    @ClassRule
+    public static TestingPlatformSupport testingPlatformSupport = new TestingPlatformSupport(Version.V8_3_19);
+
     private static final String CHECK_ID = "form-named-element-name";
 
     private static final String PROJECT_NAME = "NamedElementName";

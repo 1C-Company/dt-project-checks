@@ -20,6 +20,7 @@ import java.util.Collections;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.junit.ClassRule;
 
 import com._1c.g5.v8.bm.core.IBmObject;
 import com._1c.g5.v8.bm.core.IBmTransaction;
@@ -28,7 +29,9 @@ import com._1c.g5.v8.bm.integration.IBmModel;
 import com._1c.g5.v8.dt.core.platform.IDtProject;
 import com._1c.g5.v8.dt.core.platform.IV8Project;
 import com._1c.g5.v8.dt.core.platform.IV8ProjectManager;
+import com._1c.g5.v8.dt.platform.version.Version;
 import com._1c.g5.v8.dt.testing.GuiceModules;
+import com._1c.g5.v8.dt.testing.TestingPlatformSupport;
 import com._1c.g5.v8.dt.validation.marker.Marker;
 import com.e1c.dt.check.internal.md.itests.ExternalDependenciesModule;
 import com.e1c.g5.v8.dt.check.ICheckScheduler;
@@ -44,6 +47,12 @@ import com.google.inject.Inject;
 public abstract class AbstractMdCheckTest
     extends CheckTestBase
 {
+    @ClassRule
+    public static TestingPlatformSupport testingPlatformSupport =
+        new TestingPlatformSupport(Version.V8_3_8, Version.V8_3_9, Version.V8_3_10, Version.V8_3_11, Version.V8_3_12,
+            Version.V8_3_13, Version.V8_3_14, Version.V8_3_15, Version.V8_3_16, Version.V8_3_17, Version.V8_3_18,
+            Version.V8_3_19, Version.V8_3_20, Version.V8_3_21, Version.V8_3_22, Version.V8_3_23, Version.V8_3_24);
+
     @Inject
     protected ICheckScheduler checker;
     @Inject
