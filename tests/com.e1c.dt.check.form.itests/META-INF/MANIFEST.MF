@@ -6,7 +6,7 @@ Bundle-Version: 0.7.0.qualifier
 Bundle-Vendor: %providerName
 Fragment-Host: com.e1c.dt.check.form;bundle-version="[0.7.0,0.8.0)"
 Automatic-Module-Name: com.e1c.dt.check.form.itests
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Localization: fragment
 Import-Package: com._1c.g5.v8.bm.integration;version="[11.0.0,12.0.0)",
  com._1c.g5.v8.derived;version="[16.0.0,17.0.0)",
@@ -25,5 +25,5 @@ Import-Package: com._1c.g5.v8.bm.integration;version="[11.0.0,12.0.0)",
  org.junit.rules;version="[4.13.2,5.0.0)",
  org.junit.runner;version="[4.13.2,5.0.0)"
 Require-Bundle: org.eclipse.core.resources;bundle-version="[3.13.0,4.0.0)",
- org.assertj;bundle-version="[3.14.0,4.0.0)",
+ assertj-core;bundle-version="[3.24.2,4.0.0)",
  com._1c.g5.wiring;bundle-version="[2.0.100,3.0.0)"
