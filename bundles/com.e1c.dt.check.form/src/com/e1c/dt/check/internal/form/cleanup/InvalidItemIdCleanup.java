@@ -88,11 +88,6 @@ public class InvalidItemIdCleanup
     private final IBmModelManager bmModelManager;
 
     /**
-     * Service used to check if editing is allowed.
-     */
-    private final IModelEditingSupport editingSupport;
-
-    /**
      * Service that is used to generate new identifiers for broken form items.
      */
     private final FormIdentifierService formIdentifierService;
@@ -102,29 +97,25 @@ public class InvalidItemIdCleanup
      *
      * @param bmModelManager Service instance that is to be used to obtain project model.
      * Must not be {@code null}.
-     * @param editingSupport Service instance that is to be used to check if we're allowed to change forms.
-     * Must not be {@code null}.
      * @param formIdentifierService Service to be used to generate
      * new identifiers when fixing broken form items. Must not be {@code null}.
      */
     @Inject
-    public InvalidItemIdCleanup(IBmModelManager bmModelManager, IModelEditingSupport editingSupport,
-        FormIdentifierService formIdentifierService)
+    public InvalidItemIdCleanup(IBmModelManager bmModelManager, FormIdentifierService formIdentifierService)
     {
         this.bmModelManager = bmModelManager;
-        this.editingSupport = editingSupport;
         this.formIdentifierService = formIdentifierService;
     }
 
     @Override
-    public List<ICleanUpBmObjectTask> getCleanUpProjectTasks(IDtProject project)
+    public List<ICleanUpBmObjectTask> getCleanUpProjectTasks(IDtProject project, IModelEditingSupport editingSupport)
     {
         IBmModel model = bmModelManager.getModel(project);
         if (model == null)
         {
             return Collections.emptyList();
         }
-        return model.executeReadonlyTask(new CollectCleanupTasksTask(), false);
+        return model.executeReadonlyTask(new CollectCleanupTasksTask(editingSupport), false);
     }
 
     /**
@@ -133,13 +124,15 @@ public class InvalidItemIdCleanup
     private class CollectCleanupTasksTask
         extends AbstractBmTask<List<ICleanUpBmObjectTask>>
     {
+        private final IModelEditingSupport editingSupport;
 
         /**
          * Creates an instance.
          */
-        CollectCleanupTasksTask()
+        public CollectCleanupTasksTask(IModelEditingSupport editingSupport)
         {
             super(Messages.InvalidItemIdCleanup_Searching_invalid_form_item_identifiers);
+            this.editingSupport = editingSupport;
         }
 
         @Override
