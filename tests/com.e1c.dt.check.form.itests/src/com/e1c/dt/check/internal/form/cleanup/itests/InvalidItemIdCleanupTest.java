@@ -444,8 +444,8 @@ public class InvalidItemIdCleanupTest
                 });
                 try
                 {
-                    new InvalidItemIdCleanup(bmModelManager, editingSupport, formIdentifierService)
-                        .getCleanUpProjectTasks(dtProject)
+                    new InvalidItemIdCleanup(bmModelManager, formIdentifierService)
+                        .getCleanUpProjectTasks(dtProject, editingSupport)
                         .forEach(cleaupTask -> bmModel.executeInBatchSession(batchSessionHandle, cleaupTask));
                 }
                 finally
