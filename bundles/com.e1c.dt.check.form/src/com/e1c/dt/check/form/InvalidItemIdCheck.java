@@ -249,6 +249,7 @@ public class InvalidItemIdCheck
             FormPackage.Literals.CONTEXT_MENU_HOLDER,
             FormPackage.Literals.COMMAND_BAR_HOLDER,
             FormPackage.Literals.EXTENDED_TOOLTIP_HOLDER,
+            FormPackage.Literals.SELECTED_ITEMS_ACTIONS_PANEL_HOLDER,
             FormPackage.Literals.TABLE_HOLDER,
             FormPackage.Literals.ADDITION_CONTAINER,
             FormPackage.Literals.TOOLTIP_CONTAINER
@@ -332,6 +333,7 @@ public class InvalidItemIdCheck
      * <li>{@link com._1c.g5.v8.dt.form.model.CommandBarHolder#getAutoCommandBar()}
      * <li>{@link com._1c.g5.v8.dt.form.model.ContextMenuHolder#getContextMenu()}
      * <li>{@link com._1c.g5.v8.dt.form.model.ExtendedTooltipHolder#getExtendedTooltip()}
+     * <li>{@link com._1c.g5.v8.dt.form.model.SelectedItemsActionsPanelHolder#getSelectedItemsActionsPanel()}
      * <li>and so on
      * </ul>
      */
