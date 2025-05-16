@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2022, 1C-Soft LLC and others.
+ * Copyright (C) 2022-2025, 1C-Soft LLC and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -35,6 +35,7 @@ import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGUR
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__COMMON_TEMPLATES;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__CONSTANTS;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__DATA_PROCESSORS;
+import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__DEFINED_TYPES;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__DOCUMENTS;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__DOCUMENT_JOURNALS;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__DOCUMENT_NUMERATORS;
@@ -48,13 +49,21 @@ import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGUR
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__HTTP_SERVICES;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__INFORMATION_REGISTERS;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__INTEGRATION_SERVICES;
+import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__PALETTE_COLORS;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__REPORTS;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__ROLES;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__SCHEDULED_JOBS;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__SEQUENCES;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__SESSION_PARAMETERS;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__SETTINGS_STORAGES;
+import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__STYLES;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__STYLE_ITEMS;
+import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__SUBSYSTEMS;
+import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__TASKS;
+import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__WEB_SERVICES;
+import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__WEB_SOCKET_CLIENTS;
+import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__WS_REFERENCES;
+import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.CONFIGURATION__XDTO_PACKAGES;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.EXCHANGE_PLAN;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.EXCHANGE_PLAN_CONTENT_ITEM;
 import static com._1c.g5.v8.dt.metadata.mdclass.MdClassPackage.Literals.EXCHANGE_PLAN_CONTENT_ITEM__MD_OBJECT;
@@ -131,6 +140,7 @@ public final class MdReferenceIntegrity
             CONFIGURATION__COMMON_TEMPLATES,
             CONFIGURATION__CONSTANTS,
             CONFIGURATION__DATA_PROCESSORS,
+            CONFIGURATION__DEFINED_TYPES,
             CONFIGURATION__DOCUMENT_JOURNALS,
             CONFIGURATION__DOCUMENT_NUMERATORS,
             CONFIGURATION__DOCUMENTS,
@@ -144,13 +154,21 @@ public final class MdReferenceIntegrity
             CONFIGURATION__HTTP_SERVICES,
             CONFIGURATION__INFORMATION_REGISTERS,
             CONFIGURATION__INTEGRATION_SERVICES,
+            CONFIGURATION__PALETTE_COLORS,
             CONFIGURATION__REPORTS,
             CONFIGURATION__ROLES,
             CONFIGURATION__SCHEDULED_JOBS,
             CONFIGURATION__SEQUENCES,
             CONFIGURATION__SESSION_PARAMETERS,
             CONFIGURATION__SETTINGS_STORAGES,
-            CONFIGURATION__STYLE_ITEMS)),
+            CONFIGURATION__STYLES,
+            CONFIGURATION__STYLE_ITEMS,
+            CONFIGURATION__SUBSYSTEMS,
+            CONFIGURATION__TASKS,
+            CONFIGURATION__WEB_SERVICES,
+            CONFIGURATION__WEB_SOCKET_CLIENTS,
+            CONFIGURATION__WS_REFERENCES,
+            CONFIGURATION__XDTO_PACKAGES)),
         COMMON_ATTRIBUTE, new CheckDef(Map.of(
             COMMON_ATTRIBUTE_CONTENT_ITEM,
                 Set.of(COMMON_ATTRIBUTE_CONTENT_ITEM__METADATA))),
