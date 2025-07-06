@@ -18,10 +18,10 @@
 	<parent>
 		<groupId>com.e1c.dt.check</groupId>
 		<artifactId>bundles</artifactId>
-		<version>0.9.0-SNAPSHOT</version>
+		<version>0.10.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>com.e1c.dt.check.form</artifactId>
-	<version>0.9.0-SNAPSHOT</version>
+	<version>0.10.0-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 	
 	<properties>
