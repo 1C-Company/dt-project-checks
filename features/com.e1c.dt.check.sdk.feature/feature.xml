@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
     Copyright (C) 2021, 1C-Soft LLC and others.
 
@@ -10,34 +10,16 @@
 
     Contributors:
         1C-Soft LLC - initial API and implementation
- -->
-<feature
-      id="com.e1c.dt.check.sdk"
-      label="%featureName"
-      version="0.12.0.qualifier"
-      provider-name="%providerName"
-      license-feature="org.eclipse.license"
-      license-feature-version="2.0.2.qualifier">
-
-   <description>
+ --><feature id="com.e1c.dt.check.sdk" label="%featureName" license-feature="org.eclipse.license" license-feature-version="2.0.2.qualifier" provider-name="%providerName" version="0.12.0.qualifier">
+  <description>
       %description
    </description>
-
-   <copyright>
+  <copyright>
       %copyright
    </copyright>
-
-   <license url="%licenseURL">
+  <license url="%licenseURL">
       %license
    </license>
-
-   <includes
-         id="com.e1c.dt.check.feature.source"
-         version="0.12.0.qualifier"
-         optional="true"/>
-
-   <includes
-         id="com.e1c.dt.check.feature"
-         version="0.12.0.qualifier"/>
-
+  <includes id="com.e1c.dt.check.feature.source" optional="true" version="0.12.0.qualifier"/>
+  <includes id="com.e1c.dt.check.feature" version="0.12.0.qualifier"/>
 </feature>
