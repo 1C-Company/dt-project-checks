@@ -38,7 +38,7 @@
 <unit id="net.bytebuddy.byte-buddy" version="0.0.0"/>
 <unit id="net.bytebuddy.byte-buddy-agent" version="0.0.0"/>
 <unit id="com.ibm.icu" version="0.0.0"/>
-<unit id="org.apache.commons.commons-codec" version="0.0.0"/>
+<unit id="org.apache.commons.commons-codec" version="1.20.0"/>
 <unit id="org.apache.commons.commons-logging" version="0.0.0"/>
 <unit id="org.apache.xmlgraphics" version="0.0.0"/>
 <unit id="com.github.weisj.jsvg" version="0.0.0"/>
