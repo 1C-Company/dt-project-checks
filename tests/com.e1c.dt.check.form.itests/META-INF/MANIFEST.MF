@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: com.e1c.dt.check.form.itests;singleton:=true
-Bundle-Version: 0.14.0.qualifier
+Bundle-Version: 0.15.0.qualifier
 Bundle-Vendor: %providerName
-Fragment-Host: com.e1c.dt.check.form;bundle-version="[0.14.0,0.15.0)"
+Fragment-Host: com.e1c.dt.check.form;bundle-version="[0.15.0,0.16.0)"
 Automatic-Module-Name: com.e1c.dt.check.form.itests
 Bundle-RequiredExecutionEnvironment: JavaSE-25
 Bundle-Localization: fragment
