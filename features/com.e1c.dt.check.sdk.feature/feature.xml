@@ -10,7 +10,7 @@
 
     Contributors:
         1C-Soft LLC - initial API and implementation
- --><feature id="com.e1c.dt.check.sdk" label="%featureName" license-feature="org.eclipse.license" license-feature-version="2.0.2.qualifier" provider-name="%providerName" version="0.13.0.qualifier">
+ --><feature id="com.e1c.dt.check.sdk" label="%featureName" license-feature="org.eclipse.license" license-feature-version="2.0.2.qualifier" provider-name="%providerName" version="0.14.0.qualifier">
   <description>
       %description
    </description>
@@ -20,6 +20,6 @@
   <license url="%licenseURL">
       %license
    </license>
-  <includes id="com.e1c.dt.check.feature.source" optional="true" version="0.13.0.qualifier"/>
-  <includes id="com.e1c.dt.check.feature" version="0.13.0.qualifier"/>
+  <includes id="com.e1c.dt.check.feature.source" optional="true" version="0.14.0.qualifier"/>
+  <includes id="com.e1c.dt.check.feature" version="0.14.0.qualifier"/>
 </feature>

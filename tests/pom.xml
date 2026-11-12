@@ -12,7 +12,7 @@
   <parent>
     <groupId>com.e1c.dt.check</groupId>
     <artifactId>parent</artifactId>
-    <version>0.13.0-SNAPSHOT</version>
+    <version>0.14.0-SNAPSHOT</version>
   </parent>
   <artifactId>tests</artifactId>
   <packaging>pom</packaging>
@@ -67,7 +67,7 @@
             <artifact>
               <groupId>com.e1c.dt.check</groupId>
               <artifactId>default</artifactId>
-              <version>0.13.0-SNAPSHOT</version>
+              <version>0.14.0-SNAPSHOT</version>
             </artifact>
           </target>
           <dependency-resolution>
